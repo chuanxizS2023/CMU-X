@@ -11,7 +11,7 @@ import SwiftUI
 struct CMU_XApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            LandingPage()
         }
     }
 }

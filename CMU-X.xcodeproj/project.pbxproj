@@ -7,12 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0EA6C1582AD903FC00D8A4D1 /* AppIntroText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA6C1572AD903FC00D8A4D1 /* AppIntroText.swift */; };
 		0EC045B42AD76984009E44D0 /* CMU_XApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC045B32AD76984009E44D0 /* CMU_XApp.swift */; };
-		0EC045B62AD76984009E44D0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC045B52AD76984009E44D0 /* ContentView.swift */; };
+		0EC045B62AD76984009E44D0 /* LandingPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC045B52AD76984009E44D0 /* LandingPage.swift */; };
 		0EC045B82AD76986009E44D0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0EC045B72AD76986009E44D0 /* Assets.xcassets */; };
 		0EC045BB2AD76986009E44D0 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0EC045BA2AD76986009E44D0 /* Preview Assets.xcassets */; };
 		0EC045C62AD76986009E44D0 /* CMU_XTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC045C52AD76986009E44D0 /* CMU_XTests.swift */; };
 		0EC045D12AD76986009E44D0 /* CMU_XUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC045D02AD76986009E44D0 /* CMU_XUITests.swift */; };
+		0EC045E92AD86AC4009E44D0 /* SigninForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC045E82AD86AC4009E44D0 /* SigninForm.swift */; };
+		0EC045F02AD87F6B009E44D0 /* YoungSerif-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0EC045EF2AD87F6B009E44D0 /* YoungSerif-Regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,9 +36,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0EA6C1572AD903FC00D8A4D1 /* AppIntroText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIntroText.swift; sourceTree = "<group>"; };
 		0EC045B02AD76984009E44D0 /* CMU-X.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CMU-X.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0EC045B32AD76984009E44D0 /* CMU_XApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMU_XApp.swift; sourceTree = "<group>"; };
-		0EC045B52AD76984009E44D0 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		0EC045B52AD76984009E44D0 /* LandingPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingPage.swift; sourceTree = "<group>"; };
 		0EC045B72AD76986009E44D0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0EC045BA2AD76986009E44D0 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		0EC045BC2AD76986009E44D0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -45,6 +49,8 @@
 		0EC045CC2AD76986009E44D0 /* CMU-XUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CMU-XUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0EC045D02AD76986009E44D0 /* CMU_XUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMU_XUITests.swift; sourceTree = "<group>"; };
 		0EC045D22AD76986009E44D0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0EC045E82AD86AC4009E44D0 /* SigninForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SigninForm.swift; sourceTree = "<group>"; };
+		0EC045EF2AD87F6B009E44D0 /* YoungSerif-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "YoungSerif-Regular.ttf"; path = "../../../../../Downloads/Young_Serif/YoungSerif-Regular.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,8 +101,13 @@
 		0EC045B22AD76984009E44D0 /* CMU-X */ = {
 			isa = PBXGroup;
 			children = (
+				0EC045EA2AD87F1A009E44D0 /* FontStyles */,
+				0EC045E52AD7A8CB009E44D0 /* Utilities */,
+				0EC045E42AD7A8B6009E44D0 /* Services */,
+				0EC045E32AD7A8A3009E44D0 /* ViewModels */,
+				0EC045E22AD7A89A009E44D0 /* Models */,
+				0EC045E02AD7A84A009E44D0 /* Views */,
 				0EC045B32AD76984009E44D0 /* CMU_XApp.swift */,
-				0EC045B52AD76984009E44D0 /* ContentView.swift */,
 				0EC045B72AD76986009E44D0 /* Assets.xcassets */,
 				0EC045BC2AD76986009E44D0 /* Info.plist */,
 				0EC045B92AD76986009E44D0 /* Preview Content */,
@@ -128,6 +139,68 @@
 				0EC045D22AD76986009E44D0 /* Info.plist */,
 			);
 			path = "CMU-XUITests";
+			sourceTree = "<group>";
+		};
+		0EC045E02AD7A84A009E44D0 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				0EC045E72AD7A8F4009E44D0 /* Screens */,
+				0EC045E62AD7A8DE009E44D0 /* Components */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		0EC045E22AD7A89A009E44D0 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		0EC045E32AD7A8A3009E44D0 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		0EC045E42AD7A8B6009E44D0 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		0EC045E52AD7A8CB009E44D0 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		0EC045E62AD7A8DE009E44D0 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				0EC045E82AD86AC4009E44D0 /* SigninForm.swift */,
+				0EA6C1572AD903FC00D8A4D1 /* AppIntroText.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		0EC045E72AD7A8F4009E44D0 /* Screens */ = {
+			isa = PBXGroup;
+			children = (
+				0EC045B52AD76984009E44D0 /* LandingPage.swift */,
+			);
+			path = Screens;
+			sourceTree = "<group>";
+		};
+		0EC045EA2AD87F1A009E44D0 /* FontStyles */ = {
+			isa = PBXGroup;
+			children = (
+				0EC045EF2AD87F6B009E44D0 /* YoungSerif-Regular.ttf */,
+			);
+			path = FontStyles;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -233,6 +306,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0EC045F02AD87F6B009E44D0 /* YoungSerif-Regular.ttf in Resources */,
 				0EC045BB2AD76986009E44D0 /* Preview Assets.xcassets in Resources */,
 				0EC045B82AD76986009E44D0 /* Assets.xcassets in Resources */,
 			);
@@ -259,8 +333,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0EC045B62AD76984009E44D0 /* ContentView.swift in Sources */,
+				0EC045B62AD76984009E44D0 /* LandingPage.swift in Sources */,
+				0EC045E92AD86AC4009E44D0 /* SigninForm.swift in Sources */,
 				0EC045B42AD76984009E44D0 /* CMU_XApp.swift in Sources */,
+				0EA6C1582AD903FC00D8A4D1 /* AppIntroText.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
