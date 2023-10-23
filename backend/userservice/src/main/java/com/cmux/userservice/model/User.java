@@ -1,7 +1,7 @@
-package main.java.com.cmux.userservice.model;
+package com.cmux.userservice.model;
 
 import lombok.Data;
-import javax.persistence;
+import javax.persistence.*;
 import javax.annotation.processing.Generated;
 
 

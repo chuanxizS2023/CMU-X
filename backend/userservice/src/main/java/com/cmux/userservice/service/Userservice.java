@@ -1,4 +1,4 @@
-package main.java.com.cmux.userservice.service;
+package com.cmux.userservice.service;
 
 import com.cmux.userservice.model.User;
 import com.cmux.userservice.repository.UserRepository;
@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserService {
+public class Userservice {
 
     @Autowired
     private UserRepository userRepository;

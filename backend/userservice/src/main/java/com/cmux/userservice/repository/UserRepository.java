@@ -1,6 +1,6 @@
-package main.java.com.cmux.userservice.repository;
+package com.cmux.userservice.repository;
 
-import main.java.com.cmux.userservice.model.User;
+import com.cmux.userservice.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
