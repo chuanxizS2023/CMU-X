@@ -1,4 +1,5 @@
-<img width="100" alt="cmux_logo" src="https://github.com/chuanxizS2023/CMU-X/assets/123205746/04bfc7ec-f829-4735-8fbd-539ff7210945"> # CMU-X 
+<img width="100" alt="cmux_logo" src="https://github.com/chuanxizS2023/CMU-X/assets/123205746/04bfc7ec-f829-4735-8fbd-539ff7210945"> 
+# CMU-X 
 
 
 CMU-X drawing inspiration from the popular microblogging service, Twitter. It provides a space for students, faculty, and alumni to connect, share thoughts, and engage in real-time discussions in a concise and convenient manner.
