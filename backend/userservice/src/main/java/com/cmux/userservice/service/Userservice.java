@@ -12,7 +12,6 @@ public class UserService {
     private UserRepository userRepository;
 
     public User register(User user) {
-        // TODO: implement registration logic
         // Hash the password before saving
         return userRepository.save(user);
     }
@@ -21,5 +20,4 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
-    // other service methods
 }
