@@ -1,0 +1,46 @@
+version: '3'
+services:
+  reward-app:
+    container_name: sda-reward-backend
+    image: sda-reward-backend
+    build:
+      context: ./backend/reward
+      dockerfile: Dockerfile-reward
+    environment:
+      - DB_HOST=user-credit
+      # - HBASE_HOST=credit-history
+    ports:
+      - 8080:8080
+    depends_on:
+      - reward-db
+      # - reward-hbase
+    networks:
+      - reward
+
+  reward-db:
+    container_name: user-credit
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 'password'
+      MYSQL_DATABASE: 'sda-reward'
+      MYSQL_USER: 'reward'
+      MYSQL_PASSWORD: 'password'
+    ports:
+      - 3306:3306
+    networks:
+      - reward
+
+  reward-hbase:
+    container_name: credit-history
+    restart: always
+    image: harisekhon/hbase
+    ports:
+      - 16010:16010
+      - 9090:9090
+    networks:
+      - reward
+
+networks:
+  reward: 
+    driver: bridge
