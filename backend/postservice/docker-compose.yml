@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  myPostServiceDB:
+    image: mysql:8.1.0
+    container_name: mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: zhangzcx1999
+      MYSQL_DATABASE: myPostServiceDB
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql 
+
+  postservice:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: postservice
+    ports:
+      - "9000:9000"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://userServiceDB:3307/myPostServiceDB
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: zhangzcx1999
+    depends_on:
+      - myPostServiceDB
+
+volumes:
+  mysql-data:
