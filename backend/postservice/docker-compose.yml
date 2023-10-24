@@ -20,7 +20,7 @@ services:
     ports:
       - "9000:9000"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3307/myPostServiceDB
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/myPostServiceDB
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: zhangzcx1999
     depends_on:

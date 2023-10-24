@@ -1,12 +1,19 @@
 FROM openjdk:17-jdk-slim
 
-RUN apt-get update && apt-get install -y maven
+# Install necessary utilities
+RUN apt-get update && apt-get install -y maven netcat
+
+# Set the working directory in the container
 WORKDIR /app
 
+# Copy local files to the container
 COPY . /app/
-WORKDIR /app
+
+# Build the application
 RUN mvn clean install -DskipTests
 
+# Expose the port the app runs on
 EXPOSE 9000
 
-CMD ["java", "-jar", "target/postservice-0.0.1-SNAPSHOT.jar"]
+# Command to run the application
+CMD ["./wait-for-it.sh"]
