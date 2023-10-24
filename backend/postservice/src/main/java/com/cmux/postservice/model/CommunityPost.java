@@ -1,7 +1,7 @@
 package com.cmux.postservice.model;
 
 import lombok.Data;
-import jakarta.persistence.*;
+import javax.persistence.*;
 
 @Data
 @Entity
