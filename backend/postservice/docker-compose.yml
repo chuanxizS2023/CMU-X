@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  myPostServiceDB:
+  mysql:
     image: mysql:8.1.0
     container_name: mysql-container
     environment:
@@ -20,11 +20,11 @@ services:
     ports:
       - "9000:9000"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://userServiceDB:3307/myPostServiceDB
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3307/myPostServiceDB
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: zhangzcx1999
     depends_on:
-      - myPostServiceDB
+      - mysql
 
 volumes:
   mysql-data:
