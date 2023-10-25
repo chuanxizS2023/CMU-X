@@ -10,6 +10,12 @@ public class CommunityPostController {
 
     @GetMapping("/communitypost")
     public String getCommunityPost() {
-        return "Here display the community post";
+        System.out.println("Here display the community2312312 ");
+        return "Here display the community ";
+    }
+
+    @GetMapping("/c")
+    public String getCommunityPost2() {
+        return "Here display newsssst";
     }
 }
