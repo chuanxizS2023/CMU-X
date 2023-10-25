@@ -5,13 +5,13 @@ import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 
 @Node(labels = {"Student"})
-public class Student {
+public class User {
 
 	@Id
 	@GeneratedValue
 	private Long id;
 
-    private Long studentid;
+    private Long CMUid;
 
 	private String name;
 
@@ -19,12 +19,12 @@ public class Student {
 		return id;
 	}
 
-    public Long getStudentid() {
-        return studentid;
+    public Long getCMUid() {
+        return CMUid;
     }
 
-    public void setStudentid(Long studentid) {
-        this.studentid = studentid;
+    public void setCMUid(Long CMUid) {
+        this.CMUid = CMUid;
     }
 
 	public void setId(Long id) {
