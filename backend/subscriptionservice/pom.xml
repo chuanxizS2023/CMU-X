@@ -48,8 +48,13 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.0</version> <!-- update this to 3.8.0 or above -->
+				<configuration>
+					<source>17</source> <!-- specify Java version here -->
+					<target>17</target> <!-- specify Java version here -->
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

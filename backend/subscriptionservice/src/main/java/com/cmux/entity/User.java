@@ -4,7 +4,7 @@ import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 
-@Node(labels = {"Student"})
+@Node(labels = {"User"})
 public class User {
 
 	@Id
