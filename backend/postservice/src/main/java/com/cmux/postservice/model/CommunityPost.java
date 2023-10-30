@@ -1,5 +1,6 @@
 package com.cmux.postservice.model;
 
+import java.util.List;
 import lombok.Data;
 import java.util.Date;
 import jakarta.persistence.*;
@@ -19,5 +20,13 @@ public class CommunityPost {
 
     private String title;
     private String content;
-    private Date created;
+    private Date created_Date;
+    // foreign key from user table
+    private String author_id;
+    private long likes;
+    private int commentsCount;
+    private boolean is_published;
+    @OneToMany(mappedBy = "communityPostid", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Comment> comments;
+
 }

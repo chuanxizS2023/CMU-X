@@ -15,11 +15,11 @@ public class Comment {
     private long commentid;
 
     private String content;
-    private Date created;
+    private Date created_Date;
     private String author_id;
     private long likes;
     
     @ManyToOne
     @JoinColumn(name = "communityPostid")
-    private CommunityPost post;
+    private CommunityPost communityPostid;
 }
