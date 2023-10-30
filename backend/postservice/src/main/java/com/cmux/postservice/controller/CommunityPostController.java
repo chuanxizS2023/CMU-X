@@ -35,14 +35,16 @@ public class CommunityPostController {
         return communityPostService.savePost(post);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{communityPostid}")
     public Optional<CommunityPost> getPostById(@PathVariable long communityPostid){
         return communityPostService.getPostById(communityPostid);
     }
 
+    @GetMapping("/post/{id}")
     public Optional<CommunityPost> getPost(@PathVariable Long id) {
         Optional<CommunityPost> post = communityPostService.getPostById(id);
         logger.info("Retrieved post: " + post);
+        System.out.println("Retrieved post: " + post);
         return post;
     }
 }
