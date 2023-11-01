@@ -26,7 +26,7 @@ public class CommunityPost {
     private long likes;
     private int commentsCount;
     private boolean is_published;
-    @OneToMany(mappedBy = "communityPostid", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "communityPost", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Comment> comments;
 
 }

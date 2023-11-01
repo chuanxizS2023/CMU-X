@@ -2,7 +2,7 @@ package com.cmux.postservice.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-
+import com.cmux.postservice.model.CommunityPost;
 import java.util.Date;
 
 @Getter
@@ -14,4 +14,5 @@ public class CommentDTO {
     private Date created_Date;
     private String author_id;
     private long likes;
+    private long communityPostid;
 }

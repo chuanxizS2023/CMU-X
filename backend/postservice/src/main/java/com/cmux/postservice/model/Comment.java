@@ -21,5 +21,5 @@ public class Comment {
     
     @ManyToOne
     @JoinColumn(name = "communityPostid")
-    private CommunityPost communityPostid;
+    private CommunityPost communityPost;
 }
