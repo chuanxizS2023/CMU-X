@@ -2,7 +2,15 @@ package com.cmux.postservice.dto;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.ArrayList;
+import com.cmux.postservice.model.Comment;
+import com.cmux.postservice.dto.CommentDTO;
+import com.cmux.postservice.model.CommunityPost;
+import com.cmux.postservice.service.CommentService;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,4 +27,9 @@ public class CommunityPostDTO {
     private int commentsCount;
     private boolean is_published;
     private List<CommentDTO> comments;
+
+    
+
+
+    
 }
