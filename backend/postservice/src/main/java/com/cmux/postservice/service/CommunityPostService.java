@@ -1,10 +1,10 @@
 package com.cmux.postservice.service;
 
-import com.cmux.postservice.model.Comment;
-import com.cmux.postservice.dto.CommentDTO;
+import java.util.NoSuchElementException;
 import com.cmux.postservice.dto.CommunityPostDTO;
 import com.cmux.postservice.model.CommunityPost;
 import com.cmux.postservice.repository.CommunityPostRepository;
+import com.cmux.postservice.converter.CommunityPostConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,19 +18,25 @@ public class CommunityPostService {
     private CommunityPostRepository communityPostRepository;
 
     @Autowired
-    private CommentService commentService;
+    private CommunityPostConverter communityPostConverter;
 
     public CommunityPostDTO savePost(CommunityPostDTO communityPostDTO) {
-        CommunityPost communityPost = convertToEntity(communityPostDTO);
+        CommunityPost communityPost = communityPostConverter.convertToEntity(communityPostDTO);
 
         communityPost = communityPostRepository.save(communityPost);
-        return convertToDTO(communityPost);
+        return communityPostConverter.convertToDTO(communityPost);
     }
 
     @Transactional
     public Optional<CommunityPostDTO> getPostById(long id) {
         Optional<CommunityPost> post = communityPostRepository.findById(id);
-        return post.map(this::convertToDTO);
+        if (post.isPresent()) {
+            CommunityPostDTO communityPostDTO = communityPostConverter.convertToDTO(post.get());
+            return Optional.of(communityPostDTO);
+        } else {
+            throw new NoSuchElementException("Post not found for id: " + id);
+        }
+
     }
     
 
@@ -38,34 +44,34 @@ public class CommunityPostService {
     //     All business logic, including entity-to-DTO conversions, is centralized in the service layer. This ensures that controllers remain lean and focused solely on handling requests and responses.
     // Consistency: If there are other operations or logic needed during the conversion (e.g., fetching related entities, handling exceptions), having it in the service layer ensures consistent behavior.
     // Encapsulation: The service layer can hide the details of the conversion, providing a cleaner interface to the controller.
-    public CommunityPostDTO convertToDTO(CommunityPost communityPost){
-        CommunityPostDTO dto = new CommunityPostDTO();
-        dto.setCommunityPostid(communityPost.getCommunityPostid());
-        dto.setTitle(communityPost.getTitle());
-        dto.setContent(communityPost.getContent());
-        dto.setCreated_Date(communityPost.getCreated_Date());
-        dto.setAuthor_id(communityPost.getAuthor_id());
-        dto.setLikes(communityPost.getLikes());
-        dto.setCommentsCount(communityPost.getCommentsCount());
-        if(communityPost.getComments() != null) {
-            dto.setComments(communityPost.getComments().stream()
-                .map(commentService::convertEntityToDTO)
-                .collect(Collectors.toList()));
-        }
-        return dto;
-    }
+    // public CommunityPostDTO convertToDTO(CommunityPost communityPost){
+    //     CommunityPostDTO dto = new CommunityPostDTO();
+    //     dto.setCommunityPostid(communityPost.getCommunityPostid());
+    //     dto.setTitle(communityPost.getTitle());
+    //     dto.setContent(communityPost.getContent());
+    //     dto.setCreated_Date(communityPost.getCreated_Date());
+    //     dto.setAuthor_id(communityPost.getAuthor_id());
+    //     dto.setLikes(communityPost.getLikes());
+    //     dto.setCommentsCount(communityPost.getCommentsCount());
+    //     if(communityPost.getComments() != null) {
+    //         dto.setComments(communityPost.getComments().stream()
+    //             .map(commentService::convertEntityToDTO)
+    //             .collect(Collectors.toList()));
+    //     }
+    //     return dto;
+    // }
 
 
-    public CommunityPost convertToEntity(CommunityPostDTO communityPostDTO) {
-        CommunityPost communityPost = new CommunityPost();
-        communityPost.setTitle(communityPostDTO.getTitle());
-        communityPost.setContent(communityPostDTO.getContent());
-        communityPost.setCreated_Date(communityPostDTO.getCreated_Date());
-        communityPost.setAuthor_id(communityPostDTO.getAuthor_id());
-        communityPost.setLikes(communityPostDTO.getLikes());
-        communityPost.setCommentsCount(communityPostDTO.getCommentsCount());
-        // Do not set comments here to avoid cyclic dependency
-        return communityPost;
-    }
+    // public CommunityPost convertToEntity(CommunityPostDTO communityPostDTO) {
+    //     CommunityPost communityPost = new CommunityPost();
+    //     communityPost.setTitle(communityPostDTO.getTitle());
+    //     communityPost.setContent(communityPostDTO.getContent());
+    //     communityPost.setCreated_Date(communityPostDTO.getCreated_Date());
+    //     communityPost.setAuthor_id(communityPostDTO.getAuthor_id());
+    //     communityPost.setLikes(communityPostDTO.getLikes());
+    //     communityPost.setCommentsCount(communityPostDTO.getCommentsCount());
+    //     // Do not set comments here to avoid cyclic dependency
+    //     return communityPost;
+    // }
     
 }

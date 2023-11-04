@@ -4,7 +4,8 @@ import org.springframework.stereotype.Service;
 import com.cmux.postservice.model.Comment;
 import com.cmux.postservice.model.CommunityPost;
 import com.cmux.postservice.dto.CommentDTO;
-import com.cmux.postservice.dto.CommunityPostDTO;
+import java.util.NoSuchElementException;
+import com.cmux.postservice.converter.CommentConverter;
 import com.cmux.postservice.repository.CommentRepository;
 
 import jakarta.transaction.Transactional;
@@ -18,53 +19,29 @@ public class CommentService {
     @Autowired
     private CommentRepository commentRepository;
 
+    // @Autowired
+    // CommunityPostService communityPostService = new CommunityPostService();
     @Autowired
-    CommunityPostService communityPostService = new CommunityPostService();
-
+    private CommentConverter commentConverter;
 
     public CommentDTO saveComment(CommentDTO commentdto){
-        Comment comment = convertDTOToEntity(commentdto);
+        Comment comment = commentConverter.convertDTOToEntity(commentdto);
         
         commentRepository.save(comment);
 
-        return convertEntityToDTO(comment);
+        return commentConverter.convertEntityToDTO(comment);
     }
 
     @Transactional
     public Optional<CommentDTO> getCommentById(long commentid){
         Optional<Comment> comment = commentRepository.findById(commentid);
-        
-        return comment.map(this::convertEntityToDTO);
-    }
-
-    public CommentDTO convertEntityToDTO(Comment comment){
-        CommentDTO dto = new CommentDTO();
-        dto.setCommentid(comment.getCommentid());
-        dto.setContent(comment.getContent());
-        dto.setCreated_Date(comment.getCreated_Date());
-        dto.setAuthor_id(comment.getAuthor_id());
-        dto.setLikes(comment.getLikes());
-        return dto;
-    }
-
-    public Comment convertDTOToEntity(CommentDTO commentdto){
-        Comment comment = new Comment();
-
-        comment.setCommentid(commentdto.getCommentid());
-        comment.setContent(commentdto.getContent());
-        comment.setCreated_Date(commentdto.getCreated_Date());
-        comment.setAuthor_id(commentdto.getAuthor_id());
-        comment.setLikes(commentdto.getLikes());
-        Optional<CommunityPostDTO> communityPostDTOOptional = communityPostService.getPostById(commentdto.getCommunityPostid());
-        if (communityPostDTOOptional.isPresent()) {
-            CommunityPost communityPost = communityPostService.convertToEntity(communityPostDTOOptional.get());
-            comment.setCommunityPost(communityPost);
-        } else {
-            // Handle the case when the community post is not found
-            // For example, throw an exception or return a specific error response
-            throw new RuntimeException("Community post not found");
+        if (comment.isPresent()) {
+            CommentDTO commentdto = commentConverter.convertEntityToDTO(comment.get());
+            return Optional.of(commentdto);
+        }else {
+            throw new NoSuchElementException("Comment not found for id: " + commentid);
         }
-
-        return comment;
     }
+
+
 }
