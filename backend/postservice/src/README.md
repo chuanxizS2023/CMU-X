@@ -9,4 +9,10 @@
 
 ## Mysql port 3307
 
-## Elasticsearch port 3308
+## Elasticsearch port 9200
+
+## Run "Kibana" for elasticsearch visualization
+`cd D:\Program Files (x86)\kibana-8.10.4\bin>`
+`unix: ./kibana`
+`window kibana.bat`
+## Then use web browser localhost:5601 to visualize

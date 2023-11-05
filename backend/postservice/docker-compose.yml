@@ -23,6 +23,10 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/myPostServiceDB
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: zhangzcx1999
+      ELASTICSEARCH_HOST: elasticsearch
+      ELASTICSEARCH_PORT: 9200
+      ELASTICSEARCH_USERNAME: elastic
+      ELASTICSEARCH_PASSWORD: 2JeXn31HFDxoD3iMkX5v
     volumes:
       - .:/app
     restart: always
@@ -34,12 +38,13 @@ services:
       environment:
         - discovery.type=single-node
         - ES_JAVA_OPTS=-Xmx512m -Xms512m
+        - "ELASTIC_PASSWORD=2JeXn31HFDxoD3iMkX5v"
       ulimits:
         memlock:
           soft: -1
           hard: -1
       ports:
-        - "3308:9200" 
+        - "9200:9200" 
       volumes:
         - elasticsearch-data:/usr/share/elasticsearch/data
       depends_on:
