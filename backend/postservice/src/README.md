@@ -6,3 +6,7 @@
 ## ensure the wait-for-it.sh can be run by using command `"chmod +x wait-for-it.sh"`
 
 ## Port number 9000
+
+## Mysql port 3307
+
+## Elasticsearch port 3308
