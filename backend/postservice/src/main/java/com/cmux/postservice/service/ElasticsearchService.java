@@ -60,7 +60,7 @@ public class ElasticsearchService {
                 .id(String.valueOf(post.getCommunityPostid()))
                 .document(post)
             );
-            
+            System.out.println("ElasticsearchService: indexPost: indexed post");
         } catch (Exception e) {
             // Handle the exception
             throw new IndexingException("Cannot index post: " + e.getMessage(), e);        }

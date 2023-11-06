@@ -3,7 +3,7 @@ package com.cmux.postservice.service;
 import java.util.NoSuchElementException;
 import com.cmux.postservice.dto.CommunityPostDTO;
 import com.cmux.postservice.model.CommunityPost;
-import com.cmux.postservice.model.PostCreatedEvent;
+import com.cmux.postservice.model.PostEvents;
 import com.cmux.postservice.repository.CommunityPostRepository;
 import com.cmux.postservice.converter.CommunityPostConverter;
 import org.springframework.context.ApplicationEventPublisher;
@@ -36,8 +36,8 @@ public class CommunityPostService {
 
         // after save to mysql, publish event for elastic search
 
-        publisher.publishEvent(new PostCreatedEvent(communityPost));
-        System.out.println("CommunityPostService: savePost: published event");
+        publisher.publishEvent(new PostEvents.Created(communityPost));
+
         return communityPostConverter.convertToDTO(communityPost);
     }
 

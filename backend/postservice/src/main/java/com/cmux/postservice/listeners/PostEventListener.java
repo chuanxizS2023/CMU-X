@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import com.cmux.postservice.service.ElasticsearchService;
-import com.cmux.postservice.model.PostCreatedEvent;
+import com.cmux.postservice.model.PostEvents;
 
 @Component
 public class PostEventListener {
@@ -17,7 +17,7 @@ public class PostEventListener {
     // }
 
     @EventListener
-    public void onPostCreated(PostCreatedEvent event) {
+    public void onPostCreated(PostEvents.Created event) {
         elasticsearchService.indexPost(event.getCommunityPost());
     }
 
