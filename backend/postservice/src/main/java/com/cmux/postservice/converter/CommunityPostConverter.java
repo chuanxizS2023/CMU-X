@@ -64,4 +64,26 @@ public class CommunityPostConverter {
 
         return communityPost;
     }
+
+
+    public CommunityPost updateEntityWithDTO(CommunityPost existingPost, CommunityPostDTO updatePostDTO){
+        CommunityPost updatePost = this.convertToEntity(updatePostDTO);
+
+        existingPost.setTitle(updatePost.getTitle());
+        existingPost.setContent(updatePost.getContent());
+        existingPost.setCreated_Date(updatePost.getCreated_Date());
+        existingPost.setAuthor_id(updatePost.getAuthor_id());
+        existingPost.setLikes(updatePost.getLikes());
+        existingPost.setCommentsCount(updatePost.getCommentsCount());
+        existingPost.set_published(updatePost.is_published());
+        // set comments
+        if(updatePost.getComments() != null) {
+            ArrayList<Comment> commentList = new ArrayList<Comment>();
+            for (int i = 0; i < updatePost.getComments().size(); i++) {
+                commentList.add(updatePost.getComments().get(i));
+            }
+            existingPost.setComments(commentList); 
+        }   
+        return existingPost;
+    }
 }

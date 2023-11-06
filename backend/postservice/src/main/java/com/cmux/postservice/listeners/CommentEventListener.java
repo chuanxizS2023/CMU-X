@@ -3,22 +3,30 @@ package com.cmux.postservice.listeners;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-import com.cmux.postservice.service.ElasticsearchService;
 import com.cmux.postservice.model.CommentEvents;
+import com.cmux.postservice.service.CommentService;
 
 @Component
 public class CommentEventListener {
     
     @Autowired
-    private ElasticsearchService elasticsearchService;
-
+    private CommentService commentService;
+    private final String index = "comment";
     // public PostEventListener(ElasticsearchService elasticsearchService) {
     //     this.elasticsearchService = elasticsearchService;
     // }
 
     @EventListener
-    public void onPostCreated(CommentEvents.Created event) {
-        elasticsearchService.indexComment(event.getComment());
+    public void onCommentCreated(CommentEvents.Created event) {
+        String id = String.valueOf(event.getComment().getCommentid());
+
+        commentService.index(this.index, id, event.getComment());
+
+        System.out.println("Comment indexed");
     }
 
+    // @EventListener
+    // public void onCommentUpdated(CommentEvents.Updated event) {
+    //     elasticsearchService.updateComment(event.getComment());
+    // }
 }

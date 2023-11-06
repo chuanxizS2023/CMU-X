@@ -3,10 +3,13 @@ package com.cmux.postservice.controller;
 import com.cmux.postservice.dto.CommunityPostDTO;
 import com.cmux.postservice.service.CommunityPostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.nio.file.AccessDeniedException;
 import java.util.NoSuchElementException;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 
 @RestController
 @RequestMapping("/community")
@@ -17,8 +20,7 @@ public class CommunityPostController {
 
     @PostMapping
     public CommunityPostDTO createPost(@RequestBody CommunityPostDTO postDTO) {
-        // Here you should throw AccessDeniedException if access is denied
-        // For example: if(!hasAccess()) throw new AccessDeniedException("Access Denied");
+        
         return communityPostService.savePost(postDTO);
     }
 
@@ -28,9 +30,31 @@ public class CommunityPostController {
                 .orElseThrow(() -> new NoSuchElementException("Post not found with id: " + communityPostid));
     }
 
-    @GetMapping("/posts/{id}")
-    public CommunityPostDTO getPost(@PathVariable Long id) {
-        return communityPostService.getPostById(id)
-                .orElseThrow(() -> new NoSuchElementException("Post not found with id: " + id));
+    @DeleteMapping("/{communityPostId}")
+    public ResponseEntity<?> deletePost(@PathVariable long communityPostId) {
+        try {
+            communityPostService.deletePostById(communityPostId);
+            return new ResponseEntity<>("Post deleted successfully", HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error deleting post", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/{communityPostId}")
+    public ResponseEntity<?> updatePost(@PathVariable long communityPostId, @RequestBody CommunityPostDTO postDTO) {
+        try {
+            CommunityPostDTO updatedPost = communityPostService.updatePost(communityPostId, postDTO);
+            return new ResponseEntity<>(updatedPost, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+        // } catch (AccessDeniedException e) {
+        //     return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        // } 
+        catch (Exception e) {
+            return new ResponseEntity<>("Error updating post", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
