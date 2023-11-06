@@ -20,7 +20,24 @@ public class PostEventListener {
 
     @EventListener
     public void onPostCreated(PostEvents.Created event) {
+        String postID = String.valueOf(event.getCommunityPost().getCommunityPostid());
+
+        communityPostService.index(this.id, postID, event.getCommunityPost());
+    }
+
+    @EventListener
+    public void onPostUpdated(PostEvents.Updated event) {
+        String postID = String.valueOf(event.getCommunityPost().getCommunityPostid());
+
         communityPostService.index(this.id,String.valueOf(event.getCommunityPost().getCommunityPostid()), event.getCommunityPost());
+
+    }
+
+    @EventListener
+    public void onPostDeleted(PostEvents.Deleted event) {
+        String postID = String.valueOf(event.getPostId());
+
+        communityPostService.deleteIndex(this.id, postID);
     }
 
     // @EventListener

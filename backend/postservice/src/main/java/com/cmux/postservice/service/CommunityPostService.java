@@ -106,4 +106,13 @@ public class CommunityPostService extends AbstractESService<CommunityPost> {
             // Handle the exception
             throw new IndexingException("Cannot index post: " + e.getMessage(), e);        }
     }
+
+    @Override
+    public void deleteIndex(String index, String id){
+        super.deleteIndex(index, id);
+
+        System.out.println("Communitypost: delete index: " + id);
+    }
+
+     
 }

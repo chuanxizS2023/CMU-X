@@ -21,4 +21,13 @@ public abstract class AbstractESService<T> {
         }
     }
 
+    public void deleteIndex(String index, String id) {
+        try {
+            elasticsearchClient.delete(d -> d.index(index).id(id));
+            System.out.println(getClass().getSimpleName() + ": deleteIndex: deleted document with id " + id);
+        } catch (Exception e) {
+            throw new IndexingException("Cannot delete document: " + e.getMessage(), e);
+        }
+    }
+    
 }
