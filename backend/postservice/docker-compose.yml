@@ -32,24 +32,37 @@ services:
     restart: always
     depends_on:
       - mysql
+      - elasticsearch
+
   elasticsearch:
-      image: docker.elastic.co/elasticsearch/elasticsearch:8.10.4
-      container_name: elasticsearch-container
-      environment:
-        - discovery.type=single-node
-        - ES_JAVA_OPTS=-Xmx512m -Xms512m
-        - "ELASTIC_PASSWORD=2JeXn31HFDxoD3iMkX5v"
-      ulimits:
-        memlock:
-          soft: -1
-          hard: -1
-      ports:
-        - "9200:9200" 
-      volumes:
-        - elasticsearch-data:/usr/share/elasticsearch/data
-      depends_on:
-        - mysql      
-      
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.4
+    container_name: elasticsearch-container
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xmx512m -Xms512m
+      - "ELASTIC_PASSWORD=2JeXn31HFDxoD3iMkX5v"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "9200:9200" 
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.1.0
+    container_name: kibana
+    environment:
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+      ELASTICSEARCH_USERNAME: elastic
+      ELASTICSEARCH_PASSWORD: 2JeXn31HFDxoD3iMkX5v
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+
 volumes:
   mysql-data:
   elasticsearch-data:
+
