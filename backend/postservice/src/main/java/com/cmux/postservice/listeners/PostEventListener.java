@@ -3,6 +3,8 @@ package com.cmux.postservice.listeners;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+
+import com.cmux.postservice.service.CommentService;
 import com.cmux.postservice.service.CommunityPostService;
 // import com.cmux.postservice.service.ElasticsearchService;
 import com.cmux.postservice.model.PostEvents;
@@ -13,6 +15,8 @@ public class PostEventListener {
     @Autowired
     private CommunityPostService communityPostService;
 
+    @Autowired
+    private CommentService commentService;
     private final String id = "communitypost";
     // public PostEventListener(ElasticsearchService elasticsearchService) {
     //     this.elasticsearchService = elasticsearchService;
@@ -23,6 +27,8 @@ public class PostEventListener {
         String postID = String.valueOf(event.getCommunityPost().getCommunityPostid());
 
         communityPostService.index(this.id, postID, event.getCommunityPost());
+    
+        System.out.println("PostEventListener: onPostCreated: indexed document with id " + postID);
     }
 
     @EventListener
@@ -37,7 +43,9 @@ public class PostEventListener {
     public void onPostDeleted(PostEvents.Deleted event) {
         String postID = String.valueOf(event.getPostId());
 
-        communityPostService.deleteIndex(this.id, postID);
+        commentService.deleteIndex(this.id, postID);
+
+        System.out.println("PostEventListener: onPostDeleted: deleted document with id " + postID);
     }
 
     // @EventListener

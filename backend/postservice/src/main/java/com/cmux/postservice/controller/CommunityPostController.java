@@ -46,6 +46,7 @@ public class CommunityPostController {
     public ResponseEntity<?> updatePost(@PathVariable long communityPostId, @RequestBody CommunityPostDTO postDTO) {
         try {
             CommunityPostDTO updatedPost = communityPostService.updatePost(communityPostId, postDTO);
+            System.out.println("updatedPost controller");
             return new ResponseEntity<>(updatedPost, HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -54,7 +55,8 @@ public class CommunityPostController {
         //     return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         // } 
         catch (Exception e) {
-            return new ResponseEntity<>("Error updating post", HttpStatus.INTERNAL_SERVER_ERROR);
+            e.printStackTrace();
+            return new ResponseEntity<>("Error updating post" + e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
