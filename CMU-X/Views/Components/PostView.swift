@@ -1,3 +1,5 @@
+import SwiftUI
+
 struct PostView: View {
     var post: Post
 
@@ -55,6 +57,6 @@ struct PostView: View {
 
 struct PostView_Previews: PreviewProvider {
     static var previews: some View {
-        PostView(post: Post(username: "Username", content: "I love Professor Cecile and her classes. Feel like she has put so much effort on designing these courses. And I got A on her FSE. It was such an unforgettable experience with her and Professor Hakan. I really enjoy taking FSE with them. Hope you all had a great time!", timestamp: "3h"))
+        PostView(post: Post(id: "1", username: "username1", content: "I love Professor Cecile and her classes. Feel like she has put so much effort on designing these courses. And I got A on her FSE. It was such an unforgettable experience with her and Professor Hakan. I really enjoy taking FSE with them. Hope you all had a great time!", timestamp: "3h", likes: 1, comments: 10))
     }
 }
