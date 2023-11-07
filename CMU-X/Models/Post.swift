@@ -3,9 +3,10 @@
 import Foundation
 
 struct Post: Identifiable {
-    let id = UUID()
+    let id: String
     let username: String
     let content: String
-    let timestamp: String // For simplicity, let's keep it as a String
-    // You would have other properties like userImage, likes, comments etc.
+    let timestamp: String
+    var likes: Int // Added property for likes count
+    var comments: Int // Added property for comments count
 }
