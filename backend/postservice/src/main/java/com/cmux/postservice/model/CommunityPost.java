@@ -1,6 +1,9 @@
 package com.cmux.postservice.model;
 
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import lombok.Data;
 import java.util.Date;
 import jakarta.persistence.*;
@@ -26,7 +29,8 @@ public class CommunityPost {
     private long likes;
     private int commentsCount;
     private boolean is_published;
-    @OneToMany(mappedBy = "communityPost", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "communityPost", cascade = CascadeType.ALL, fetch = FetchType.LAZY) // Changed to LAZY to prevent immediate fetching
+    @JsonManagedReference // This annotation is used to overcome the recursion problem.
     private List<Comment> comments;
 
 }

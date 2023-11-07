@@ -2,6 +2,9 @@ package com.cmux.postservice.model;
 
 import lombok.Data;
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 
 
@@ -19,7 +22,8 @@ public class Comment {
     private String author_id;
     private long likes;
     
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY) // Changed to LAZY to prevent immediate fetching
     @JoinColumn(name = "communityPostid")
+    @JsonBackReference // This annotation will prevent the serialization of the referenced CommunityPost to avoid recursion.
     private CommunityPost communityPost;
 }
