@@ -25,6 +25,23 @@ public class CommentEventListener {
         System.out.println("Comment indexed");
     }
 
+    @EventListener 
+    public void onCommentDeleted(CommentEvents.Deleted event){
+        String id = String.valueOf(event.getCommentId());
+
+        commentService.deleteIndex(this.index, id);
+
+        System.out.println("Comment deleted");
+    }
+
+    @EventListener
+    public void onCommentUpdated(CommentEvents.Updated event){
+        String id = String.valueOf(event.getComment().getCommentid());
+
+        commentService.index(this.index, id, event.getComment());
+
+        System.out.println("Comment updated");
+    }
     // @EventListener
     // public void onCommentUpdated(CommentEvents.Updated event) {
     //     elasticsearchService.updateComment(event.getComment());

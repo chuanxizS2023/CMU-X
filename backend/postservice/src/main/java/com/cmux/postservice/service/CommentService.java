@@ -53,5 +53,43 @@ public class CommentService extends AbstractESService<Comment> {
         }
     }
 
+    public void deleteCommentById(long commentid){
+        Optional<Comment> comment = commentRepository.findById(commentid);
+        if (comment.isPresent()) {
+            commentRepository.deleteById(commentid);
+            this.publisher.publishEvent(new CommentEvents.Deleted(commentid));
+            System.out.println("CommentService: deleteCommentById: deleted comment with id " + commentid);
+        }else {
+            throw new NoSuchElementException("Comment not found for id: " + commentid);
+        }
+    }
+
+    @Transactional
+    public CommentDTO updateComment(long commentid, CommentDTO commentdto){
+        Comment existComment = commentRepository.findById(commentid)
+            .orElseThrow(()->new NoSuchElementException());
+        
+        existComment = commentConverter.updateEntityWithDTO(existComment, commentdto);
+
+        Comment updateComment = commentRepository.save(existComment);
+
+        return commentConverter.convertEntityToDTO(updateComment);
+    }
+
+
+    @Override
+    public void index(String index, String id, Comment comment) {
+        super.index(index, id, comment);
+
+        System.out.println("CommentService: index: indexed comment with id " + id);
+    }
+
+    @Override
+    public void deleteIndex(String index, String id) {
+        super.deleteIndex(index, id);
+
+        System.out.println("CommentService: deleteIndex: deleted comment with id " + id);
+    }
+
 
 }

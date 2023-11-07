@@ -31,8 +31,6 @@ public class CommentConverter {
         if (communityPost.isPresent()) {
             comment.setCommunityPost(communityPost.get());
         } else {
-            // Handle the case when the community post is not found
-            // For example, throw an exception or return a specific error response
             throw new NoSuchElementException("Community post not found for this id");
         }
 
@@ -48,5 +46,20 @@ public class CommentConverter {
         dto.setLikes(comment.getLikes());
         dto.setCommunityPostid(comment.getCommunityPost().getCommunityPostid());
         return dto;
+    }
+
+    public Comment updateEntityWithDTO(Comment existingComment, CommentDTO commentDTO){
+        Comment comment = this.convertDTOToEntity(commentDTO);
+        existingComment.setContent(comment.getContent());
+        existingComment.setCreated_Date(comment.getCreated_Date());
+        existingComment.setAuthor_id(comment.getAuthor_id());
+        existingComment.setLikes(comment.getLikes());
+        CommunityPost communityPost = comment.getCommunityPost();
+        if (communityPost != null){
+            existingComment.setCommunityPost(communityPost);
+        }else{
+            throw new NoSuchElementException("Community post not found for this id");
+        }
+        return existingComment;
     }
 }
