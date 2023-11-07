@@ -1,7 +1,6 @@
 // CMU-X -> model -> Post.swift
 
 import Foundation
-
 struct Post: Identifiable {
     let id: String
     let username: String
@@ -10,3 +9,4 @@ struct Post: Identifiable {
     var likes: Int // Added property for likes count
     var comments: Int // Added property for comments count
 }
+

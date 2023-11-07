@@ -1,12 +1,8 @@
-// CMU-X -> view -> component -> PostView.swift
-
-import SwiftUI
-
 struct PostView: View {
     var post: Post
 
     var body: some View {
-        HStack(spacing: 10) {
+        HStack(alignment: .top, spacing: 10) {
             Image(systemName: "person.circle.fill") // Placeholder for the profile image
                 .resizable()
                 .scaledToFit()
@@ -26,8 +22,26 @@ struct PostView: View {
                     Text(post.timestamp)
                         .font(.subheadline)
                         .foregroundColor(.gray)
+
                     Spacer()
-                    // Add more icons or interactions here if needed.
+
+                    // Comment icon with count
+                    HStack(spacing: 2) {
+                        Image(systemName: "bubble.right")
+                            .resizable()
+                            .frame(width: 15, height: 15)
+                        Text("\(post.comments)")
+                            .font(.subheadline)
+                    }
+
+                    // Like icon with count
+                    HStack(spacing: 2) {
+                        Image(systemName: "heart")
+                            .resizable()
+                            .frame(width: 15, height: 15)
+                        Text("\(post.likes)")
+                            .font(.subheadline)
+                    }
                 }
             }
         }
@@ -37,6 +51,7 @@ struct PostView: View {
         .shadow(radius: 1)
     }
 }
+
 
 struct PostView_Previews: PreviewProvider {
     static var previews: some View {

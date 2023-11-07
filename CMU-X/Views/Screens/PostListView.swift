@@ -1,56 +1,19 @@
 import SwiftUI
 
-struct PostView: View {
-    var post: Post
+struct PostListView: View {
+    @State var posts = [
+        Post(username: "Harris Potter", content: "I love Professor Cecile and her classes...", timestamp: "14h"),Post(username: "Tom Dai", content: "Where is Hakan", timestamp: "14min")
+        // Add more dummy `Post` data as needed for the preview
+    ]
 
     var body: some View {
-        HStack(alignment: .top, spacing: 10) {
-            Image(systemName: "person.circle.fill") // Placeholder for the profile image
-                .resizable()
-                .scaledToFit()
-                .frame(width: 50, height: 50)
-                .clipShape(Circle())
-                .overlay(Circle().stroke(Color.gray, lineWidth: 1))
-
-            VStack(alignment: .leading, spacing: 4) {
-                Text(post.username)
-                    .fontWeight(.semibold)
-
-                Text(post.content)
-                    .font(.body)
-                    .lineLimit(4)
-
-                HStack {
-                    Text(post.timestamp)
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-
-                    Spacer()
-
-                    // Comment icon with count
-                    HStack(spacing: 2) {
-                        Image(systemName: "bubble.right")
-                            .resizable()
-                            .frame(width: 15, height: 15)
-                        Text("\(post.comments)")
-                            .font(.subheadline)
-                    }
-
-                    // Like icon with count
-                    HStack(spacing: 2) {
-                        Image(systemName: "heart")
-                            .resizable()
-                            .frame(width: 15, height: 15)
-                        Text("\(post.likes)")
-                            .font(.subheadline)
-                    }
-                }
+        NavigationView {
+            List(posts) { post in
+                PostView(post: post)
             }
+            .navigationTitle("Community Posts")
+            .listStyle(PlainListStyle()) // Use `PlainListStyle` for a cleaner look
         }
-        .padding()
-        .background(Color.white)
-        .cornerRadius(10)
-        .shadow(radius: 1)
     }
 }
 
@@ -59,5 +22,3 @@ struct PostListView_Previews: PreviewProvider {
         PostListView()
     }
 }
-
-
