@@ -37,6 +37,17 @@ public class CommunityPostConverter {
         }else{
             dto.setComments(null);
         }
+
+        dto.setFindTeammatePost(communityPost.isFindTeammatePost());
+        dto.setInstructorName(communityPost.getInstructorName());
+        dto.setCourseNumber(communityPost.getCourseNumber());
+        dto.setSemester(communityPost.getSemester());
+        if (communityPost.getTeamMembers() == null) {
+            dto.setTeamMembers(null);
+        } else{
+            dto.setTeamMembers(communityPost.getTeamMembers().toString());
+        }
+
         return dto;
     }
 

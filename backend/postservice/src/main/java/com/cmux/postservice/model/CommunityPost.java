@@ -33,4 +33,11 @@ public class CommunityPost {
     @JsonManagedReference // This annotation is used to overcome the recursion problem.
     private List<Comment> comments;
 
+    // For find teammate post
+    private boolean isFindTeammatePost;
+    private String instructorName;
+    private String courseNumber;
+    private String semester;
+    private List<String> teamMembers;
+
 }

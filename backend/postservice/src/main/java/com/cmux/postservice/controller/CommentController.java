@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 
 
 @RestController
-@RequestMapping("/community/comments")
+@RequestMapping("/comments")
 
 public class CommentController {
     

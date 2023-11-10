@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
+import java.util.List;
+import java.util.ArrayList;
 
 @Service
 public class CommunityPostService extends AbstractESService<CommunityPost> {
@@ -100,6 +102,27 @@ public class CommunityPostService extends AbstractESService<CommunityPost> {
         return communityPostConverter.convertToDTO(updatedPost);
     }
 
+    @Transactional
+    public CommunityPostDTO markAsFindTeammatePost(long communityPostId, CommunityPostDTO communityPostDTO){
+        CommunityPost communityPost = communityPostRepository.findById(communityPostId)
+                .orElseThrow(() -> new NoSuchElementException("Post not found with id: " + communityPostId));
+        communityPost.setFindTeammatePost(true);
+
+        communityPost.setCourseNumber(communityPostDTO.getCourseNumber());
+        communityPost.setInstructorName(communityPostDTO.getInstructorName());
+        communityPost.setSemester(communityPostDTO.getSemester());
+        List<String> newTeamMembers = communityPost.getTeamMembers();
+        if (newTeamMembers == null) {
+            // instantiate new list
+            newTeamMembers = new ArrayList<String>();
+        }
+        newTeamMembers.add(communityPostDTO.getTeamMembers());
+        communityPost.setTeamMembers(newTeamMembers);
+
+        communityPostRepository.save(communityPost);
+
+        return communityPostConverter.convertToDTO(communityPost);
+    }
 
 
     @Override

@@ -19,12 +19,14 @@ public class CommunityPostController {
     private CommunityPostService communityPostService;
 
     @PostMapping
-    public CommunityPostDTO createPost(@RequestBody CommunityPostDTO postDTO) {
+    public ResponseEntity<?> createPost(@RequestBody CommunityPostDTO postDTO) {
         
-        return communityPostService.savePost(postDTO);
+        communityPostService.savePost(postDTO);
+
+        return new ResponseEntity<>("Post created successfully", HttpStatus.OK);
     }
 
-    @PostMapping("/{communityPostId}/likes")
+    @PostMapping("/likes/{communityPostId}")
     public ResponseEntity<?> addLike(@PathVariable long communityPostId) {
         try {
             communityPostService.addLikeToPost(communityPostId);
@@ -71,5 +73,21 @@ public class CommunityPostController {
             e.printStackTrace();
             return new ResponseEntity<>("Error updating post" + e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @PostMapping("/find-teammate/{communityPostId}")
+    public ResponseEntity<?> markAsFindTeammatePost(@PathVariable Long communityPostId, 
+                                                     @RequestBody CommunityPostDTO communityPostDTO) {
+        // ... implement logic to mark post as FindTeammate and save the additional details
+        communityPostService.markAsFindTeammatePost(communityPostId, communityPostDTO);
+
+        return new ResponseEntity<>("Add find teammate post successfully", HttpStatus.OK);
+    }
+
+    @PutMapping("/{postId}/team-members")
+    public ResponseEntity<?> addTeamMembers(@PathVariable Long postId, 
+                                            @RequestBody CommunityPostDTO communityPostDTO) {
+        // ... implement logic to add team members to the post
+        return ResponseEntity.ok().build();
     }
 }
