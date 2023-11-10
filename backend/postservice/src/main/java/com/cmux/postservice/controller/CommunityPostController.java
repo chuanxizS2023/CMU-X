@@ -24,6 +24,19 @@ public class CommunityPostController {
         return communityPostService.savePost(postDTO);
     }
 
+    @PostMapping("/{communityPostId}/likes")
+    public ResponseEntity<?> addLike(@PathVariable long communityPostId) {
+        try {
+            communityPostService.addLikeToPost(communityPostId);
+            return new ResponseEntity<>("Like added successfully", HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("Error adding like", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @GetMapping("/{communityPostid}")
     public CommunityPostDTO getPostById(@PathVariable long communityPostid) {
         return communityPostService.getPostById(communityPostid)
