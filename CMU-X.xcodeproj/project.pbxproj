@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0E696B082AFAF212000D473C /* PostListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E696B072AFAF212000D473C /* PostListView.swift */; };
+		0E696B0A2AFAF221000D473C /* PostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E696B092AFAF221000D473C /* PostView.swift */; };
+		0E696B0C2AFAF526000D473C /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E696B0B2AFAF526000D473C /* Post.swift */; };
 		0EA6C1582AD903FC00D8A4D1 /* AppIntroText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA6C1572AD903FC00D8A4D1 /* AppIntroText.swift */; };
 		0EA6C15C2AD9C50700D8A4D1 /* YoungSerifText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA6C15B2AD9C50700D8A4D1 /* YoungSerifText.swift */; };
 		0EA6C15E2AD9C6AC00D8A4D1 /* CustomButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA6C15D2AD9C6AC00D8A4D1 /* CustomButtons.swift */; };
@@ -39,6 +42,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0E696B072AFAF212000D473C /* PostListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostListView.swift; sourceTree = "<group>"; };
+		0E696B092AFAF221000D473C /* PostView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostView.swift; sourceTree = "<group>"; };
+		0E696B0B2AFAF526000D473C /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		0EA6C1572AD903FC00D8A4D1 /* AppIntroText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIntroText.swift; sourceTree = "<group>"; };
 		0EA6C15B2AD9C50700D8A4D1 /* YoungSerifText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoungSerifText.swift; sourceTree = "<group>"; };
 		0EA6C15D2AD9C6AC00D8A4D1 /* CustomButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButtons.swift; sourceTree = "<group>"; };
@@ -168,6 +174,7 @@
 		0EC045E22AD7A89A009E44D0 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				0E696B0B2AFAF526000D473C /* Post.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -200,6 +207,7 @@
 				0EA6C1572AD903FC00D8A4D1 /* AppIntroText.swift */,
 				0EA6C15D2AD9C6AC00D8A4D1 /* CustomButtons.swift */,
 				0EA6C15F2AD9E24F00D8A4D1 /* NavBar.swift */,
+				0E696B092AFAF221000D473C /* PostView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -208,6 +216,7 @@
 			isa = PBXGroup;
 			children = (
 				0EC045B52AD76984009E44D0 /* LandingPage.swift */,
+				0E696B072AFAF212000D473C /* PostListView.swift */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -352,11 +361,14 @@
 			files = (
 				0EC045B62AD76984009E44D0 /* LandingPage.swift in Sources */,
 				0EC045E92AD86AC4009E44D0 /* SigninForm.swift in Sources */,
+				0E696B082AFAF212000D473C /* PostListView.swift in Sources */,
 				0EC045B42AD76984009E44D0 /* CMU_XApp.swift in Sources */,
 				0EA6C15C2AD9C50700D8A4D1 /* YoungSerifText.swift in Sources */,
 				0EA6C1602AD9E24F00D8A4D1 /* NavBar.swift in Sources */,
 				0EA6C15E2AD9C6AC00D8A4D1 /* CustomButtons.swift in Sources */,
+				0E696B0A2AFAF221000D473C /* PostView.swift in Sources */,
 				0EA6C1582AD903FC00D8A4D1 /* AppIntroText.swift in Sources */,
+				0E696B0C2AFAF526000D473C /* Post.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
