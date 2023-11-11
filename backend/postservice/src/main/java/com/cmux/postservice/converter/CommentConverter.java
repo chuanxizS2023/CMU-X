@@ -9,17 +9,15 @@ import com.cmux.postservice.dto.CommentDTO;
 import org.springframework.stereotype.Component;
 import com.cmux.postservice.model.Comment;
 import com.cmux.postservice.model.CommunityPost;
-import com.cmux.postservice.handleException.HandleException;
 import com.cmux.postservice.repository.CommunityPostRepository;
 
 @Component
 public class CommentConverter {
 
-
     @Autowired
     private CommunityPostRepository communityPostRepository;
 
-    public Comment convertDTOToEntity(CommentDTO commentdto){
+    public Comment convertDTOToEntity(CommentDTO commentdto) {
         Comment comment = new Comment();
         // CommunityPostDTO communityPostDTO = new CommunityPostDTO();
         comment.setCommentid(commentdto.getCommentid());
@@ -37,7 +35,7 @@ public class CommentConverter {
         return comment;
     }
 
-    public CommentDTO convertEntityToDTO(Comment comment){
+    public CommentDTO convertEntityToDTO(Comment comment) {
         CommentDTO dto = new CommentDTO();
         dto.setCommentid(comment.getCommentid());
         dto.setContent(comment.getContent());
@@ -48,16 +46,16 @@ public class CommentConverter {
         return dto;
     }
 
-    public Comment updateEntityWithDTO(Comment existingComment, CommentDTO commentDTO){
+    public Comment updateEntityWithDTO(Comment existingComment, CommentDTO commentDTO) {
         Comment comment = this.convertDTOToEntity(commentDTO);
         existingComment.setContent(comment.getContent());
         existingComment.setCreated_Date(comment.getCreated_Date());
         existingComment.setAuthor_id(comment.getAuthor_id());
         existingComment.setLikes(comment.getLikes());
         CommunityPost communityPost = comment.getCommunityPost();
-        if (communityPost != null){
+        if (communityPost != null) {
             existingComment.setCommunityPost(communityPost);
-        }else{
+        } else {
             throw new NoSuchElementException("Community post not found for this id");
         }
         return existingComment;

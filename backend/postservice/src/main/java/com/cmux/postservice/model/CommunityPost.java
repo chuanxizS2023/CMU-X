@@ -17,10 +17,6 @@ public class CommunityPost {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long communityPostid;
     
-    // @ManyToOne
-    // @JoinColumn(name = "userid")
-    // private User user;
-
     private String title;
     private String content;
     private Date created_Date;

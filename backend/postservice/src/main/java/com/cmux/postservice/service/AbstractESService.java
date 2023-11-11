@@ -1,9 +1,7 @@
 package com.cmux.postservice.service;
 
-
 import com.cmux.postservice.handleException.IndexingException;
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
-
 
 public abstract class AbstractESService<T> {
     protected final ElasticsearchClient elasticsearchClient;
@@ -29,5 +27,5 @@ public abstract class AbstractESService<T> {
             throw new IndexingException("Cannot delete document: " + e.getMessage(), e);
         }
     }
-    
+
 }

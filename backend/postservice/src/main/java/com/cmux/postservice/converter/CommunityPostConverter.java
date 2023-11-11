@@ -2,7 +2,6 @@ package com.cmux.postservice.converter;
 
 import java.util.ArrayList;
 
-
 import com.cmux.postservice.dto.CommentDTO;
 import org.springframework.stereotype.Component;
 import com.cmux.postservice.dto.CommunityPostDTO;
@@ -12,7 +11,7 @@ import com.cmux.postservice.model.CommunityPost;
 @Component
 public class CommunityPostConverter {
 
-    public CommunityPostDTO convertToDTO(CommunityPost communityPost){
+    public CommunityPostDTO convertToDTO(CommunityPost communityPost) {
         CommentConverter commentConverter = new CommentConverter();
         CommunityPostDTO dto = new CommunityPostDTO();
         dto.setCommunityPostid(communityPost.getCommunityPostid());
@@ -23,18 +22,17 @@ public class CommunityPostConverter {
         dto.setLikes(communityPost.getLikes());
         dto.setCommentsCount(communityPost.getCommentsCount());
         dto.set_published(communityPost.is_published());
-        if(communityPost.getComments() != null) {
+        if (communityPost.getComments() != null) {
             ArrayList<CommentDTO> commentList = new ArrayList<CommentDTO>();
             for (int i = 0; i < communityPost.getComments().size(); i++) {
                 commentList.add(commentConverter.convertEntityToDTO(communityPost.getComments().get(i)));
             }
             dto.setComments(commentList);
 
-
             // dto.setComments(communityPost.getComments().stream()
-            //     .map(commentService.convertEntityToDTO)
-            //     .collect(Collectors.toList()));
-        }else{
+            // .map(commentService.convertEntityToDTO)
+            // .collect(Collectors.toList()));
+        } else {
             dto.setComments(null);
         }
 
@@ -44,13 +42,12 @@ public class CommunityPostConverter {
         dto.setSemester(communityPost.getSemester());
         if (communityPost.getTeamMembers() == null) {
             dto.setTeamMembers(null);
-        } else{
+        } else {
             dto.setTeamMembers(communityPost.getTeamMembers().toString());
         }
 
         return dto;
     }
-
 
     public CommunityPost convertToEntity(CommunityPostDTO communityPostDTO) {
         CommunityPost communityPost = new CommunityPost();
@@ -63,21 +60,20 @@ public class CommunityPostConverter {
         communityPost.setCommentsCount(communityPostDTO.getCommentsCount());
         communityPost.set_published(communityPostDTO.is_published());
         // set comments
-        if(communityPostDTO.getComments() != null) {
+        if (communityPostDTO.getComments() != null) {
             ArrayList<Comment> commentList = new ArrayList<Comment>();
             for (int i = 0; i < communityPostDTO.getComments().size(); i++) {
                 commentList.add(commentConverter.convertDTOToEntity(communityPostDTO.getComments().get(i)));
             }
             communityPost.setComments(commentList);
-        }else{
+        } else {
             communityPost.setComments(null);
         }
 
         return communityPost;
     }
 
-
-    public CommunityPost updateEntityWithDTO(CommunityPost existingPost, CommunityPostDTO updatePostDTO){
+    public CommunityPost updateEntityWithDTO(CommunityPost existingPost, CommunityPostDTO updatePostDTO) {
         CommunityPost updatePost = this.convertToEntity(updatePostDTO);
 
         existingPost.setTitle(updatePost.getTitle());
@@ -88,13 +84,13 @@ public class CommunityPostConverter {
         existingPost.setCommentsCount(updatePost.getCommentsCount());
         existingPost.set_published(updatePost.is_published());
         // set comments
-        if(updatePost.getComments() != null) {
+        if (updatePost.getComments() != null) {
             ArrayList<Comment> commentList = new ArrayList<Comment>();
             for (int i = 0; i < updatePost.getComments().size(); i++) {
                 commentList.add(updatePost.getComments().get(i));
             }
-            existingPost.setComments(commentList); 
-        }   
+            existingPost.setComments(commentList);
+        }
         return existingPost;
     }
 }

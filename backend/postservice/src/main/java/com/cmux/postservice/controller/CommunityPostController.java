@@ -14,13 +14,13 @@ import org.springframework.http.HttpStatus;
 @RestController
 @RequestMapping("/community")
 public class CommunityPostController {
-    
+
     @Autowired
     private CommunityPostService communityPostService;
 
     @PostMapping
     public ResponseEntity<?> createPost(@RequestBody CommunityPostDTO postDTO) {
-        
+
         communityPostService.savePost(postDTO);
 
         return new ResponseEntity<>("Post created successfully", HttpStatus.OK);
@@ -67,8 +67,8 @@ public class CommunityPostController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
         // } catch (AccessDeniedException e) {
-        //     return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
-        // } 
+        // return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        // }
         catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("Error updating post" + e, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -76,18 +76,20 @@ public class CommunityPostController {
     }
 
     @PostMapping("/find-teammate/{communityPostId}")
-    public ResponseEntity<?> markAsFindTeammatePost(@PathVariable Long communityPostId, 
-                                                     @RequestBody CommunityPostDTO communityPostDTO) {
-        // ... implement logic to mark post as FindTeammate and save the additional details
+    public ResponseEntity<?> markAsFindTeammatePost(@PathVariable Long communityPostId,
+            @RequestBody CommunityPostDTO communityPostDTO) {
+
         communityPostService.markAsFindTeammatePost(communityPostId, communityPostDTO);
 
         return new ResponseEntity<>("Add find teammate post successfully", HttpStatus.OK);
     }
 
     @PutMapping("/{postId}/team-members")
-    public ResponseEntity<?> addTeamMembers(@PathVariable Long postId, 
-                                            @RequestBody CommunityPostDTO communityPostDTO) {
-        // ... implement logic to add team members to the post
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> addTeamMembers(@PathVariable Long postId,
+            @PathVariable String username) {
+
+        communityPostService.addTeamMembers(postId, username);
+
+        return new ResponseEntity<>("Add team members successfully", HttpStatus.OK);
     }
 }

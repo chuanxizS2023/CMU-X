@@ -8,17 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 
-
 @RestController
 @RequestMapping("/comments")
 
 public class CommentController {
-    
+
     @Autowired
     private CommentService commentService;
 
     @PostMapping
-    public CommentDTO savComment(@RequestBody CommentDTO commentdto){
+    public CommentDTO savComment(@RequestBody CommentDTO commentdto) {
         return commentService.saveComment(commentdto);
     }
 
@@ -29,7 +28,7 @@ public class CommentController {
     }
 
     @DeleteMapping("/{commentid}")
-    public ResponseEntity<?> deleteComment(@PathVariable long commentid){
+    public ResponseEntity<?> deleteComment(@PathVariable long commentid) {
         try {
             commentService.deleteCommentById(commentid);
             return ResponseEntity.ok("Comment deleted successfully");
@@ -41,7 +40,7 @@ public class CommentController {
     }
 
     @PutMapping("/{commentid}")
-    public ResponseEntity<?> updateComment(@PathVariable long commentid, @RequestBody CommentDTO commentdto){
+    public ResponseEntity<?> updateComment(@PathVariable long commentid, @RequestBody CommentDTO commentdto) {
         try {
             CommentDTO updatedComment = commentService.updateComment(commentid, commentdto);
             return ResponseEntity.ok(updatedComment);

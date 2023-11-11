@@ -14,22 +14,22 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Optional;
 import java.util.List;
 import java.util.ArrayList;
 
 @Service
 public class CommunityPostService extends AbstractESService<CommunityPost> {
-    
+
     private CommunityPostRepository communityPostRepository;
     private CommunityPostConverter communityPostConverter;
     private final ApplicationEventPublisher publisher;
 
     @Autowired
-    public CommunityPostService(CommunityPostRepository communityPostRepository, 
-                                CommunityPostConverter communityPostConverter,
-                                ApplicationEventPublisher publisher
-                                ,ElasticsearchClient elasticsearchClient) {
+    public CommunityPostService(CommunityPostRepository communityPostRepository,
+            CommunityPostConverter communityPostConverter,
+            ApplicationEventPublisher publisher, ElasticsearchClient elasticsearchClient) {
         super(elasticsearchClient);
         this.communityPostRepository = communityPostRepository;
         this.communityPostConverter = communityPostConverter;
@@ -66,7 +66,7 @@ public class CommunityPostService extends AbstractESService<CommunityPost> {
         if (post.isPresent()) {
 
             CommunityPostDTO communityPostDTO = communityPostConverter.convertToDTO(post.get());
-            
+
             return Optional.of(communityPostDTO);
 
         } else {
@@ -80,30 +80,31 @@ public class CommunityPostService extends AbstractESService<CommunityPost> {
         CommunityPost communityPost = communityPostRepository.findById(communityPostId)
                 .orElseThrow(() -> new NoSuchElementException("Post not found with id: " + communityPostId));
         communityPostRepository.delete(communityPost);
-    
+
         // after delete in mysql, publish event for elastic search if needed
         publisher.publishEvent(new PostEvents.Deleted(communityPostId));
     }
-    
+
     @Transactional
     public CommunityPostDTO updatePost(long communityPostId, CommunityPostDTO communityPostDTO) {
         CommunityPost existingPost = communityPostRepository.findById(communityPostId)
                 .orElseThrow(() -> new NoSuchElementException("Post not found with id: " + communityPostId));
-    
+
         // Update entity with DTO details
-        // Assuming you have method in your converter or service to update entity fields from DTO
+        // Assuming you have method in your converter or service to update entity fields
+        // from DTO
         existingPost = communityPostConverter.updateEntityWithDTO(existingPost, communityPostDTO);
-    
+
         CommunityPost updatedPost = communityPostRepository.save(existingPost);
-    
+
         // after update to mysql, publish event for elastic search
         publisher.publishEvent(new PostEvents.Updated(updatedPost));
-    
+
         return communityPostConverter.convertToDTO(updatedPost);
     }
 
     @Transactional
-    public CommunityPostDTO markAsFindTeammatePost(long communityPostId, CommunityPostDTO communityPostDTO){
+    public CommunityPostDTO markAsFindTeammatePost(long communityPostId, CommunityPostDTO communityPostDTO) {
         CommunityPost communityPost = communityPostRepository.findById(communityPostId)
                 .orElseThrow(() -> new NoSuchElementException("Post not found with id: " + communityPostId));
         communityPost.setFindTeammatePost(true);
@@ -124,27 +125,43 @@ public class CommunityPostService extends AbstractESService<CommunityPost> {
         return communityPostConverter.convertToDTO(communityPost);
     }
 
+    @Transactional
+    public CommunityPostDTO addTeamMembers(long communityPostId, String username) {
+        CommunityPost communityPost = communityPostRepository.findById(communityPostId)
+                .orElseThrow(() -> new NoSuchElementException("Post not found with id: " + communityPostId));
+        List<String> newTeamMembers = communityPost.getTeamMembers();
+        if (newTeamMembers == null) {
+            // instantiate new list
+            newTeamMembers = new ArrayList<String>();
+        }
+        newTeamMembers.add(username);
+        communityPost.setTeamMembers(newTeamMembers);
+
+        communityPostRepository.save(communityPost);
+
+        return communityPostConverter.convertToDTO(communityPost);
+
+    }
 
     @Override
     public void index(String index, String id, CommunityPost communityPost) {
         try {
             IndexResponse response = elasticsearchClient.index(i -> i
-                .index("communitypost")
-                .id(String.valueOf(communityPost.getCommunityPostid()))
-                .document(communityPost)
-            );
+                    .index("communitypost")
+                    .id(String.valueOf(communityPost.getCommunityPostid()))
+                    .document(communityPost));
             System.out.println("Communitypost: indexPost: indexed post");
         } catch (Exception e) {
             // Handle the exception
-            throw new IndexingException("Cannot index post: " + e.getMessage(), e);        }
+            throw new IndexingException("Cannot index post: " + e.getMessage(), e);
+        }
     }
 
     @Override
-    public void deleteIndex(String index, String id){
+    public void deleteIndex(String index, String id) {
         super.deleteIndex(index, id);
 
         System.out.println("Communitypost: delete index: " + id);
     }
 
-     
 }

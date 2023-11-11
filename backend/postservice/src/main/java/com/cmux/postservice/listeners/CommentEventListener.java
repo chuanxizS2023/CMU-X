@@ -8,13 +8,11 @@ import com.cmux.postservice.service.CommentService;
 
 @Component
 public class CommentEventListener {
-    
+
     @Autowired
     private CommentService commentService;
     private final String index = "comment";
-    // public PostEventListener(ElasticsearchService elasticsearchService) {
-    //     this.elasticsearchService = elasticsearchService;
-    // }
+
 
     @EventListener
     public void onCommentCreated(CommentEvents.Created event) {
@@ -25,8 +23,8 @@ public class CommentEventListener {
         System.out.println("Comment indexed");
     }
 
-    @EventListener 
-    public void onCommentDeleted(CommentEvents.Deleted event){
+    @EventListener
+    public void onCommentDeleted(CommentEvents.Deleted event) {
         String id = String.valueOf(event.getCommentId());
 
         commentService.deleteIndex(this.index, id);
@@ -35,15 +33,12 @@ public class CommentEventListener {
     }
 
     @EventListener
-    public void onCommentUpdated(CommentEvents.Updated event){
+    public void onCommentUpdated(CommentEvents.Updated event) {
         String id = String.valueOf(event.getComment().getCommentid());
 
         commentService.index(this.index, id, event.getComment());
 
         System.out.println("Comment updated");
     }
-    // @EventListener
-    // public void onCommentUpdated(CommentEvents.Updated event) {
-    //     elasticsearchService.updateComment(event.getComment());
-    // }
+
 }
