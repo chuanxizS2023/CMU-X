@@ -20,31 +20,50 @@ class APIService {
             // Handle the response or error
         }.resume()
     }
-
-    static func fetchComment(commentId: Int, completion: @escaping (Result<Comment, Error>) -> Void) {
-        let url = URL(string: "\(baseUrlString)/comments/\(commentId)")!
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-
+    
+    static func fetchPosts(completion: @escaping (Result<[Post], Error>) -> Void) {
+        let request = URLRequest(url: baseUrl.appendingPathComponent("/posts"))
+        
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
                 completion(.failure(error))
                 return
             }
-            
             guard let data = data else {
-                completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "No data received"])))
+                completion(.failure(NSError(domain: "", code: -1, userInfo: nil)))
                 return
             }
-
             do {
-                let comment = try JSONDecoder().decode(Comment.self, from: data)
-                completion(.success(comment))
+                let posts = try JSONDecoder().decode([Post].self, from: data)
+                completion(.success(posts))
             } catch {
                 completion(.failure(error))
             }
         }.resume()
     }
+
+    // MARK: Fetch Comments for Post
+    static func fetchComments(for postId: String, completion: @escaping (Result<[Comment], Error>) -> Void) {
+        let request = URLRequest(url: baseUrl.appendingPathComponent("/posts/\(postId)/comments"))
+        
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            guard let data = data else {
+                completion(.failure(NSError(domain: "", code: -1, userInfo: nil)))
+                return
+            }
+            do {
+                let comments = try JSONDecoder().decode([Comment].self, from: data)
+                completion(.success(comments))
+            } catch {
+                completion(.failure(error))
+            }
+        }.resume()
+    }
+
     
     static func updateComment(commentId: Int, updatedComment: Comment, completion: @escaping (Result<Comment, Error>) -> Void) {
         let url = URL(string: "\(baseUrlString)/comments/\(commentId)")!

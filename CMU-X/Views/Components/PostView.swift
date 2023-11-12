@@ -2,57 +2,52 @@ import SwiftUI
 
 struct PostView: View {
     var post: Post
+    @State private var comments: [Comment] = []
+    @State private var isLoading = false
+    @State private var errorMessage: String?
 
     var body: some View {
-        HStack(alignment: .top, spacing: 10) {
-            Image(systemName: "person.circle.fill") // Placeholder for the profile image
-                .resizable()
-                .scaledToFit()
-                .frame(width: 50, height: 50)
-                .clipShape(Circle())
-                .overlay(Circle().stroke(Color.gray, lineWidth: 1))
-
-            VStack(alignment: .leading, spacing: 4) {
-                Text(post.username)
-                    .fontWeight(.semibold)
-
-                Text(post.content)
-                    .font(.body)
-                    .lineLimit(4)
-
-                HStack {
-                    Text(post.timestamp)
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-
-                    Spacer()
-
-                    // Comment icon with count
-                    HStack(spacing: 2) {
-                        Image(systemName: "bubble.right")
-                            .resizable()
-                            .frame(width: 15, height: 15)
-                        Text("\(post.comments)")
-                            .font(.subheadline)
-                    }
-
-                    // Like icon with count
-                    HStack(spacing: 2) {
-                        Image(systemName: "heart")
-                            .resizable()
-                            .frame(width: 15, height: 15)
-                        Text("\(post.likes)")
-                            .font(.subheadline)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 10) {
+                Text(post.title).font(.title)
+                Text(post.content).font(.body)
+                Divider()
+                if isLoading {
+                    ProgressView().padding()
+                } else {
+                    ForEach(comments) { comment in
+                        Text(comment.content)
                     }
                 }
             }
+            .padding()
+            .onAppear {
+                loadComments()
+            }
+            .navigationBarTitle(Text(post.title), displayMode: .inline)
+            .alert(isPresented: .constant(errorMessage != nil), content: {
+                Alert(title: Text("Error"), message: Text(errorMessage ?? "Unknown error"), dismissButton: .default(Text("OK")))
+            })
         }
-        .padding()
-        .background(Color.white)
-        .cornerRadius(10)
-        .shadow(radius: 1)
+    }
+
+    private func loadComments() {
+        isLoading = true
+        APIService.fetchComments(for: post.id) { result in
+            DispatchQueue.main.async {
+                isLoading = false
+                switch result {
+                case .success(let fetchedComments):
+                    self.comments = fetchedComments
+                case .failure(let error):
+                    self.errorMessage = error.localizedDescription
+                }
+            }
+        }
     }
 }
+
+
 
 
 struct PostView_Previews: PreviewProvider {
