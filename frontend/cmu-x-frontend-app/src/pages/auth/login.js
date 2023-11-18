@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { TextField, Button, Paper, Grid, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
   const [credentials, setCredentials] = useState({ email: '', password: '' });
+  const navigate = useNavigate();
 
   const handleChange = (event) => {
     setCredentials({ ...credentials, [event.target.name]: event.target.value });
@@ -12,6 +14,7 @@ function Login() {
     event.preventDefault();
     // Handle login logic here
     console.log('Logging in with', credentials);
+    navigate('/communityPost', { replace: true });
   };
 
   const paperStyle = {
