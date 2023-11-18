@@ -26,10 +26,12 @@ export const addLike = async (postId) => {
 
 // Get a post by ID
 export const getPostById = async (postId) => {
+    console.log("fetching from: " + `${baseUrl}/${postId}`)
   const response = await fetch(`${baseUrl}/${postId}`, {
     method: 'GET',
     headers,
   });
+  console.log("response: " + response)
   return response.json();
 };
 

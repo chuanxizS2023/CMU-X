@@ -8,7 +8,6 @@ const CommunityPage = () => {
   const [post, setPost] = useState(null);
   const postId = 1; // Replace with the actual post ID you want to fetch
 
-  useEffect(() => {
     const fetchPost = async () => {
       try {
         const data = await getPostById(postId);
@@ -18,8 +17,6 @@ const CommunityPage = () => {
       }
     };
 
-    fetchPost();
-  }, [postId]);
 
   const styles = {
     page: {
@@ -33,6 +30,7 @@ const CommunityPage = () => {
       <Header title="CMU-X Community" />
       {post && <PostList posts={[post]} />}
       <div>Hello world</div>
+      <button onClick={fetchPost}></button>
     </div>
   );
 };
