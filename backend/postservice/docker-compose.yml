@@ -50,6 +50,21 @@ services:
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
 
+  frontend:
+    build:
+      context: ../../frontend/cmu-x-frontend-app
+      dockerfile: Dockerfile
+    container_name: frontend-container
+    ports:
+      - "3000:80"
+    volumes:
+      - ../../frontend/cmu-x-frontend-app:/usr/src/app
+    environment:
+      - CHOKIDAR_USEPOLLING=true # This environment variable is sometimes necessary for file watching to work correctly on Docker volumes
+    stdin_open: true # docker run -i
+    tty: true
+
+
   # kibana:
   #   image: docker.elastic.co/kibana/kibana:8.1.0
   #   container_name: kibana
