@@ -1,30 +1,16 @@
-# Build react application
-FROM node AS build
+# Base image
+FROM node:latest
 
 # Set working directory
-WORKDIR /app-docker
+WORKDIR /app
 
-# Copy package.json
-COPY package.json ./
-
-# install dependencies
+# Install dependencies
+# Only copy the package.json file to work directory
+COPY package.json /app/
 RUN npm install
+COPY . /app/
+# Expose port 3000
+EXPOSE 3000
 
-# Copy all files
-COPY . ./
-
-# Build react application
-RUN npm run build
-
-# Serve react application from nginx
-FROM nginx:alpine
-
-# Copy build files to nginx
-COPY --from=build /app-docker/build /usr/share/nginx/html
-
-# Expose port 80(default port for nginx, if wish to change,
-# write in nginx.conf file and copy it to /etc/gnginx/conf.d/)
-EXPOSE 80
-
-# Start nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Start the application
+CMD ["npm", "start"]

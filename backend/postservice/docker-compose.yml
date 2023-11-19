@@ -51,19 +51,17 @@ services:
       - elasticsearch-data:/usr/share/elasticsearch/data
 
   frontend:
-    build:
-      context: ../../frontend/cmu-x-frontend-app
+    build: 
+      context: ../../frontend/cmu-x-frontend-app  # Relative path from backend/postservice to frontend app
       dockerfile: Dockerfile
     container_name: frontend-container
     ports:
-      - "3000:80"
+      - "3000:3000"
     volumes:
-      - ../../frontend/cmu-x-frontend-app:/usr/src/app
+      - ../../frontend/cmu-x-frontend-app:/app  # Adjust this path as needed
+      - /app/node_modules
     environment:
-      - CHOKIDAR_USEPOLLING=true # This environment variable is sometimes necessary for file watching to work correctly on Docker volumes
-    stdin_open: true # docker run -i
-    tty: true
-
+      - WATCHPACK_POLLING=true
 
   # kibana:
   #   image: docker.elastic.co/kibana/kibana:8.1.0

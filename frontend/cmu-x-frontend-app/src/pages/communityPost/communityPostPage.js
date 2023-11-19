@@ -32,7 +32,7 @@ const CommunityPage = () => {
     <div style={styles.page}>
       <Header title="CMU-X Community" />
       {post && <PostList posts={[post]} />}
-      <div>Hello world</div>
+      <div>Hesssssss</div>
     </div>
   );
 };
