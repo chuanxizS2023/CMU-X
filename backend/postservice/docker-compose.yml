@@ -3,6 +3,8 @@ version: '3'
 services:
   mysql:
     image: mysql:8.1.0
+    cpus: '2.0'
+    mem_limit: 2g
     container_name: mysql-container
     environment:
       MYSQL_ROOT_PASSWORD: zhangzcx1999
@@ -19,6 +21,8 @@ services:
     container_name: postservice
     ports:
       - "9000:9000"
+    cpus: '2.0'
+    mem_limit: 2g
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/myPostServiceDB
       SPRING_DATASOURCE_USERNAME: root
@@ -36,6 +40,8 @@ services:
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.10.4
+    cpus: '1.0'
+    mem_limit: 1g
     container_name: elasticsearch-container
     environment:
       - discovery.type=single-node
@@ -55,6 +61,8 @@ services:
       context: ../../frontend/cmu-x-frontend-app  # Relative path from backend/postservice to frontend app
       dockerfile: Dockerfile
     container_name: frontend-container
+    cpus: '2.0'
+    mem_limit: 2g
     ports:
       - "3000:3000"
     volumes:
