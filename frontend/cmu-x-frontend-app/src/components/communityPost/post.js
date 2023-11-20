@@ -1,42 +1,43 @@
 import React from 'react';
+import { Card, CardContent, CardActions, Typography, IconButton } from '@mui/material';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import CommentIcon from '@mui/icons-material/Comment';
+import ShareIcon from '@mui/icons-material/Share';
+import styled from '@emotion/styled'; // Corrected import statement
 
-const Post = ({username, title, content, likes, comments, retweets }) => {
-  const styles = {
-    postContainer: {
-      display: 'flex',
-      flexDirection: 'row',
-      padding: '10px',
-      borderBottom: '1px solid #ccc',
-    },
-    avatar: {
-      width: '50px',
-      height: '50px',
-      borderRadius: '50%',
-      marginRight: '10px',
-    },
-    postContent: {
-      flex: 1,
-    },
-    engagement: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      marginTop: '10px',
-    },
-  };
+const StyledCard = styled(Card)(({ theme }) => ({
+  marginBottom: theme.spacing(2),
+  '&:hover': {
+    boxShadow: theme.shadows[5],
+  },
+}));
 
+const Post = ({ username, title, content, likes, comments, retweets }) => {
   return (
-    <div style={styles.postContainer}>
-        <h4>{title}</h4>  
-      <div style={styles.postContent}>
-        <strong>{username}</strong>
-        <p>{content}</p>
-        <div style={styles.engagement}>
-          <span>{likes} Likes</span>
-          <span>{comments} Comments</span>
-          <span>{retweets} Retweets</span>
-        </div>
-      </div>
-    </div>
+    <StyledCard>
+      <CardContent>
+        <Typography gutterBottom variant="h5" component="div">
+          {title}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          {content}
+        </Typography>
+      </CardContent>
+      <CardActions disableSpacing>
+        <IconButton aria-label="add to favorites">
+          <FavoriteIcon />
+          <Typography component="span" sx={{ marginLeft: 0.5 }}>{likes}</Typography>
+        </IconButton>
+        <IconButton aria-label="comment">
+          <CommentIcon />
+          <Typography component="span" sx={{ marginLeft: 0.5 }}>{comments}</Typography>
+        </IconButton>
+        <IconButton aria-label="share">
+          <ShareIcon />
+          <Typography component="span" sx={{ marginLeft: 0.5 }}>{retweets}</Typography>
+        </IconButton>
+      </CardActions>
+    </StyledCard>
   );
 };
 

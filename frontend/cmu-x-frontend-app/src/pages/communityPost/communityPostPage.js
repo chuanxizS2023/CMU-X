@@ -3,12 +3,15 @@ import React, { useState, useEffect } from 'react';
 import Header from '../../components/common/header';
 import PostList from '../../containers/communityPost/postContainer';
 import { getPostById } from '../../apis/communitypostAPIs/postAPI'; // Adjust the import path as necessary
+import TopBar from '../../components/common/topNavbar';
+import BottomBar from '../../components/common/botNavbar';
+import AddPostFab from '../../components/communityPost/addPostFab';
+import { Container } from '@mui/material';
 
 const CommunityPage = () => {
-  const [post, setPost] = useState(null);
-  const postId = 1; // Replace with the actual post ID you want to fetch
+  const [post, setPost] = useState([]);
+  const postId = 2; // Replace with the actual post ID you want to fetch
 
-  useEffect(() => {
     const fetchPost = async () => {
       try {
         const data = await getPostById(postId);
@@ -18,8 +21,19 @@ const CommunityPage = () => {
       }
     };
 
-    fetchPost();
-  }, [postId]);
+  const fetchAllPosts = async () => {
+    try {
+      let data = await getPostById(postId);
+      while (data){
+        post.push(data);
+        postId++;
+        data = await getPostById(postId);
+      }
+      setPost(post);
+    } catch (error) {
+      console.error('Failed to fetch post:', error);
+    }
+  };
 
   const styles = {
     page: {
@@ -29,11 +43,15 @@ const CommunityPage = () => {
   };
 
   return (
-    <div style={styles.page}>
-      <Header title="CMU-X Community" />
-      {post && <PostList posts={[post]} />}
-      <div>Hesssssss</div>
-    </div>
+    <>
+      <TopBar />
+      <Container maxWidth="sm" style={{ marginBottom: 75 }}>
+        <Header title="CMU-X Community" />
+        {post && <PostList posts={[post]} />}
+      </Container>
+      <AddPostFab/>
+      <BottomBar />
+    </>
   );
 };
 

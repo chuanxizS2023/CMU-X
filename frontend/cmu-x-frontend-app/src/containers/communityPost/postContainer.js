@@ -1,60 +1,44 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Post from '../../components/communityPost/post';
+import List from '@mui/material/List';
 
-const PostList = () => {
-    const posts = [
-        {
-          id: 1,
-          username: 'johndoe',
-          title: 'Hello World',
-          content: 'This is a new post about my hello world experience.',
-          likes: 10,
-          comments: 5,
-          retweets: 3
-        },
-        {
-          id: 2,
-          username: 'janedoe',
-          title: 'My React Journey',
-          content: 'Today, I want to share my journey learning React. It’s been fun and challenging!',
-          likes: 15,
-          comments: 3,
-          retweets: 5
-        },
-        {
-          id: 3,
-          username: 'tech_guru',
-          title: 'Tips for Programming',
-          content: 'Here are some tips I’ve learned during my 10 years as a programmer.',
-          likes: 25,
-          comments: 10,
-          retweets: 2
-        }
-        // More posts...
-      ];
-
-//   useEffect(() => {
-//     // Define the async function inside the effect
-//     const fetchPosts = async () => {
-//       try {
-//         const response = await fetch('/api/posts'); // Replace with your API endpoint
-//         const data = await response.json();
-//         setPosts(data);
-//       } catch (error) {
-//         console.error('Error fetching posts:', error);
-//       }
-//     };
-
-//     // Call the function
-//     fetchPosts();
-//   }, []); // Empty dependency array means this effect runs once on mount
+const PostList = ({  }) => {
+  const posts = [
+    {
+      communityPostid: 1,
+      username: 'user1',
+      title: 'title1',
+      content: 'content1',
+      likes: 1,
+      comments: 1,
+      retweets: 1,
+    },
+    {
+      communityPostid: 2,
+      username: 'user2',
+      title: 'title2',
+      content: 'content2',
+      likes: 2,
+      comments: 2,
+      retweets: 2,
+    },
+    {
+      communityPostid: 3,
+      username: 'user3',
+      title: 'title3',
+      content: 'content3',
+      likes: 3,
+      comments: 3,
+      retweets: 3,
+    },
+  ];
 
   return (
-    <div>
+    <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
       {posts.map((post) => (
-        <Post key={post.id} {...post} />
+        <Post key={post.communityPostid} {...post} />
       ))}
-    </div>
+    </List>
   );
 };
 
