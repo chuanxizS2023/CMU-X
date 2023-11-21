@@ -5,6 +5,7 @@ import CommentIcon from '@mui/icons-material/Comment';
 import ShareIcon from '@mui/icons-material/Share';
 import styled from '@emotion/styled'; 
 import { addLike } from '../../apis/communitypostAPIs/postAPI';
+import { saveComment } from '../../apis/communitypostAPIs/postAPI';
 
 const StyledCard = styled(Card)(({ theme }) => ({
   marginBottom: theme.spacing(2),
@@ -18,7 +19,8 @@ const onLikeClick = (communityPostid) => {
   const response = addLike(communityPostid);
 }
 
-const Post = ({ communityPostid, username, title, content, likes, comments, retweets }) => {
+
+const Post = ({ communityPostid, username, title, content, likes, comments, retweets, onCommentClick  }) => {
   return (
     <StyledCard>
       <CardContent>
@@ -34,9 +36,9 @@ const Post = ({ communityPostid, username, title, content, likes, comments, retw
           <FavoriteIcon />
           <Typography component="span" sx={{ marginLeft: 0.5 }}>{likes}</Typography>
         </IconButton>
-        <IconButton aria-label="comment">
+        <IconButton aria-label="comment" onClick={() => onCommentClick(communityPostid)}>
           <CommentIcon />
-          <Typography component="span" sx={{ marginLeft: 0.5 }}>{comments}</Typography>
+          {/* <Typography component="span" sx={{ marginLeft: 0.5 }}>{comments}</Typography> */}
         </IconButton>
         <IconButton aria-label="share">
           <ShareIcon />

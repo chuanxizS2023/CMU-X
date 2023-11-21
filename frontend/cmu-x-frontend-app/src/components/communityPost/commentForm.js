@@ -1,39 +1,28 @@
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogTitle, TextField, DialogActions, Button } from '@mui/material';
 
-const PostForm = ({ open, onClose, onSubmit }) => {
-  const [postData, setPostData] = useState({
-    title: '',
+const CommentForm = ({ open, onClose, onSubmit }) => {
+  const [commentData, setcommentData] = useState({
     content: '',
     author_id: null,
     created: null,
+    communityPostid: null,
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setPostData({ ...postData, [name]: value });
+    setcommentData({ ...commentData, [name]: value });
   };
 
   const handleSubmit = () => {
-    onSubmit(postData);
+    onSubmit(commentData);
     onClose(); // Close the modal after submit
   };
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Create a New Post</DialogTitle>
+      <DialogTitle>Create a New comment</DialogTitle>
       <DialogContent>
-        <TextField
-          autoFocus
-          margin="dense"
-          name="title"
-          label="Title"
-          type="text"
-          fullWidth
-          variant="outlined"
-          value={postData.title}
-          onChange={handleChange}
-        />
         <TextField
           margin="dense"
           name="content"
@@ -43,16 +32,16 @@ const PostForm = ({ open, onClose, onSubmit }) => {
           multiline
           rows={4}
           variant="outlined"
-          value={postData.content}
+          value={commentData.content}
           onChange={handleChange}
         />
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={handleSubmit}>Post</Button>
+        <Button onClick={handleSubmit}>comment</Button>
       </DialogActions>
     </Dialog>
   );
 };
 
-export default PostForm;
+export default CommentForm;

@@ -9,6 +9,8 @@ import AddPostFab from '../../components/communityPost/addPostFab';
 import { Container } from '@mui/material';
 import PostForm from '../../components/communityPost/postForm';
 import CommonPopup from '../../components/common/popup';
+import CommentForm from '../../components/communityPost/commentForm';
+import { saveComment, getComment } from '../../apis/communitypostAPIs/commentAPI';
 
 const CommunityPage = () => {
   const [post, setPost] = useState([]);
@@ -16,10 +18,17 @@ const CommunityPage = () => {
   const [openPopup, setOpenPopup] = useState(false);
   const [postId, setPostId] = useState(1);
   const [isPostFormOpen, setPostFormOpen] = useState(false);
+  const [isCommentFormOpen, setCommentFormOpen] = useState(false);
+  const [activeCommentPostId, setActiveCommentPostId] = useState(null);
+
   // Function to open the post creation form
 
   const handleAddPostClick = () => {
     setPostFormOpen(true);
+  };
+  const handleCommentFormOpen = (postId) => {
+    setActiveCommentPostId(postId);
+    setCommentFormOpen(true);
   };
   
   const handlepopUpOpen = () => setOpenPopup(true);
@@ -29,13 +38,15 @@ const CommunityPage = () => {
   const handleClosePostForm = () => {
     setPostFormOpen(false);
   };
-
+  const handleCloseCommentForm = () => {
+    setCommentFormOpen(false);
+    setActiveCommentPostId(null); // Reset the active post id
+  };
   const handlePostSubmit = (postData) => {
     // Logic to submit the post data to the backend
     postData.author_id = 1;
     postData.created = new Date().toLocaleString();
     const response = createPost(postData);
-    console.log("response", response)
     if (response) {
       setPopupContext('Post created successfully!');
       handlepopUpOpen();
@@ -43,12 +54,24 @@ const CommunityPage = () => {
       setPopupContext('Failed to create post!');
       handlepopUpOpen();
     }
-
-};
+  };
+  const handleCommentSubmit = (commentData) => {
+    // Logic to submit the post data to the backend
+    commentData.author_id = 1;
+    commentData.created = new Date().toLocaleString();
+    commentData.communityPostid = activeCommentPostId;
+    const response = saveComment(commentData);
+    if (response) {
+      setPopupContext('Comment created successfully!');
+      handlepopUpOpen();
+    } else {
+      setPopupContext('Failed to create comment!');
+      handlepopUpOpen();
+    }
+  }
 
     const fetchPost = async () => {
       try {
-        console.log("in fetchPost")
         const data = await getPostById(postId);
         setPost((prev) => [...prev, data]);
       } catch (error) {
@@ -69,17 +92,25 @@ const CommunityPage = () => {
       <TopBar />
       <Container maxWidth="sm" style={{ marginBottom: 75 }}>
         <Header title="CMU-X Community" />
-        {post && <PostList posts={post} />}
+        {post && <PostList posts={post} onCommentClick={handleCommentFormOpen} />}
         <button onClick={()=>{setPostId(postId+1);fetchPost()}}>Fetch Post</button>
       </Container>
       <AddPostFab onClick={handleAddPostClick} />
-      <PostForm open={isPostFormOpen} onClose={handleClosePostForm} onSubmit={handlePostSubmit} />
       <BottomBar />
+
+      {/* popup */}
+      <PostForm open={isPostFormOpen} onClose={handleClosePostForm} onSubmit={handlePostSubmit} />
       <CommonPopup
         isOpen={openPopup}
         handleClose={handlepopUpClose}
         text={popupContext}
       />
+      <CommentForm
+        open={isCommentFormOpen}
+        onClose={handleCloseCommentForm}
+        onSubmit={handleCommentSubmit}
+      />
+
     </>
   );
 };
