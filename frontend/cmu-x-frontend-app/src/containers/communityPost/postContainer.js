@@ -36,6 +36,7 @@ const PostList = ({ posts }) => {
   return (
     <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
       {posts.map((post) => (
+        console.log("post", post),
         <Post key={post.communityPostid} {...post} />
       ))}
     </List>

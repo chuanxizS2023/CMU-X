@@ -3,7 +3,8 @@ import { Card, CardContent, CardActions, Typography, IconButton } from '@mui/mat
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import CommentIcon from '@mui/icons-material/Comment';
 import ShareIcon from '@mui/icons-material/Share';
-import styled from '@emotion/styled'; // Corrected import statement
+import styled from '@emotion/styled'; 
+import { addLike } from '../../apis/communitypostAPIs/postAPI';
 
 const StyledCard = styled(Card)(({ theme }) => ({
   marginBottom: theme.spacing(2),
@@ -12,7 +13,12 @@ const StyledCard = styled(Card)(({ theme }) => ({
   },
 }));
 
-const Post = ({ username, title, content, likes, comments, retweets }) => {
+const onLikeClick = (communityPostid) => {
+  console.log("like clicked with id: ", communityPostid);
+  const response = addLike(communityPostid);
+}
+
+const Post = ({ communityPostid, username, title, content, likes, comments, retweets }) => {
   return (
     <StyledCard>
       <CardContent>
@@ -24,7 +30,7 @@ const Post = ({ username, title, content, likes, comments, retweets }) => {
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
+        <IconButton aria-label="add to favorites" onClick={() => onLikeClick(communityPostid)}>
           <FavoriteIcon />
           <Typography component="span" sx={{ marginLeft: 0.5 }}>{likes}</Typography>
         </IconButton>

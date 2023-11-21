@@ -2,24 +2,28 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../../components/common/header';
 import PostList from '../../containers/communityPost/postContainer';
-import { getPostById, getAllPosts } from '../../apis/communitypostAPIs/postAPI'; // Adjust the import path as necessary
+import { getPostById, getAllPosts, createPost } from '../../apis/communitypostAPIs/postAPI'; // Adjust the import path as necessary
 import TopBar from '../../components/common/topNavbar';
 import BottomBar from '../../components/common/botNavbar';
 import AddPostFab from '../../components/communityPost/addPostFab';
 import { Container } from '@mui/material';
 import PostForm from '../../components/communityPost/postForm';
+import CommonPopup from '../../components/common/popup';
 
 const CommunityPage = () => {
   const [post, setPost] = useState([]);
-  let postId = 2; // Replace with the actual post ID you want to fetch
+  const [popupContext, setPopupContext] = useState('');
+  const [openPopup, setOpenPopup] = useState(false);
+  const [postId, setPostId] = useState(1);
   const [isPostFormOpen, setPostFormOpen] = useState(false);
-  useEffect(()=>{
-    fetchPost();
-  },[])
   // Function to open the post creation form
+
   const handleAddPostClick = () => {
     setPostFormOpen(true);
   };
+  
+  const handlepopUpOpen = () => setOpenPopup(true);
+  const handlepopUpClose = () => setOpenPopup(false);
 
   // Function to close the post creation form
   const handleClosePostForm = () => {
@@ -28,11 +32,23 @@ const CommunityPage = () => {
 
   const handlePostSubmit = (postData) => {
     // Logic to submit the post data to the backend
-    console.log(postData);
-    // After submission, you might want to fetch the posts again to update the list
-  };
+    postData.author_id = 1;
+    postData.created = new Date().toLocaleString();
+    const response = createPost(postData);
+    console.log("response", response)
+    if (response) {
+      setPopupContext('Post created successfully!');
+      handlepopUpOpen();
+    } else {
+      setPopupContext('Failed to create post!');
+      handlepopUpOpen();
+    }
+
+};
+
     const fetchPost = async () => {
       try {
+        console.log("in fetchPost")
         const data = await getPostById(postId);
         setPost((prev) => [...prev, data]);
       } catch (error) {
@@ -54,11 +70,16 @@ const CommunityPage = () => {
       <Container maxWidth="sm" style={{ marginBottom: 75 }}>
         <Header title="CMU-X Community" />
         {post && <PostList posts={post} />}
-        <button onClick={()=>{postId++;fetchPost()}}>Fetch Post</button>
+        <button onClick={()=>{setPostId(postId+1);fetchPost()}}>Fetch Post</button>
       </Container>
       <AddPostFab onClick={handleAddPostClick} />
       <PostForm open={isPostFormOpen} onClose={handleClosePostForm} onSubmit={handlePostSubmit} />
       <BottomBar />
+      <CommonPopup
+        isOpen={openPopup}
+        handleClose={handlepopUpClose}
+        text={popupContext}
+      />
     </>
   );
 };

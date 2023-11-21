@@ -19,7 +19,7 @@ public class CommunityPost {
     
     private String title;
     private String content;
-    private Date created_Date;
+    private String created_Date;
     // foreign key from user table
     private String author_id;
     private long likes;

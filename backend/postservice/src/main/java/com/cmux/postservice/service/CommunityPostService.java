@@ -58,6 +58,7 @@ public class CommunityPostService extends AbstractESService<CommunityPost> {
         return communityPost.getLikes();
     }
 
+    
     @Transactional
     public Optional<CommunityPostDTO> getPostById(long id) {
 

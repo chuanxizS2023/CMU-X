@@ -12,7 +12,7 @@ public class CommunityPostDTO {
     private long communityPostid;
     private String title;
     private String content;
-    private Date created_Date;
+    private String created_Date;
     private String author_id;
     private long likes;
     private int commentsCount;
