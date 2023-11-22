@@ -50,12 +50,12 @@ public class CommunityPostService extends AbstractESService<CommunityPost> {
     }
 
     @Transactional
-    public synchronized long addLikeToPost(long communityPostId) {
+    public synchronized CommunityPost addLikeToPost(long communityPostId) {
         CommunityPost communityPost = communityPostRepository.findById(communityPostId)
                 .orElseThrow(() -> new NoSuchElementException("Post not found with id: " + communityPostId));
         communityPost.setLikes(communityPost.getLikes() + 1);
         communityPostRepository.save(communityPost);
-        return communityPost.getLikes();
+        return communityPost;
     }
 
     
