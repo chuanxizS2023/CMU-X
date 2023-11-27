@@ -25,8 +25,8 @@ public class ChatMessage {
 
     private Instant timestamp;
     private ChatType chatType;
-    private MessageType messageType;
     private UUID senderId;
+    private MessageType messageType;
     private String content;
     private String imageUrl;
     private String fileUrl;

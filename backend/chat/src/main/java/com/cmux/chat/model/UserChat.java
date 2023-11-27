@@ -17,9 +17,9 @@ import java.util.UUID;
 @Table("user_chats")
 public class UserChat {
 
-    @PrimaryKeyColumn(name = "chat_id", type = PARTITIONED)
+    @PrimaryKeyColumn(name = "user_id", type = PARTITIONED)
     private UUID userId;
 
-    @PrimaryKeyColumn(name = "user_id", ordinal = 0, ordering = ASCENDING)
+    @PrimaryKeyColumn(name = "chat_id", ordinal = 0, type = CLUSTERED, ordering = ASCENDING)
     private UUID chatId;
 }
