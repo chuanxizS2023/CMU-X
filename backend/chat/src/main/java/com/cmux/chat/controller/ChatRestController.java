@@ -23,24 +23,25 @@ public class ChatRestController {
     @Autowired
     private ChatService chatService;
 
-    @PostMapping("/message")
-    public ResponseEntity<ChatMessage> saveMessage(@RequestBody ChatMessage chatMessage) {
-        if (chatMessage.getChatId() == null || chatMessage.getSenderId() == null || chatMessage.getMessageType() == null) {
-            // throw exception
-            return ResponseEntity.badRequest().build();
-        }
-        ChatMessage newMessage = ChatMessage.builder()
-            .chatId(chatMessage.getChatId())
-            .messageId(Uuids.timeBased())
-            .timestamp(Instant.now())
-            .messageType(chatMessage.getMessageType())
-            .senderId(chatMessage.getSenderId())
-            .content(chatMessage.getContent())
-            .imageUrl(chatMessage.getImageUrl())
-            .fileUrl(chatMessage.getFileUrl())
-            .build();
-        return ResponseEntity.ok(chatService.saveMessage(newMessage));
-    }
+    // for testing purposes
+    // @PostMapping("/message")
+    // public ResponseEntity<ChatMessage> saveMessage(@RequestBody ChatMessage chatMessage) {
+    //     if (chatMessage.getChatId() == null || chatMessage.getSenderId() == null || chatMessage.getMessageType() == null) {
+    //         // throw exception
+    //         return ResponseEntity.badRequest().build();
+    //     }
+    //     ChatMessage newMessage = ChatMessage.builder()
+    //         .chatId(chatMessage.getChatId())
+    //         .messageId(Uuids.timeBased())
+    //         .timestamp(Instant.now())
+    //         .messageType(chatMessage.getMessageType())
+    //         .senderId(chatMessage.getSenderId())
+    //         .content(chatMessage.getContent())
+    //         .imageUrl(chatMessage.getImageUrl())
+    //         .fileUrl(chatMessage.getFileUrl())
+    //         .build();
+    //     return ResponseEntity.ok(chatService.saveMessage(newMessage));
+    // }
 
     @PostMapping("/private")
     public ResponseEntity<Chat> getOrCreatePrivateChat(@RequestBody PrivateChatRequest privateChatRequest) {
