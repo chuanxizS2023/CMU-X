@@ -54,6 +54,10 @@ public class User implements Serializable {
         this.password = password;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
 
     @Override
     public boolean equals(Object o) {
