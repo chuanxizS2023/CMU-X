@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { sendMessage, subscribeToTopic } from '../../socketClient';
 
 const baseUrl = 'http://localhost:9000/community';
 
@@ -6,6 +7,7 @@ const baseUrl = 'http://localhost:9000/community';
 export const createPost = async (postData) => {
   try {
     const response = await axios.post(baseUrl, postData);
+    sendMessage('/app/communityPost.createPost', postData);
     return response;
   } catch (error) {
     console.error("Error creating post:", error.message);

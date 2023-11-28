@@ -33,6 +33,7 @@ services:
     depends_on:
       - mysql
       - elasticsearch
+      # - rabbitmq
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.10.4
@@ -50,20 +51,32 @@ services:
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
 
-  frontend:
-    build: 
-      context: ../../frontend/cmu-x-frontend-app  # Relative path from backend/postservice to frontend app
-      dockerfile: Dockerfile
-    container_name: frontend-container
-    ports:
-      - "3000:3000"
-    volumes:
-      - ../../frontend/cmu-x-frontend-app:/app  # Adjust this path as needed
-      - /app/node_modules
+
+  rabbitmq:
+    image: "rabbitmq:management"
+    # command: ["rabbitmq-plugins", "enable", "rabbitmq_stomp"]
     environment:
-      - WATCHPACK_POLLING=true
-    depends_on:
-      - postservice
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "5672:5672" # AMQP protocol port
+      - "15672:15672" # Management UI port
+      - "61613:61613" # STOMP protocol port
+
+  # frontend:
+  #   build: 
+  #     context: ../../frontend/cmu-x-frontend-app  # Relative path from backend/postservice to frontend app
+  #     dockerfile: Dockerfile
+  #   container_name: frontend-container
+  #   ports:
+  #     - "3000:3000"
+  #   volumes:
+  #     - ../../frontend/cmu-x-frontend-app:/app  # Adjust this path as needed
+  #     - /app/node_modules
+  #   environment:
+  #     - WATCHPACK_POLLING=true
+  #   depends_on:
+  #     - postservice
   # kibana:
   #   image: docker.elastic.co/kibana/kibana:8.1.0
   #   container_name: kibana
