@@ -11,6 +11,7 @@ services:
     depends_on:
       - cassandra
       - rabbitmq
+      - cassandra-load-keyspace
     environment:
       CASSANDRA_HOST: cassandra
       RABBITMQ_HOST: rabbitmq
@@ -31,13 +32,6 @@ services:
       volumes:
         - ./src/main/resources/cassandra_schema.cql:/schema.cql 
       command: /bin/bash -c "sleep 60 && echo loading cassandra keyspace && cqlsh cassandra -f /schema.cql"
-
-  # rabbitmq:
-  #   image: "rabbitmq:management"
-  #   ports:
-  #     - "15672:15672"  # management UI
-  #     - "5672:5672" # default port
-  #     - "61613:61613" # STOMP plugin
 
   rabbitmq:
     build:

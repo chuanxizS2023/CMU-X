@@ -14,8 +14,8 @@ import java.util.UUID;
 @Getter
 @Setter
 @AllArgsConstructor
-@Table("chat_users")
-public class ChatUser {
+@Table("group_users")
+public class GroupUser {
 
     @PrimaryKeyColumn(name = "chat_id", type = PARTITIONED)
     private UUID chatId;

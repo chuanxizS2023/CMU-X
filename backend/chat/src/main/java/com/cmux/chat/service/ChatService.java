@@ -2,14 +2,18 @@ package com.cmux.chat.service;
 
 import com.cmux.chat.model.Chat;
 import com.cmux.chat.model.ChatMessage;
-import com.cmux.chat.model.ChatUser;
+import com.cmux.chat.model.GroupUser;
 import com.cmux.chat.model.UserChat;
+import com.cmux.chat.model.PrivateChat;
+import com.cmux.chat.model.ChatType;
 import com.cmux.chat.repository.ChatMessageRepository;
 import com.cmux.chat.repository.ChatRepository;
-import com.cmux.chat.repository.ChatUserRepository;
+import com.cmux.chat.repository.PrivateChatRepository;
+import com.cmux.chat.repository.GroupUserRepository;
 import com.cmux.chat.repository.UserChatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.Optional;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -21,13 +25,48 @@ public class ChatService {
     private ChatRepository chatRepository;
 
     @Autowired
+    private PrivateChatRepository privateChatRepository;
+
+    @Autowired
     private ChatMessageRepository chatMessageRepository;
 
     @Autowired
-    private ChatUserRepository chatUserRepository;
+    private GroupUserRepository groupUserRepository;
 
     @Autowired
     private UserChatRepository userChatRepository;
+
+    public Chat getOrCreatePrivateChat(UUID user1Id, UUID user2Id) {
+        if (user1Id.compareTo(user2Id) > 0) {
+            UUID temp = user1Id;
+            user1Id = user2Id;
+            user2Id = temp;
+        }
+        UUID chatId;
+        Optional<PrivateChat> existingPrivateChat = privateChatRepository.findByUser1IdAndUser2Id(user1Id, user2Id);
+        if (existingPrivateChat.isPresent()) {
+            chatId = existingPrivateChat.get().getChatId();
+            return chatRepository.findById(chatId).orElse(null);
+        } else {
+            chatId = UUID.randomUUID();
+            PrivateChat newPrivateChat = PrivateChat.builder()
+                               .user1Id(user1Id)
+                               .user2Id(user2Id)
+                               .chatId(chatId)
+                               .build();
+            privateChatRepository.save(newPrivateChat);
+            Chat newChat = Chat.builder()
+                           .chatId(chatId)
+                           .chatType(ChatType.PRIVATE)
+                           .build();
+            chatRepository.save(newChat);
+            UserChat user1Chat = new UserChat(user1Id, chatId);
+            UserChat user2Chat = new UserChat(user2Id, chatId);
+            userChatRepository.save(user1Chat);
+            userChatRepository.save(user2Chat);
+            return newChat;
+        }
+    }
 
     public Chat createChat(Chat chat) {
         return chatRepository.save(chat);
@@ -51,10 +90,15 @@ public class ChatService {
         return chatMessageRepository.getChatMessages(chatId);
     }
 
-    public List<UUID> getChatUsers(UUID chatId) {
-        List<ChatUser> chatUsers = chatUserRepository.findByChatId(chatId);
-        List<UUID> userIds = chatUsers.stream()
-                .map(ChatUser::getUserId)
+    public List<UUID> getGroupUsers(UUID chatId) {
+        Chat chat = chatRepository.findById(chatId).orElse(null);
+        if (chat == null || chat.getChatType() != ChatType.GROUP) {
+            // should throw exception
+            return null;
+        }
+        List<GroupUser> groupUsers = groupUserRepository.findByChatId(chatId);
+        List<UUID> userIds = groupUsers.stream()
+                .map(GroupUser::getUserId)
                 .collect(Collectors.toList());
         return userIds;
     }
@@ -67,18 +111,18 @@ public class ChatService {
         return chatRepository.findAllById(chatIds);
     }
 
-    public void addUserToChat(ChatUser chatUser) {
-        chatUserRepository.save(chatUser);
+    public void addUserToGroup(GroupUser groupUser) {
+        groupUserRepository.save(groupUser);
     }
 
     public void addChatToUser(UserChat userChat) {
         userChatRepository.save(userChat);
     }
 
-    public void removeUserFromChat(UUID chatId, UUID userId) {
-        chatUserRepository.deleteByChatIdAndUserId(chatId, userId);
+    public void removeUserFromGroup(UUID chatId, UUID userId) {
+        groupUserRepository.deleteByChatIdAndUserId(chatId, userId);
         userChatRepository.deleteByChatIdAndUserId(chatId, userId);
-        long count = chatUserRepository.countByChatId(chatId);
+        long count = groupUserRepository.countByChatId(chatId);
         if (count == 0) {
             chatRepository.deleteById(chatId);
         }

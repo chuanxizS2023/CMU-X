@@ -1,9 +1,12 @@
 package com.cmux.chat.controller;
 
+import com.cmux.chat.dto.PrivateChatRequest;
+import com.cmux.chat.dto.GroupChatRequest;
 import com.cmux.chat.model.ChatMessage;
 import com.cmux.chat.model.Chat;
-import com.cmux.chat.model.ChatUser;
+import com.cmux.chat.model.GroupUser;
 import com.cmux.chat.model.UserChat;
+import com.cmux.chat.model.ChatType;
 import com.cmux.chat.service.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,14 +21,21 @@ public class ChatRestController {
     @Autowired
     private ChatService chatService;
 
-    @PostMapping
-    public ResponseEntity<Chat> createChat(@RequestBody Chat chat) {
-        Chat newChat = Chat.builder()
+    @PostMapping("/private")
+    public ResponseEntity<Chat> getOrCreatePrivateChat(@RequestBody PrivateChatRequest privateChatRequest) {
+        UUID user1Id = privateChatRequest.getUser1Id();
+        UUID user2Id = privateChatRequest.getUser2Id();
+        return ResponseEntity.ok(chatService.getOrCreatePrivateChat(user1Id, user2Id));
+    }
+
+    @PostMapping("/group")
+    public ResponseEntity<Chat> createGroupChat(@RequestBody GroupChatRequest groupChatRequest) {
+        Chat newGroupChat = Chat.builder()
                 .chatId(UUID.randomUUID())
-                .chatType(chat.getChatType())
-                .chatName(chat.getChatName())
+                .chatType(ChatType.GROUP)
+                .chatName(groupChatRequest.getChatName())
                 .build();
-        return ResponseEntity.ok(chatService.createChat(newChat));
+        return ResponseEntity.ok(chatService.createChat(newGroupChat));
     }
 
     @DeleteMapping("/{chatId}")
@@ -63,30 +73,30 @@ public class ChatRestController {
         return ResponseEntity.ok(chatService.getChatsByUserId(userId));
     }
 
-    @GetMapping("/{chatId}/users")
-    public ResponseEntity<List<UUID>> getChatUsers(@PathVariable UUID chatId) {
-        return ResponseEntity.ok(chatService.getChatUsers(chatId));
+    @GetMapping("/group/{chatId}/users")
+    public ResponseEntity<List<UUID>> getGroupUsers(@PathVariable UUID chatId) {
+        return ResponseEntity.ok(chatService.getGroupUsers(chatId));
     }
 
-    @PostMapping("/{chatId}/users")
-    public ResponseEntity<?> addUsersToChat(@PathVariable UUID chatId, @RequestBody List<UUID> userIds) {
+    @PostMapping("/group/{chatId}/users")
+    public ResponseEntity<?> addUsersToGroup(@PathVariable UUID chatId, @RequestBody List<UUID> userIds) {
         for (UUID userId : userIds) {
             if (userId == null) {
                 return ResponseEntity.badRequest().body("User IDs in the list must not be null");
             }
-            ChatUser chatUser = new ChatUser(chatId, userId);
-            chatService.addUserToChat(chatUser);
+            GroupUser groupUser = new GroupUser(chatId, userId);
+            chatService.addUserToGroup(groupUser);
             UserChat userChat = new UserChat(userId, chatId);
             chatService.addChatToUser(userChat);
         } 
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{chatId}/users/{userId}")
-    public ResponseEntity<Void> removeUserFromChat(@PathVariable String chatId, @PathVariable String userId) {
+    @DeleteMapping("/group/{chatId}/users/{userId}")
+    public ResponseEntity<Void> removeUserFromGroup(@PathVariable String chatId, @PathVariable String userId) {
         UUID chatUuid = UUID.fromString(chatId);
         UUID userUuid = UUID.fromString(userId);
-        chatService.removeUserFromChat(chatUuid, userUuid);
+        chatService.removeUserFromGroup(chatUuid, userUuid);
         return ResponseEntity.ok().build();
     }
 }

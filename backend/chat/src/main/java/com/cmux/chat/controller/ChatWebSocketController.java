@@ -21,7 +21,7 @@ public class ChatWebSocketController {
 
     @MessageMapping("/chat.sendMessage")
     public void sendMessage(@Payload ChatMessage chatMessage) {
-        if (chatMessage.getChatId() == null || chatMessage.getSenderId() == null) {
+        if (chatMessage.getChatId() == null || chatMessage.getSenderId() == null || chatMessage.getChatType() == null) {
             // throw exception
             return;
         }
