@@ -21,7 +21,7 @@ public class ChatWebSocketController {
 
     @MessageMapping("/chat.sendMessage")
     public void sendMessage(@Payload ChatMessage chatMessage) {
-        if (chatMessage.getChatId() == null || chatMessage.getSenderId() == null || chatMessage.getChatType() == null) {
+        if (chatMessage.getChatId() == null || chatMessage.getSenderId() == null || chatMessage.getMessageType() == null) {
             // throw exception
             return;
         }
@@ -29,8 +29,8 @@ public class ChatWebSocketController {
                 .chatId(chatMessage.getChatId())
                 .messageId(Uuids.timeBased())
                 .timestamp(Instant.now())
+                .messageType(chatMessage.getMessageType())
                 .senderId(chatMessage.getSenderId())
-                .chatType(chatMessage.getChatType())
                 .content(chatMessage.getContent())
                 .imageUrl(chatMessage.getImageUrl())
                 .fileUrl(chatMessage.getFileUrl())

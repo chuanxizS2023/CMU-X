@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
+import java.time.Instant;
+import com.datastax.oss.driver.api.core.uuid.Uuids;
 
 @RestController
 @RequestMapping("/api/chats")
@@ -20,6 +22,25 @@ public class ChatRestController {
 
     @Autowired
     private ChatService chatService;
+
+    @PostMapping("/message")
+    public ResponseEntity<ChatMessage> saveMessage(@RequestBody ChatMessage chatMessage) {
+        if (chatMessage.getChatId() == null || chatMessage.getSenderId() == null || chatMessage.getMessageType() == null) {
+            // throw exception
+            return ResponseEntity.badRequest().build();
+        }
+        ChatMessage newMessage = ChatMessage.builder()
+            .chatId(chatMessage.getChatId())
+            .messageId(Uuids.timeBased())
+            .timestamp(Instant.now())
+            .messageType(chatMessage.getMessageType())
+            .senderId(chatMessage.getSenderId())
+            .content(chatMessage.getContent())
+            .imageUrl(chatMessage.getImageUrl())
+            .fileUrl(chatMessage.getFileUrl())
+            .build();
+        return ResponseEntity.ok(chatService.saveMessage(newMessage));
+    }
 
     @PostMapping("/private")
     public ResponseEntity<Chat> getOrCreatePrivateChat(@RequestBody PrivateChatRequest privateChatRequest) {

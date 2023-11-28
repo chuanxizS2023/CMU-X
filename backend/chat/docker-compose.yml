@@ -31,7 +31,7 @@ services:
         - cassandra
       volumes:
         - ./src/main/resources/cassandra_schema.cql:/schema.cql 
-      command: /bin/bash -c "sleep 60 && echo loading cassandra keyspace && cqlsh cassandra -f /schema.cql"
+      command: /bin/bash -c "sleep 90 && echo loading cassandra keyspace && cqlsh cassandra -f /schema.cql"
 
   rabbitmq:
     build:

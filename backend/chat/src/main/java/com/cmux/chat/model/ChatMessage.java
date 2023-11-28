@@ -20,12 +20,11 @@ public class ChatMessage {
     @PrimaryKeyColumn(name = "chatid", type = PARTITIONED)
     private UUID chatId;
 
-    @PrimaryKeyColumn(name = "messageid", type = CLUSTERED, ordering = DESCENDING)
+    @PrimaryKeyColumn(name = "messageid", type = CLUSTERED, ordering = ASCENDING)
     private UUID messageId;
 
-    private Instant timestamp;
-    private ChatType chatType;
     private UUID senderId;
+    private Instant timestamp;
     private MessageType messageType;
     private String content;
     private String imageUrl;

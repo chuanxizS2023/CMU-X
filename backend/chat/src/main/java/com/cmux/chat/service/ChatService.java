@@ -6,6 +6,7 @@ import com.cmux.chat.model.GroupUser;
 import com.cmux.chat.model.UserChat;
 import com.cmux.chat.model.PrivateChat;
 import com.cmux.chat.model.ChatType;
+import com.cmux.chat.model.MessageType;
 import com.cmux.chat.repository.ChatMessageRepository;
 import com.cmux.chat.repository.ChatRepository;
 import com.cmux.chat.repository.PrivateChatRepository;
@@ -108,7 +109,9 @@ public class ChatService {
         List<UUID> chatIds = userChats.stream()
                 .map(UserChat::getChatId)
                 .collect(Collectors.toList());
-        return chatRepository.findAllById(chatIds);
+        List<Chat> chats = chatRepository.findAllById(chatIds);
+        chats.sort((c1, c2) -> c2.getLastMessageTime().compareTo(c1.getLastMessageTime()));
+        return chats;
     }
 
     public void addUserToGroup(GroupUser groupUser) {
@@ -129,6 +132,21 @@ public class ChatService {
     }
 
     public ChatMessage saveMessage(ChatMessage chatMessage) {
+        Chat chat = chatRepository.findById(chatMessage.getChatId()).orElse(null);
+        if (chat == null) {
+            // should throw exception
+            return null;
+        }
+        chat.setLastMessageTime(chatMessage.getTimestamp());
+        MessageType messageType = chatMessage.getMessageType();
+        if (messageType == MessageType.TEXT) {
+            chat.setLastMessage(chatMessage.getContent());
+        } else if (messageType == MessageType.IMAGE) {
+            chat.setLastMessage("[Image]");
+        } else if (messageType == MessageType.FILE) {
+            chat.setLastMessage("[File]");
+        }
+        chatRepository.save(chat);
         return chatMessageRepository.save(chatMessage);
     }
 }
