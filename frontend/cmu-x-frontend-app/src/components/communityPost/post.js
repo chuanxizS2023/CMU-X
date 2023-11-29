@@ -3,9 +3,9 @@ import { Card, CardContent, CardActions, Typography, IconButton } from '@mui/mat
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import CommentIcon from '@mui/icons-material/Comment';
 import ShareIcon from '@mui/icons-material/Share';
+import DeleteIcon from '@mui/icons-material/Delete';
 import styled from '@emotion/styled'; 
-import { addLike } from '../../apis/communitypostAPIs/postAPI';
-import { saveComment } from '../../apis/communitypostAPIs/postAPI';
+import { addLike, deletePost, saveComment } from '../../apis/communitypostAPIs/postAPI';
 
 const StyledCard = styled(Card)(({ theme }) => ({
   marginBottom: theme.spacing(2),
@@ -19,6 +19,10 @@ const onLikeClick = (communityPostid) => {
   const response = addLike(communityPostid);
 }
 
+const onDeleteClick = (communityPostid) => {
+  console.log("delete clicked with id: ", communityPostid);
+  const response = deletePost(communityPostid);
+}
 
 const Post = ({ communityPostid, username, title, content, likes, comments, retweets, onCommentClick  }) => {
   return (
@@ -31,18 +35,22 @@ const Post = ({ communityPostid, username, title, content, likes, comments, retw
           {content}
         </Typography>
       </CardContent>
-      <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites" onClick={() => onLikeClick(communityPostid)}>
-          <FavoriteIcon />
-          <Typography component="span" sx={{ marginLeft: 0.5 }}>{likes}</Typography>
-        </IconButton>
-        <IconButton aria-label="comment" onClick={() => onCommentClick(communityPostid)}>
-          <CommentIcon />
-          {/* <Typography component="span" sx={{ marginLeft: 0.5 }}>{comments}</Typography> */}
-        </IconButton>
-        <IconButton aria-label="share">
-          <ShareIcon />
-          <Typography component="span" sx={{ marginLeft: 0.5 }}>{retweets}</Typography>
+      <CardActions disableSpacing sx={{ justifyContent: 'space-between' }}>
+        <div>
+          <IconButton aria-label="add to favorites" onClick={() => onLikeClick(communityPostid)}>
+            <FavoriteIcon />
+            <Typography component="span" sx={{ marginLeft: 0.5 }}>{likes}</Typography>
+          </IconButton>
+          <IconButton aria-label="comment" onClick={() => onCommentClick(communityPostid)}>
+            <CommentIcon />
+          </IconButton>
+          <IconButton aria-label="share">
+            <ShareIcon />
+            <Typography component="span" sx={{ marginLeft: 0.5 }}>{retweets}</Typography>
+          </IconButton>
+        </div>
+        <IconButton aria-label="delete" onClick={() => onDeleteClick(communityPostid)}>
+          <DeleteIcon />
         </IconButton>
       </CardActions>
     </StyledCard>

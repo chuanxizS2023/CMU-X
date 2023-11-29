@@ -1,17 +1,27 @@
 import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogTitle, TextField, DialogActions, Button } from '@mui/material';
+import { Dialog, DialogContent, DialogTitle, TextField, DialogActions, Button, Checkbox, FormControlLabel } from '@mui/material';
 
 const PostForm = ({ open, onClose, onSubmit }) => {
+  const [isFindTeammatePost, setIsFindTeammatePost] = useState(false);
   const [postData, setPostData] = useState({
     title: '',
     content: '',
     author_id: null,
     created: null,
+    semester: '',
+    teammembers: [],
+    instructorName: '',
+    courseNumber: '',
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setPostData({ ...postData, [name]: value });
+  };
+
+
+  const handleCheckboxChange = (e) => {
+    setIsFindTeammatePost(e.target.checked);
   };
 
   const handleSubmit = () => {
@@ -46,6 +56,59 @@ const PostForm = ({ open, onClose, onSubmit }) => {
           value={postData.content}
           onChange={handleChange}
         />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={isFindTeammatePost}
+              onChange={handleCheckboxChange}
+            />
+          }
+          label="Is this a Find Teammate Post?"
+        />
+        {isFindTeammatePost && (
+          <>
+            <TextField
+              margin="dense"
+              name="semester"
+              label="Semester"
+              type="text"
+              fullWidth
+              variant="outlined"
+              value={postData.semester}
+              onChange={handleChange}
+            />
+            <TextField
+              margin="dense"
+              name="teammembers"
+              label="Team Members (Your name)"
+              type="text"
+              fullWidth
+              variant="outlined"
+              value={postData.teammembers}
+              onChange={handleChange}
+            />
+            <TextField
+              margin="dense"
+              name="instructorName"
+              label="Instructor Name"
+              type="text"
+              fullWidth
+              variant="outlined"
+              value={postData.instructorName}
+              onChange={handleChange}
+            />
+            <TextField
+              margin="dense"
+              name="courseNumber"
+              label="Course Number"
+              type="text"
+              fullWidth
+              variant="outlined"
+              value={postData.courseNumber}
+              onChange={handleChange}
+            />
+          </>
+        )}
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>

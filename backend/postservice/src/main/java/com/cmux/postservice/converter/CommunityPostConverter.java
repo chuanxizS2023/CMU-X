@@ -43,7 +43,7 @@ public class CommunityPostConverter {
         if (communityPost.getTeamMembers() == null) {
             dto.setTeamMembers(null);
         } else {
-            dto.setTeamMembers(communityPost.getTeamMembers().toString());
+            dto.setTeamMembers(communityPost.getTeamMembers());
         }
 
         return dto;
@@ -59,6 +59,13 @@ public class CommunityPostConverter {
         communityPost.setLikes(communityPostDTO.getLikes());
         communityPost.setCommentsCount(communityPostDTO.getCommentsCount());
         communityPost.set_published(communityPostDTO.is_published());
+        communityPost.setFindTeammatePost(communityPostDTO.isFindTeammatePost());
+        communityPost.setInstructorName(communityPostDTO.getInstructorName());
+        communityPost.setCourseNumber(communityPostDTO.getCourseNumber());
+        communityPost.setSemester(communityPostDTO.getSemester());
+        communityPost.setTeamMembers(communityPostDTO.getTeamMembers());
+        System.out.println("CommunityPostConverter: convertToEntity: communityPostDTO.getTeamMembers(): " + communityPostDTO.getTeamMembers());
+        System.out.println("CommunityPostConverter: convertToEntity: communityPost.coursen " + communityPost.getCourseNumber());
         // set comments
         if (communityPostDTO.getComments() != null) {
             ArrayList<Comment> commentList = new ArrayList<Comment>();
@@ -69,7 +76,7 @@ public class CommunityPostConverter {
         } else {
             communityPost.setComments(null);
         }
-
+        
         return communityPost;
     }
 
@@ -91,6 +98,13 @@ public class CommunityPostConverter {
             }
             existingPost.setComments(commentList);
         }
+
+        existingPost.setFindTeammatePost(updatePost.isFindTeammatePost());
+        existingPost.setInstructorName(updatePost.getInstructorName());
+        existingPost.setCourseNumber(updatePost.getCourseNumber());
+        existingPost.setSemester(updatePost.getSemester());
+        existingPost.setTeamMembers(updatePost.getTeamMembers());
+
         return existingPost;
     }
 }

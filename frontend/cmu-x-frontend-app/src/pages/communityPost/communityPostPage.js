@@ -26,10 +26,8 @@ const CommunityPage = () => {
   useEffect(() => {
     const initiateSubscription = async () => {
       await delay(1000); 
-      console.log("Subscribing to topic...");
-      const subscription = subscribeToTopic('/topic/post-update', (message) => {
+      const postUpdateSubscribe = subscribeToTopic('/topic/post-update', (message) => {
         const { communityPostid, title, content, likes, comments } = message;
-        console.log("postid: ", communityPostid)
         setPost(prevPosts => {
           const existingPostIndex = prevPosts.findIndex(post => post.communityPostid === communityPostid);
           if (existingPostIndex !== -1) {
@@ -43,16 +41,17 @@ const CommunityPage = () => {
           }
         });
       });
+
+
+      const postDeleteSubscribe = subscribeToTopic('/topic/post-delete', (postId) => {
+        setPost(prevPosts => prevPosts.filter(post => post.communityPostid !== postId));
+      });
+
     };
   
     initiateSubscription();
   }, []);
   
-
-  useEffect(() => {
-    console.log("post: ", post);
-
-  }, [post]);
   const handleAddPostClick = () => {
     setPostFormOpen(true);
   };

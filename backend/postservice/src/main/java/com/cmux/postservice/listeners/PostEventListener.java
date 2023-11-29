@@ -40,9 +40,8 @@ public class PostEventListener {
 
         communityPostService.index(this.id, String.valueOf(event.getCommunityPost().getCommunityPostid()),
                 event.getCommunityPost());
-        System.out.println("PostEventListener: onPostUpdated: updated document with id " + postID);
+
         messagingTemplate.convertAndSend("/topic/post-update", event.getCommunityPost());
-        System.err.println("PostEventListener: onPostUpdated: sent to frontend with id " + postID);
     }
 
     @EventListener
@@ -52,5 +51,7 @@ public class PostEventListener {
         commentService.deleteIndex(this.id, postID);
 
         System.out.println("PostEventListener: onPostDeleted: deleted document with id " + postID);
+    
+        messagingTemplate.convertAndSend("/topic/post-delete", event.getPostId());
     }
 }
