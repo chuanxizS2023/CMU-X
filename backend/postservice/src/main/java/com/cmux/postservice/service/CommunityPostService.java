@@ -55,6 +55,8 @@ public class CommunityPostService extends AbstractESService<CommunityPost> {
                 .orElseThrow(() -> new NoSuchElementException("Post not found with id: " + communityPostId));
         communityPost.setLikes(communityPost.getLikes() + 1);
         communityPostRepository.save(communityPost);
+
+        publisher.publishEvent(new PostEvents.Updated(communityPost));
         return communityPost;
     }
 

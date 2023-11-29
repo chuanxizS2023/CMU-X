@@ -11,6 +11,7 @@ import PostForm from '../../components/communityPost/postForm';
 import CommonPopup from '../../components/common/popup';
 import CommentForm from '../../components/communityPost/commentForm';
 import { saveComment, getComment } from '../../apis/communitypostAPIs/commentAPI';
+import { subscribeToTopic } from '../../socketClient';
 
 const CommunityPage = () => {
   const [post, setPost] = useState([]);
@@ -21,7 +22,16 @@ const CommunityPage = () => {
   const [isCommentFormOpen, setCommentFormOpen] = useState(false);
   const [activeCommentPostId, setActiveCommentPostId] = useState(null);
 
-  // Function to open the post creation form
+  useEffect(() => {
+    const subscription = subscribeToTopic('/topic/post-update', (message) => {
+      console.log("Message received from topic:", message);
+      if (message) {
+        console.log("Message received from topic:", message);
+        // You can add logic here to update the state based on the received message
+      }
+    });
+  
+  }, []);
 
   const handleAddPostClick = () => {
     setPostFormOpen(true);
