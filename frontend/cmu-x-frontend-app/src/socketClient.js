@@ -19,6 +19,10 @@ client.onConnect = function (frame) {
   console.log('Connected: ' + frame);
 };
 
+client.onChangeState = function (frame) {
+  console.log('State changed: ' + frame);
+}
+
 client.onStompError = function (frame) {
   console.log('Broker reported error: ' + frame.headers['message']);
   console.log('Additional details: ' + frame.body);

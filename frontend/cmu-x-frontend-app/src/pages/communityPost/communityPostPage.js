@@ -11,7 +11,7 @@ import PostForm from '../../components/communityPost/postForm';
 import CommonPopup from '../../components/common/popup';
 import CommentForm from '../../components/communityPost/commentForm';
 import { saveComment, getComment } from '../../apis/communitypostAPIs/commentAPI';
-import { subscribeToTopic } from '../../socketClient';
+import { subscribeToTopic, client } from '../../socketClient';
 
 const CommunityPage = () => {
   const [post, setPost] = useState([]);
@@ -21,18 +21,41 @@ const CommunityPage = () => {
   const [isPostFormOpen, setPostFormOpen] = useState(false);
   const [isCommentFormOpen, setCommentFormOpen] = useState(false);
   const [activeCommentPostId, setActiveCommentPostId] = useState(null);
+  const delay = ms => new Promise(res => setTimeout(res, ms));
 
   useEffect(() => {
-    const subscription = subscribeToTopic('/topic/post-update', (message) => {
-      console.log("Message received from topic:", message);
-      if (message) {
-        console.log("Message received from topic:", message);
-        // You can add logic here to update the state based on the received message
-      }
-    });
-  
+    const initiateSubscription = async () => {
+      await delay(1000); 
+      console.log("Subscribing to topic...");
+      const subscription = subscribeToTopic('/topic/post-update', (message) => {
+        const postId = message.communityPostid;
+        const title = message.title;
+        const content = message.content;
+        const likes = message.likes;
+        const comments_count = message.comments.length;
+        // set post with same postId to new post
+        setPost((prev) => {
+          const newPost = prev.map((post) => {
+            if (post.postId === postId) {
+              console.log("Updating post... with postId: " + postId)
+              return {
+                ...post,
+              };
+            }
+            return post;
+          });
+          return newPost;
+        });
+      });
+    };
+
+    initiateSubscription();
   }, []);
 
+  useEffect(() => {
+    console.log("post: ", post);
+
+  }, [post]);
   const handleAddPostClick = () => {
     setPostFormOpen(true);
   };
