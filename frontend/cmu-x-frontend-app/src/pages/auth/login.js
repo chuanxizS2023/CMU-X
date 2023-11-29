@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { TextField, Button, Paper, Grid, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import TwitterIcon from '../../assets/cmux_logo_no_bg.png';
 
 function Login() {
-  const [credentials, setCredentials] = useState({ email: '', password: '' });
+  const [credentials, setCredentials] = useState({ username: '', password: '' });
   const navigate = useNavigate();
 
   const handleChange = (event) => {
@@ -12,35 +13,44 @@ function Login() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Handle login logic here
-    console.log('Logging in with', credentials);
-    navigate('/communityPost', { replace: true });
+    // Twitter login logic goes here
+    navigate('/home', { replace: true }); // Redirect to a different route after login
   };
 
   const paperStyle = {
     padding: 20, 
-    height: '70vh', 
+    height: '60vh', 
     width: 280, 
-    margin: "20px auto"
+    margin: "20px auto",
+    backgroundColor: '#f5f8fa' // Light background color
   };
 
-  const btnstyle = { margin: '8px 0' };
+  const textFieldStyle = { 
+    margin: '8px 0', 
+    backgroundColor: 'white' // White text fields
+  };
+
+  const btnstyle = {
+    margin: '8px 0',
+    backgroundColor: '#1DA1F2', // Twitter blue
+    color: 'white'
+  };
 
   return (
-    <Grid container spacing={2} style={{ minHeight: '100vh' }} alignItems="center" justify="center">
+    <Grid container spacing={2} style={{ minHeight: '100vh', backgroundColor: '#f5f8fa' }} alignItems="center" justify="center">
       <Paper elevation={10} style={paperStyle}>
         <Grid align='center'>
-          <Typography variant='h5'>Sign in</Typography>
+          <img src={TwitterIcon} alt="Twitter Logo" width="120" height="100" />
         </Grid>
         <TextField
-          label='Email'
-          placeholder='Enter email'
+          label='Username'
+          placeholder='Enter username'
           fullWidth
           required
-          name="email"
-          value={credentials.email}
+          name="username"
+          value={credentials.username}
           onChange={handleChange}
-          style={{ margin: '8px 0' }}
+          style={textFieldStyle}
         />
         <TextField
           label='Password'
@@ -51,17 +61,16 @@ function Login() {
           name="password"
           value={credentials.password}
           onChange={handleChange}
-          style={{ margin: '8px 0' }}
+          style={textFieldStyle}
         />
         <Button
           type='submit'
-          color='primary'
           variant="contained"
           fullWidth
           onClick={handleSubmit}
           style={btnstyle}
         >
-          Sign in
+          Log in with Andrew ID
         </Button>
       </Paper>
     </Grid>
