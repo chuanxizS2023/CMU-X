@@ -1,14 +1,16 @@
 package com.cmux.chat.dto;
 
+import com.cmux.chat.model.MessageType;
 import lombok.*;
 import java.util.UUID;
 import jakarta.validation.constraints.NotNull;
 
 @Getter
 @Setter
-public class PrivateChatRequest {
+public class MessageRequest {
     @NotNull
-    private UUID user1Id;
+    private UUID chatId;
     @NotNull
-    private UUID user2Id;
+    private UUID senderId;
+    private String content;
 }

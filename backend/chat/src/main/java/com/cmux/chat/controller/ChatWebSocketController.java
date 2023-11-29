@@ -2,11 +2,14 @@ package com.cmux.chat.controller;
 
 import com.cmux.chat.model.ChatMessage;
 import com.cmux.chat.service.ChatService;
+import com.cmux.chat.dto.MessageRequest;
+import com.cmux.chat.model.MessageType;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
+import com.cmux.chat.service.S3Service;
 import com.datastax.oss.driver.api.core.uuid.Uuids;
 import java.util.UUID;
 import java.time.Instant;
@@ -17,24 +20,21 @@ public class ChatWebSocketController {
     private ChatService chatService;
 
     @Autowired
+    private S3Service s3Service;
+
+    @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
     @MessageMapping("/chat.sendMessage")
-    public void sendMessage(@Payload ChatMessage chatMessage) {
-        if (chatMessage.getChatId() == null || chatMessage.getSenderId() == null || chatMessage.getMessageType() == null) {
-            // throw exception
-            return;
-        }
+    public void sendMessage(@Payload MessageRequest chatMessage) {
         ChatMessage newMessage = ChatMessage.builder()
-                .chatId(chatMessage.getChatId())
-                .messageId(Uuids.timeBased())
-                .timestamp(Instant.now())
-                .messageType(chatMessage.getMessageType())
-                .senderId(chatMessage.getSenderId())
-                .content(chatMessage.getContent())
-                .imageUrl(chatMessage.getImageUrl())
-                .fileUrl(chatMessage.getFileUrl())
-                .build();
+            .chatId(chatMessage.getChatId())
+            .senderId(chatMessage.getSenderId())
+            .messageType(MessageType.TEXT)
+            .messageId(Uuids.timeBased())
+            .timestamp(Instant.now())
+            .content(chatMessage.getContent())
+            .build();
         chatService.saveMessage(newMessage);
         messagingTemplate.convertAndSend("/topic/chat." + chatMessage.getChatId(), newMessage);
     }

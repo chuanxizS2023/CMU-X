@@ -7,7 +7,7 @@ import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.mapping.Table;
 import static org.springframework.data.cassandra.core.cql.PrimaryKeyType.PARTITIONED;
 import static org.springframework.data.cassandra.core.cql.PrimaryKeyType.CLUSTERED;
-import static org.springframework.data.cassandra.core.cql.Ordering.DESCENDING;
+import static org.springframework.data.cassandra.core.cql.Ordering.ASCENDING;
 import java.util.UUID;
 import java.time.Instant;
 
@@ -27,6 +27,5 @@ public class ChatMessage {
     private Instant timestamp;
     private MessageType messageType;
     private String content;
-    private String imageUrl;
     private String fileUrl;
 }

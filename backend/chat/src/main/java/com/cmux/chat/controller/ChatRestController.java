@@ -2,15 +2,19 @@ package com.cmux.chat.controller;
 
 import com.cmux.chat.dto.PrivateChatRequest;
 import com.cmux.chat.dto.GroupChatRequest;
+import com.cmux.chat.dto.MessageRequest;
 import com.cmux.chat.model.ChatMessage;
 import com.cmux.chat.model.Chat;
 import com.cmux.chat.model.GroupUser;
 import com.cmux.chat.model.UserChat;
 import com.cmux.chat.model.ChatType;
+import com.cmux.chat.model.MessageType;
 import com.cmux.chat.service.ChatService;
+import com.cmux.chat.service.S3Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.UUID;
 import java.time.Instant;
@@ -23,25 +27,47 @@ public class ChatRestController {
     @Autowired
     private ChatService chatService;
 
-    // for testing purposes
-    // @PostMapping("/message")
-    // public ResponseEntity<ChatMessage> saveMessage(@RequestBody ChatMessage chatMessage) {
-    //     if (chatMessage.getChatId() == null || chatMessage.getSenderId() == null || chatMessage.getMessageType() == null) {
-    //         // throw exception
-    //         return ResponseEntity.badRequest().build();
-    //     }
-    //     ChatMessage newMessage = ChatMessage.builder()
-    //         .chatId(chatMessage.getChatId())
-    //         .messageId(Uuids.timeBased())
-    //         .timestamp(Instant.now())
-    //         .messageType(chatMessage.getMessageType())
-    //         .senderId(chatMessage.getSenderId())
-    //         .content(chatMessage.getContent())
-    //         .imageUrl(chatMessage.getImageUrl())
-    //         .fileUrl(chatMessage.getFileUrl())
-    //         .build();
-    //     return ResponseEntity.ok(chatService.saveMessage(newMessage));
-    // }
+    @Autowired
+    private S3Service s3Service;
+
+    @PostMapping("/message")
+    public ResponseEntity<ChatMessage> sendMessage(@RequestBody MessageRequest chatMessage) {
+        ChatMessage newMessage = ChatMessage.builder()
+            .chatId(chatMessage.getChatId())
+            .senderId(chatMessage.getSenderId())
+            .messageType(MessageType.TEXT)
+            .messageId(Uuids.timeBased())
+            .timestamp(Instant.now())
+            .content(chatMessage.getContent())
+            .build();
+        return ResponseEntity.ok(chatService.saveMessage(newMessage));
+    }
+
+    @PostMapping(value = "/file", consumes = "multipart/form-data")
+    public ResponseEntity<ChatMessage> sendFile(
+            @RequestParam("chatId") UUID chatId,
+            @RequestParam("senderId") UUID senderId,
+            @RequestParam("messageType") MessageType messageType,
+            @RequestParam(value = "file") MultipartFile file) {
+
+        String fileUrl = null;
+        try {
+            fileUrl = s3Service.uploadFile(file);
+        } catch (Exception e) {
+            System.out.println("Error uploading file to S3");
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
+        ChatMessage newFileMessage = ChatMessage.builder()
+                .chatId(chatId)
+                .senderId(senderId)
+                .messageType(messageType)
+                .messageId(Uuids.timeBased())
+                .timestamp(Instant.now())
+                .fileUrl(fileUrl)
+                .build();
+        return ResponseEntity.ok(newFileMessage);
+    }
 
     @PostMapping("/private")
     public ResponseEntity<Chat> getOrCreatePrivateChat(@RequestBody PrivateChatRequest privateChatRequest) {

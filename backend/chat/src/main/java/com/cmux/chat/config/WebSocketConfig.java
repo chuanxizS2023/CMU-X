@@ -1,4 +1,4 @@
-package com.cmux.chat.websocket;
+package com.cmux.chat.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.beans.factory.annotation.Value;
