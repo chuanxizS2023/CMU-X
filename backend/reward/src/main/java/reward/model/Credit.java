@@ -1,4 +1,4 @@
-package reward.reward.model;
+package reward.model;
 
 import jakarta.persistence.*;
 
@@ -7,18 +7,16 @@ import jakarta.persistence.*;
 public class Credit {
     @Id
     private Long userId;
-    private String username;
     private int coins;
-    private int credits;
+    private int points;
 
     protected Credit() {
     }
 
-    public Credit(Long userId, String username, int coins, int credits) {
+    public Credit(Long userId, int coins, int points) {
         this.userId = userId;
-        this.username = username;
         this.coins = coins;
-        this.credits = credits;
+        this.points = points;
     }
 
     public Long getUserId() {
@@ -29,20 +27,12 @@ public class Credit {
         this.userId = userId;
     }
 
-    public String getUserName() {
-        return username;
+    public int getPoints() {
+        return points;
     }
 
-    public void setUserId(String username) {
-        this.username = username;
-    }
-
-    public int getCredits() {
-        return credits;
-    }
-
-    public void setCredits(int credits) {
-        this.credits = credits;
+    public void setPoints(int points) {
+        this.points = points;
     }
 
     public int getCoins() {

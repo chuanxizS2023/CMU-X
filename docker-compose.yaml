@@ -8,12 +8,11 @@ services:
       dockerfile: Dockerfile-reward
     environment:
       - DB_HOST=user-credit
-      # - HBASE_HOST=credit-history
     ports:
       - 8080:8080
+    restart: always
     depends_on:
       - reward-db
-      # - reward-hbase
     networks:
       - reward
 
@@ -28,16 +27,6 @@ services:
       MYSQL_PASSWORD: 'password'
     ports:
       - 3306:3306
-    networks:
-      - reward
-
-  reward-hbase:
-    container_name: credit-history
-    restart: always
-    image: harisekhon/hbase
-    ports:
-      - 16010:16010
-      - 9090:9090
     networks:
       - reward
 

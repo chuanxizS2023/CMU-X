@@ -1,10 +1,10 @@
-package reward.reward;
+package reward;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class RewardApplicationTests {
+class ApplicationTests {
 
 	@Test
 	void contextLoads() {

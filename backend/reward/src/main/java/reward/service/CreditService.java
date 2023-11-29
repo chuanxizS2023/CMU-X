@@ -1,0 +1,146 @@
+package reward.service;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import reward.model.*;
+import reward.exception.ErrorHandling.ExceptionType;
+import reward.exception.ErrorHandling.RewardException;
+
+@Service
+public class CreditService {
+
+    private final CreditRepository creditRepository;
+    private final CreditHistoryRepository creditHistoryRepository;
+    private Optional<Credit> userCreditInfo;
+
+    @Autowired
+    public CreditService(CreditRepository creditRepository, CreditHistoryRepository creditHistoryRepository) {
+        this.creditRepository = creditRepository;
+        this.creditHistoryRepository = creditHistoryRepository;
+    }
+
+    public void setUserCreditInfo(long userId) {
+        this.userCreditInfo = creditRepository.getCreditByUserId(userId);
+    }
+
+    public void createUserCredit(long userId, int coins, int points) throws RewardException {
+        // Check if user already exists
+        this.setUserCreditInfo(userId);
+        if (this.userCreditInfo.isPresent()) {
+            throw new RewardException(ExceptionType.USEREXISTS);
+        }
+
+        // Insert new user credit into db
+        Credit creditInfo = new Credit(userId, coins, points);
+        userCreditInfo = Optional.of(creditInfo);
+        creditRepository.save(creditInfo);
+    }
+
+    public int getPonts() throws RewardException {
+        // Check if user is valid
+        if (this.userCreditInfo.isPresent()) {
+            return userCreditInfo.get().getPoints();
+        } else {
+            throw new RewardException(ExceptionType.USERNOTFOUND);
+        }
+    }
+
+    public int getCoins() throws RewardException {
+        // Check if user is valid
+        if (this.userCreditInfo.isPresent()) {
+            return userCreditInfo.get().getCoins();
+        } else {
+            throw new RewardException(ExceptionType.USERNOTFOUND);
+        }
+    }
+
+    public void addPoints(int amount) throws RewardException {
+        // Check if user is valid
+        if (this.userCreditInfo.isPresent()) {
+            Credit creditInfo = userCreditInfo.get();
+
+            // Get credit info
+            long userId = creditInfo.getUserId();
+            int curPoints = creditInfo.getPoints();
+            int curCoins = creditInfo.getCoins();
+            int newPoints = curPoints + amount;
+
+            // Create history and save it in credit history table
+            CreditHistory creditHistory = new CreditHistory(userId);
+            creditHistory.setPoints(newPoints);
+            creditHistory.setTimestamp(LocalDateTime.now());
+            creditHistory.setCoins(curCoins);
+            creditHistoryRepository.save(creditHistory);
+
+            // Update credit table
+            creditInfo.setPoints(newPoints);
+            userCreditInfo = Optional.of(creditInfo);
+            creditRepository.save(creditInfo);
+        } else {
+            throw new RewardException(ExceptionType.USERNOTFOUND);
+        }
+    }
+
+    public void addCoins(int amount) throws RewardException {
+        // Check if user is valid
+        if (this.userCreditInfo.isPresent()) {
+            Credit creditInfo = userCreditInfo.get();
+
+            // Get credit info
+            long userId = creditInfo.getUserId();
+            int curPoints = creditInfo.getPoints();
+            int curCoins = creditInfo.getCoins();
+            int newCoins = curCoins + amount;
+
+            // Create history and save it in credit history table
+            CreditHistory creditHistory = new CreditHistory(userId);
+            creditHistory.setPoints(curPoints);
+            creditHistory.setTimestamp(LocalDateTime.now());
+            creditHistory.setCoins(newCoins);
+            creditHistoryRepository.save(creditHistory);
+
+            // Update credit table
+            creditInfo.setCoins(newCoins);
+            userCreditInfo = Optional.of(creditInfo);
+            creditRepository.save(creditInfo);
+        } else {
+            throw new RewardException(ExceptionType.USERNOTFOUND);
+        }
+    }
+
+    public void deductCoins(int amount) throws RewardException {
+        // Check if user is valid
+        if (this.userCreditInfo.isPresent()) {
+            Credit creditInfo = userCreditInfo.get();
+
+            // Get credit info
+            long userId = creditInfo.getUserId();
+            int curPoints = creditInfo.getPoints();
+            int curCoins = creditInfo.getCoins();
+            int newCoins = curCoins - amount;
+
+            // If not enough coins, throw exception
+            if (newCoins < 0) {
+                throw new RewardException(ExceptionType.NOTENOUGHCOINS);
+            }
+
+            // Create history and save it in credit history table
+            CreditHistory creditHistory = new CreditHistory(userId);
+            creditHistory.setPoints(curPoints);
+            creditHistory.setTimestamp(LocalDateTime.now());
+            creditHistory.setCoins(newCoins);
+            creditHistoryRepository.save(creditHistory);
+
+            // Update credit table
+            creditInfo.setCoins(newCoins);
+            userCreditInfo = Optional.of(creditInfo);
+            creditRepository.save(creditInfo);
+        } else {
+            throw new RewardException(ExceptionType.USERNOTFOUND);
+        }
+    }
+}
