@@ -78,3 +78,6 @@ local.properties
 # Testing
 /coverage
 /.nyc_output
+
+#env
+env.list
