@@ -14,7 +14,7 @@ function Login() {
   const handleSubmit = (event) => {
     event.preventDefault();
     // Twitter login logic goes here
-    navigate('/home', { replace: true }); // Redirect to a different route after login
+    navigate('/home', { replace: true });
   };
 
   const paperStyle = {
