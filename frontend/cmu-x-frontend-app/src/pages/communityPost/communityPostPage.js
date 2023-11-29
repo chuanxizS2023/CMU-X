@@ -28,29 +28,26 @@ const CommunityPage = () => {
       await delay(1000); 
       console.log("Subscribing to topic...");
       const subscription = subscribeToTopic('/topic/post-update', (message) => {
-        const postId = message.communityPostid;
-        const title = message.title;
-        const content = message.content;
-        const likes = message.likes;
-        const comments_count = message.comments.length;
-        // set post with same postId to new post
-        setPost((prev) => {
-          const newPost = prev.map((post) => {
-            if (post.postId === postId) {
-              console.log("Updating post... with postId: " + postId)
-              return {
-                ...post,
-              };
-            }
-            return post;
-          });
-          return newPost;
+        const { communityPostid, title, content, likes, comments } = message;
+        console.log("postid: ", communityPostid)
+        setPost(prevPosts => {
+          const existingPostIndex = prevPosts.findIndex(post => post.communityPostid === communityPostid);
+          if (existingPostIndex !== -1) {
+            // Update the existing post
+            const updatedPosts = [...prevPosts];
+            updatedPosts[existingPostIndex] = message;
+            return updatedPosts;
+          } else {
+            // Add new post if it doesn't exist
+            return [...prevPosts, { postId: communityPostid, title, content, likes, comments }];
+          }
         });
       });
     };
-
+  
     initiateSubscription();
   }, []);
+  
 
   useEffect(() => {
     console.log("post: ", post);
