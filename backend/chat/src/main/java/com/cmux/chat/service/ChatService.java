@@ -87,8 +87,8 @@ public class ChatService {
                 .orElse(null);
     }
 
-    public List<ChatMessage> getChatMessages(UUID chatId) {
-        return chatMessageRepository.getChatMessages(chatId);
+    public List<ChatMessage> getChatHistory(UUID chatId) {
+        return chatMessageRepository.getChatHistory(chatId);
     }
 
     public List<UUID> getGroupUsers(UUID chatId) {

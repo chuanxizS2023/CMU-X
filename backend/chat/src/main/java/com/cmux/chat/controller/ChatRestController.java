@@ -66,7 +66,7 @@ public class ChatRestController {
                 .timestamp(Instant.now())
                 .fileUrl(fileUrl)
                 .build();
-        return ResponseEntity.ok(newFileMessage);
+        return ResponseEntity.ok(chatService.saveMessage(newFileMessage));
     }
 
     @PostMapping("/private")
@@ -107,26 +107,26 @@ public class ChatRestController {
         return ResponseEntity.ok(chat);
     }
 
-    @GetMapping("/{chatId}/messages")
-    public ResponseEntity<List<ChatMessage>> getChatMessages(@PathVariable UUID chatId) {
+    @GetMapping("/history/{chatId}")
+    public ResponseEntity<List<ChatMessage>> getChatHistory(@PathVariable UUID chatId) {
         Chat chat = chatService.getChatById(chatId);
         if (chat == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(chatService.getChatMessages(chatId));
+        return ResponseEntity.ok(chatService.getChatHistory(chatId));
     }
 
-    @GetMapping("/users/{userId}")
+    @GetMapping("/chatlist/{userId}")
     public ResponseEntity<List<Chat>> getChatsByUserId(@PathVariable UUID userId) {
         return ResponseEntity.ok(chatService.getChatsByUserId(userId));
     }
 
-    @GetMapping("/group/{chatId}/users")
+    @GetMapping("/groupusers/{chatId}")
     public ResponseEntity<List<UUID>> getGroupUsers(@PathVariable UUID chatId) {
         return ResponseEntity.ok(chatService.getGroupUsers(chatId));
     }
 
-    @PostMapping("/group/{chatId}/users")
+    @PostMapping("/groupusers/{chatId}")
     public ResponseEntity<?> addUsersToGroup(@PathVariable UUID chatId, @RequestBody List<UUID> userIds) {
         for (UUID userId : userIds) {
             if (userId == null) {
@@ -140,7 +140,7 @@ public class ChatRestController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/group/{chatId}/users/{userId}")
+    @DeleteMapping("/groupusers/{chatId}/{userId}")
     public ResponseEntity<Void> removeUserFromGroup(@PathVariable String chatId, @PathVariable String userId) {
         UUID chatUuid = UUID.fromString(chatId);
         UUID userUuid = UUID.fromString(userId);

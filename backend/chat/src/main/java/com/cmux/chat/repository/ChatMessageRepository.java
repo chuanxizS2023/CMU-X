@@ -11,7 +11,7 @@ import java.util.UUID;
 @Repository
 public interface ChatMessageRepository extends CassandraRepository<ChatMessage, UUID> { 
     @Query("SELECT * FROM chat_messages WHERE chatId = ?0 ORDER BY messageId DESC")
-    List<ChatMessage> getChatMessages(UUID chatId);
+    List<ChatMessage> getChatHistory(UUID chatId);
     
     @Query("DELETE FROM chat_messages WHERE chatid = ?0")
     void deleteAllByChatId(UUID chatId);
