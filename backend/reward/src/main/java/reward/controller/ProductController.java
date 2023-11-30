@@ -81,7 +81,7 @@ public class ProductController {
             }
         } catch (RewardException e) {
             LOGGER.info(LOGFORMAT, e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
 
         // Upload image

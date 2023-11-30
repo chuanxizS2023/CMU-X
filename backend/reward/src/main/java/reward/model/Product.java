@@ -13,6 +13,7 @@ public class Product {
     @Getter
     private Long id;
 
+    @Column(unique = true)
     private String name;
 
     private int price;
