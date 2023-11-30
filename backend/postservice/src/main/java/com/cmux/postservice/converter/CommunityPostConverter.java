@@ -43,10 +43,9 @@ public class CommunityPostConverter {
         dto.setCourseNumber(communityPost.getCourseNumber());
         dto.setSemester(communityPost.getSemester());
         if (communityPost.getTeamMembers() != null && !communityPost.getTeamMembers().isEmpty()) {
-            String teamMembersStr = String.join(", ", communityPost.getTeamMembers());
-            dto.setTeamMembers(teamMembersStr);
+            dto.setTeamMembers(communityPost.getTeamMembers());
         } else {
-            dto.setTeamMembers("");
+            dto.setTeamMembers(new ArrayList<>());
         }
         
 
@@ -68,13 +67,12 @@ public class CommunityPostConverter {
         communityPost.setCourseNumber(communityPostDTO.getCourseNumber());
         communityPost.setSemester(communityPostDTO.getSemester());
         if (communityPostDTO.getTeamMembers() != null && !communityPostDTO.getTeamMembers().isEmpty()) {
-            List<String> teamMembersList = Arrays.asList(communityPostDTO.getTeamMembers().split("\\s*,\\s*"));
-            communityPost.setTeamMembers(teamMembersList);
+            // Split the String into a List<String>
+            communityPost.setTeamMembers(communityPostDTO.getTeamMembers());
         } else {
             communityPost.setTeamMembers(new ArrayList<>());
         }
-        System.out.println("CommunityPostConverter: convertToEntity: communityPostDTO.getTeamMembers(): " + communityPostDTO.getTeamMembers());
-        System.out.println("CommunityPostConverter: convertToEntity: communityPost.coursen " + communityPost.getCourseNumber());
+
         // set comments
         if (communityPostDTO.getComments() != null) {
             ArrayList<Comment> commentList = new ArrayList<Comment>();

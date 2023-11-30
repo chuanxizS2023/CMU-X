@@ -7,9 +7,9 @@ const PostForm = ({ open, onClose, onSubmit }) => {
     title: '',
     content: '',
     author_id: null,
-    created: null,
+    created_Date: null,
     semester: '',
-    teammembers: '',
+    teamMembers: '',
     instructorName: '',
     courseNumber: '',
   });
@@ -25,7 +25,13 @@ const PostForm = ({ open, onClose, onSubmit }) => {
   };
 
   const handleSubmit = () => {
-    onSubmit(postData);
+    // Prepare the postData for submission
+    const submitData = {
+      ...postData,
+      teamMembers: postData.teamMembers ? [postData.teamMembers] : [],
+    };
+  
+    onSubmit(submitData);
     onClose(); // Close the modal after submit
   };
 
@@ -79,12 +85,12 @@ const PostForm = ({ open, onClose, onSubmit }) => {
             />
             <TextField
               margin="dense"
-              name="teammembers"
+              name="teamMembers"
               label="Team Members (Your name)"
               type="text"
               fullWidth
               variant="outlined"
-              value={postData.teammembers}
+              value={postData.teamMembers}
               onChange={handleChange}
             />
             <TextField

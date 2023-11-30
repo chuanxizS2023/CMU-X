@@ -21,7 +21,6 @@ public class CommunityPostController {
 
     @PostMapping
     public ResponseEntity<?> createPost(@RequestBody CommunityPostDTO postDTO) {
-
         communityPostService.savePost(postDTO);
 
         return new ResponseEntity<>("Post created successfully", HttpStatus.OK);
@@ -76,14 +75,14 @@ public class CommunityPostController {
         }
     }
 
-    @PostMapping("/find-teammate/{communityPostId}")
-    public ResponseEntity<?> markAsFindTeammatePost(@PathVariable Long communityPostId,
-            @RequestBody CommunityPostDTO communityPostDTO) {
+    // @PostMapping("/find-teammate/{communityPostId}")
+    // public ResponseEntity<?> markAsFindTeammatePost(@PathVariable Long communityPostId,
+    //         @RequestBody CommunityPostDTO communityPostDTO) {
 
-        communityPostService.markAsFindTeammatePost(communityPostId, communityPostDTO);
+    //     communityPostService.markAsFindTeammatePost(communityPostId, communityPostDTO);
 
-        return new ResponseEntity<>("Add find teammate post successfully", HttpStatus.OK);
-    }
+    //     return new ResponseEntity<>("Add find teammate post successfully", HttpStatus.OK);
+    // }
 
     @PutMapping("/{postId}/team-members")
     public ResponseEntity<?> addTeamMembers(@PathVariable Long postId,
