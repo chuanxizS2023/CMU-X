@@ -7,5 +7,5 @@ import java.util.*;
 
 @Repository
 public interface CreditHistoryRepository extends JpaRepository<CreditHistory, Long> {
-    List<CreditHistory> getHistoryByUserId(final Long userId);
+    List<CreditHistory> findAllByUserId(final Long userId);
 }

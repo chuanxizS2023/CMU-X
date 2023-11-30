@@ -1,12 +1,15 @@
 package reward.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import reward.model.*;
+import reward.model.Credit;
+import reward.model.CreditHistory;
+import reward.model.CreditHistoryRepository;
+import reward.model.CreditRepository;
 import reward.exception.ErrorHandling.ExceptionType;
 import reward.exception.ErrorHandling.RewardException;
 
@@ -17,14 +20,13 @@ public class CreditService {
     private final CreditHistoryRepository creditHistoryRepository;
     private Optional<Credit> userCreditInfo;
 
-    @Autowired
     public CreditService(CreditRepository creditRepository, CreditHistoryRepository creditHistoryRepository) {
         this.creditRepository = creditRepository;
         this.creditHistoryRepository = creditHistoryRepository;
     }
 
     public void setUserCreditInfo(long userId) {
-        this.userCreditInfo = creditRepository.getCreditByUserId(userId);
+        this.userCreditInfo = creditRepository.findById(userId);
     }
 
     public void createUserCredit(long userId, int coins, int points) throws RewardException {
@@ -38,6 +40,13 @@ public class CreditService {
         Credit creditInfo = new Credit(userId, coins, points);
         userCreditInfo = Optional.of(creditInfo);
         creditRepository.save(creditInfo);
+
+        // Create history and save it in credit history table
+        CreditHistory creditHistory = new CreditHistory(userId);
+        creditHistory.setPoints(points);
+        creditHistory.setTimestamp(LocalDateTime.now());
+        creditHistory.setCoins(coins);
+        creditHistoryRepository.save(creditHistory);
     }
 
     public int getPonts() throws RewardException {
@@ -142,5 +151,13 @@ public class CreditService {
         } else {
             throw new RewardException(ExceptionType.USERNOTFOUND);
         }
+    }
+
+    public List<CreditHistory> findHistoryByUserId(long userId) throws RewardException {
+        // Check if user is valid
+        if (!this.userCreditInfo.isPresent()) {
+            throw new RewardException(ExceptionType.USERNOTFOUND);
+        }
+        return this.creditHistoryRepository.findAllByUserId(userId);
     }
 }

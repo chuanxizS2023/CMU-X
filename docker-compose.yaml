@@ -8,6 +8,9 @@ services:
       dockerfile: Dockerfile-reward
     environment:
       - DB_HOST=user-credit
+      - AWS_ACCESS_KEY_ID=AKIA2USN5UESAF6CJXE5
+      - AWS_SECRET_ACCESS_KEY=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
+      - AWS_REGION=us-east-2
     ports:
       - 8080:8080
     restart: always
