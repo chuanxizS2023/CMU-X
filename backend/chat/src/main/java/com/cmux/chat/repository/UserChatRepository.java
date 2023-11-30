@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Repository
 public interface UserChatRepository extends CassandraRepository<UserChat, UUID> {
-    @Query("DELETE FROM chat_users WHERE chat_id = ?0 AND user_id = ?1")
+    @Query("DELETE FROM user_chats WHERE chat_id = ?0 AND user_id = ?1")
     void deleteByChatIdAndUserId(UUID chatId, UUID userId);
 
     List<UserChat> findByUserId(UUID userId);
