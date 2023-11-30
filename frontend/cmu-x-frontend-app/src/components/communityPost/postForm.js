@@ -9,7 +9,7 @@ const PostForm = ({ open, onClose, onSubmit }) => {
     author_id: null,
     created: null,
     semester: '',
-    teammembers: [],
+    teammembers: '',
     instructorName: '',
     courseNumber: '',
   });

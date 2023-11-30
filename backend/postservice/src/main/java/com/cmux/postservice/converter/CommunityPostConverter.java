@@ -1,6 +1,8 @@
 package com.cmux.postservice.converter;
 
+import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import com.cmux.postservice.dto.CommentDTO;
 import org.springframework.stereotype.Component;
@@ -40,11 +42,13 @@ public class CommunityPostConverter {
         dto.setInstructorName(communityPost.getInstructorName());
         dto.setCourseNumber(communityPost.getCourseNumber());
         dto.setSemester(communityPost.getSemester());
-        if (communityPost.getTeamMembers() == null) {
-            dto.setTeamMembers(null);
+        if (communityPost.getTeamMembers() != null && !communityPost.getTeamMembers().isEmpty()) {
+            String teamMembersStr = String.join(", ", communityPost.getTeamMembers());
+            dto.setTeamMembers(teamMembersStr);
         } else {
-            dto.setTeamMembers(communityPost.getTeamMembers());
+            dto.setTeamMembers("");
         }
+        
 
         return dto;
     }
@@ -63,7 +67,12 @@ public class CommunityPostConverter {
         communityPost.setInstructorName(communityPostDTO.getInstructorName());
         communityPost.setCourseNumber(communityPostDTO.getCourseNumber());
         communityPost.setSemester(communityPostDTO.getSemester());
-        communityPost.setTeamMembers(communityPostDTO.getTeamMembers());
+        if (communityPostDTO.getTeamMembers() != null && !communityPostDTO.getTeamMembers().isEmpty()) {
+            List<String> teamMembersList = Arrays.asList(communityPostDTO.getTeamMembers().split("\\s*,\\s*"));
+            communityPost.setTeamMembers(teamMembersList);
+        } else {
+            communityPost.setTeamMembers(new ArrayList<>());
+        }
         System.out.println("CommunityPostConverter: convertToEntity: communityPostDTO.getTeamMembers(): " + communityPostDTO.getTeamMembers());
         System.out.println("CommunityPostConverter: convertToEntity: communityPost.coursen " + communityPost.getCourseNumber());
         // set comments
