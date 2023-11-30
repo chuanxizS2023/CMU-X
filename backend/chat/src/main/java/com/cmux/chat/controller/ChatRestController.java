@@ -88,6 +88,10 @@ public class ChatRestController {
 
     @DeleteMapping("/{chatId}")
     public ResponseEntity<Void> deleteChat(@PathVariable UUID chatId) {
+        Chat chat = chatService.getChatById(chatId);
+        if (chat == null) {
+            return ResponseEntity.notFound().build();
+        }
         chatService.deleteChat(chatId);
         return ResponseEntity.ok().build();
     }
@@ -123,11 +127,19 @@ public class ChatRestController {
 
     @GetMapping("/groupusers/{chatId}")
     public ResponseEntity<List<UUID>> getGroupUsers(@PathVariable UUID chatId) {
+        Chat chat = chatService.getChatById(chatId);
+        if (chat == null) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok(chatService.getGroupUsers(chatId));
     }
 
     @PostMapping("/groupusers/{chatId}")
     public ResponseEntity<?> addUsersToGroup(@PathVariable UUID chatId, @RequestBody List<UUID> userIds) {
+        Chat chat = chatService.getChatById(chatId);
+        if (chat == null) {
+            return ResponseEntity.notFound().build();
+        }
         for (UUID userId : userIds) {
             if (userId == null) {
                 return ResponseEntity.badRequest().body("User IDs in the list must not be null");
@@ -142,6 +154,10 @@ public class ChatRestController {
 
     @DeleteMapping("/groupusers/{chatId}/{userId}")
     public ResponseEntity<Void> removeUserFromGroup(@PathVariable String chatId, @PathVariable String userId) {
+        Chat chat = chatService.getChatById(UUID.fromString(chatId));
+        if (chat == null) {
+            return ResponseEntity.notFound().build();
+        }
         UUID chatUuid = UUID.fromString(chatId);
         UUID userUuid = UUID.fromString(userId);
         chatService.removeUserFromGroup(chatUuid, userUuid);
