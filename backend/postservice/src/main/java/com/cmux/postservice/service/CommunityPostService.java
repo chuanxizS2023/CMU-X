@@ -55,6 +55,8 @@ public class CommunityPostService extends AbstractESService<CommunityPost> {
                 .orElseThrow(() -> new NoSuchElementException("Post not found with id: " + communityPostId));
         communityPost.setLikes(communityPost.getLikes() + 1);
         communityPostRepository.save(communityPost);
+
+        publisher.publishEvent(new PostEvents.Updated(communityPost));
         return communityPost;
     }
 
@@ -104,27 +106,27 @@ public class CommunityPostService extends AbstractESService<CommunityPost> {
         return communityPostConverter.convertToDTO(updatedPost);
     }
 
-    @Transactional
-    public CommunityPostDTO markAsFindTeammatePost(long communityPostId, CommunityPostDTO communityPostDTO) {
-        CommunityPost communityPost = communityPostRepository.findById(communityPostId)
-                .orElseThrow(() -> new NoSuchElementException("Post not found with id: " + communityPostId));
-        communityPost.setFindTeammatePost(true);
+    // @Transactional
+    // public CommunityPostDTO markAsFindTeammatePost(long communityPostId, CommunityPostDTO communityPostDTO) {
+    //     CommunityPost communityPost = communityPostRepository.findById(communityPostId)
+    //             .orElseThrow(() -> new NoSuchElementException("Post not found with id: " + communityPostId));
+    //     communityPost.setFindTeammatePost(true);
 
-        communityPost.setCourseNumber(communityPostDTO.getCourseNumber());
-        communityPost.setInstructorName(communityPostDTO.getInstructorName());
-        communityPost.setSemester(communityPostDTO.getSemester());
-        List<String> newTeamMembers = communityPost.getTeamMembers();
-        if (newTeamMembers == null) {
-            // instantiate new list
-            newTeamMembers = new ArrayList<String>();
-        }
-        newTeamMembers.add(communityPostDTO.getTeamMembers());
-        communityPost.setTeamMembers(newTeamMembers);
+    //     communityPost.setCourseNumber(communityPostDTO.getCourseNumber());
+    //     communityPost.setInstructorName(communityPostDTO.getInstructorName());
+    //     communityPost.setSemester(communityPostDTO.getSemester());
+    //     List<String> newTeamMembers = communityPost.getTeamMembers();
+    //     if (newTeamMembers == null) {
+    //         // instantiate new list
+    //         newTeamMembers = new ArrayList<String>();
+    //     }
+    //     newTeamMembers.add(communityPostDTO.getTeamMembers());
+    //     communityPost.setTeamMembers(newTeamMembers);
 
-        communityPostRepository.save(communityPost);
+    //     communityPostRepository.save(communityPost);
 
-        return communityPostConverter.convertToDTO(communityPost);
-    }
+    //     return communityPostConverter.convertToDTO(communityPost);
+    // }
 
     @Transactional
     public CommunityPostDTO addTeamMembers(long communityPostId, String username) {

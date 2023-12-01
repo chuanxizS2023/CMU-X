@@ -4,7 +4,6 @@ services:
     container_name: sda-reward-backend
     image: sda-reward-backend
     build:
-      context: ./backend/reward
       dockerfile: Dockerfile-reward
     environment:
       - DB_HOST=user-credit

@@ -43,7 +43,7 @@ import reward.model.Product;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/shop")
-public class ProductController {
+public class RewardController {
 
     private final ProductInvoker productInvoker;
 
@@ -55,7 +55,7 @@ public class ProductController {
 
     private final S3Service s3Service;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RewardController.class);
 
     private static final String LOGFORMAT = "\n{}\n";
 
@@ -243,7 +243,7 @@ public class ProductController {
 
             coins = coins - price;
 
-            return ResponseEntity.ok("Purchase Successfully, imageUrl: " + imageUrl + ", rest coins: " + coins);
+            return ResponseEntity.ok("Purchase Successfully, imageUrl: " + imageUrl + ", remain coins: " + coins);
         } catch (RewardException e) {
             LOGGER.info(LOGFORMAT, e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

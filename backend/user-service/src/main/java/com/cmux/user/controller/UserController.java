@@ -2,7 +2,11 @@ package com.cmux.user.controller;
 
 import com.cmux.user.dto.UserUpdateRequest;
 import com.cmux.user.service.UserService;
+
+import jakarta.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.cmux.user.entity.User; 
@@ -10,14 +14,14 @@ import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/user")
 public class UserController {
 
     @Autowired
     UserService userService;
 
-    @GetMapping("/user/{id}")
-    public ResponseEntity<?> getUserById(@PathVariable Long id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getUsserById(@PathVariable Long id) {
         User user = userService.getUserById(id);
         System.out.println("user: " + user);
         if (user == null) {
@@ -34,7 +38,16 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody UserUpdateRequest updateRequest) {
+    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody UserUpdateRequest updateRequest,
+                                    HttpServletRequest request) {
+        String headerUserId = request.getHeader("userId");
+        if (headerUserId == null) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Unauthorized update attempt: no userId header!");
+        }
+        Long userId = Long.parseLong(headerUserId);
+        if (!userId.equals(id)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Unauthorized update attempt: id mismatch!");
+        }
         User updatedUser = userService.updateUserProfile(id, updateRequest);
         if (updatedUser == null) {
             return ResponseEntity.notFound().build();

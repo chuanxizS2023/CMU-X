@@ -84,4 +84,4 @@ local.properties
 /.nyc_output
 
 #env
-env.list
+*env.list

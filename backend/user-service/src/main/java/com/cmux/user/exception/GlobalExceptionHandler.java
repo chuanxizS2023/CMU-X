@@ -2,6 +2,7 @@ package com.cmux.user.exception;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
@@ -59,5 +60,15 @@ public class GlobalExceptionHandler {
         logger.error("Token not provided: {}", ex.getMessage());
 
         return buildErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<CustomErrorResponse> handleDataIntegrityViolation(DataIntegrityViolationException ex, WebRequest request) {
+        logger.error("Data integrity violation: {}", ex.getMessage());
+        String errorMessage = "A data integrity violation occurred.";
+        if (ex.getMessage().contains("Duplicate entry")) {
+            errorMessage = "Username or email already exists.";
+        }
+        return buildErrorResponse(errorMessage, HttpStatus.BAD_REQUEST);
     }
 }

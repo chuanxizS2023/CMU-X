@@ -10,7 +10,7 @@ public class CommentDTO {
     
     private long commentid;
     private String content;
-    private Date created_Date;
+    private String created_Date;
     private String author_id;
     private long likes;
     private long communityPostid;

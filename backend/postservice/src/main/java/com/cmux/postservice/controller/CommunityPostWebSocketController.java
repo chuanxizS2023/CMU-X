@@ -24,15 +24,15 @@ public class CommunityPostWebSocketController {
         this.communityPostConverter = communityPostConverter;
     }
 
-    @MessageMapping("/communityPost.createPost")
-    public void createPost(@Payload CommunityPost post) {
-        // Process the creation of a new post
-        CommunityPostDTO postDTO = communityPostConverter.convertToDTO(post);
-
-        CommunityPostDTO newPostDTO = communityPostService.savePost(postDTO);
-        // Broadcast the new post to subscribers
-        messagingTemplate.convertAndSend("/topic/communityPostCreate", newPostDTO);
-    }
+    // @MessageMapping("/communityPost.createPost")
+    // public void createPost(@Payload CommunityPost post) {
+    //     // Process the creation of a new post
+    //     CommunityPostDTO postDTO = communityPostConverter.convertToDTO(post);
+    //     System.out.println("Received new post from frontend: " + postDTO);
+    //     CommunityPostDTO newPostDTO = communityPostService.savePost(postDTO);
+    //     // Broadcast the new post to subscribers
+    //     messagingTemplate.convertAndSend("/topic/communityPostCreate", newPostDTO);
+    // }
 
     @MessageMapping("/communityPost.addLike")
     public void addLike(@Payload Long postId) {
