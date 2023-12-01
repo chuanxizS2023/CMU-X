@@ -7,6 +7,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface PrivateChatRepository extends CassandraRepository<PrivateChat, UUID> {
-    Optional<PrivateChat> findByUser1IdAndUser2Id(UUID user1Id, UUID user2Id);
+public interface PrivateChatRepository extends CassandraRepository<PrivateChat, Long> {
+    Optional<PrivateChat> findByUser1IdAndUser2Id(Long user1Id, Long user2Id);
 }

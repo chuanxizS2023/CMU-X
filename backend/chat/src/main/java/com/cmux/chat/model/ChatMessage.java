@@ -23,7 +23,7 @@ public class ChatMessage {
     @PrimaryKeyColumn(name = "messageid", type = CLUSTERED, ordering = ASCENDING)
     private UUID messageId;
 
-    private UUID senderId;
+    private Long senderId;
     private Instant timestamp;
     private MessageType messageType;
     private String content;

@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull;
 @Setter
 public class PrivateChatRequest {
     @NotNull
-    private UUID user1Id;
+    private Long user1Id;
     @NotNull
-    private UUID user2Id;
+    private Long user2Id;
 }

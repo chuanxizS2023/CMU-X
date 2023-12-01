@@ -19,7 +19,7 @@ import java.util.UUID;
 public class UserChat {
 
     @PrimaryKeyColumn(name = "user_id", type = PARTITIONED)
-    private UUID userId;
+    private Long userId;
 
     @PrimaryKeyColumn(name = "chat_id", ordinal = 0, type = CLUSTERED, ordering = ASCENDING)
     private UUID chatId;

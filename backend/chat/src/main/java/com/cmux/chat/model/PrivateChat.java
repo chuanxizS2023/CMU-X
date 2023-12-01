@@ -14,8 +14,8 @@ import java.util.UUID;
 @Table("private_chats")
 public class PrivateChat {
     @PrimaryKeyColumn(name = "user1_id", type = PARTITIONED)
-    private UUID user1Id;
+    private Long user1Id;
     @PrimaryKeyColumn(name = "user2_id", type = CLUSTERED)
-    private UUID user2Id;
+    private Long user2Id;
     private UUID chatId;
 }

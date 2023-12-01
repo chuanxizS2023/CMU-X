@@ -10,7 +10,7 @@ import java.util.UUID;
 @Repository
 public interface GroupUserRepository extends CassandraRepository<GroupUser, UUID> {
     @Query("DELETE FROM group_users WHERE chat_id = ?0 AND user_id = ?1")
-    void deleteByChatIdAndUserId(UUID chatId, UUID userId);
+    void deleteByChatIdAndUserId(UUID chatId, Long userId);
 
     List<GroupUser> findByChatId(UUID chatId);
 

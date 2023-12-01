@@ -11,6 +11,6 @@ public class MessageRequest {
     @NotNull
     private UUID chatId;
     @NotNull
-    private UUID senderId;
+    private Long senderId;
     private String content;
 }

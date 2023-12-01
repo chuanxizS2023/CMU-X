@@ -46,7 +46,7 @@ public class ChatRestController {
     @PostMapping(value = "/file", consumes = "multipart/form-data")
     public ResponseEntity<ChatMessage> sendFile(
             @RequestParam("chatId") UUID chatId,
-            @RequestParam("senderId") UUID senderId,
+            @RequestParam("senderId") Long senderId,
             @RequestParam("messageType") MessageType messageType,
             @RequestParam(value = "file") MultipartFile file) {
 
@@ -71,9 +71,7 @@ public class ChatRestController {
 
     @PostMapping("/private")
     public ResponseEntity<Chat> getOrCreatePrivateChat(@RequestBody PrivateChatRequest privateChatRequest) {
-        UUID user1Id = privateChatRequest.getUser1Id();
-        UUID user2Id = privateChatRequest.getUser2Id();
-        return ResponseEntity.ok(chatService.getOrCreatePrivateChat(user1Id, user2Id));
+        return ResponseEntity.ok(chatService.getOrCreatePrivateChat(privateChatRequest.getUser1Id(), privateChatRequest.getUser2Id()));
     }
 
     @PostMapping("/group")
@@ -121,12 +119,12 @@ public class ChatRestController {
     }
 
     @GetMapping("/chatlist/{userId}")
-    public ResponseEntity<List<Chat>> getChatsByUserId(@PathVariable UUID userId) {
+    public ResponseEntity<List<Chat>> getChatsByUserId(@PathVariable Long userId) {
         return ResponseEntity.ok(chatService.getChatsByUserId(userId));
     }
 
     @GetMapping("/groupusers/{chatId}")
-    public ResponseEntity<List<UUID>> getGroupUsers(@PathVariable UUID chatId) {
+    public ResponseEntity<List<Long>> getGroupUsers(@PathVariable UUID chatId) {
         Chat chat = chatService.getChatById(chatId);
         if (chat == null) {
             return ResponseEntity.notFound().build();
@@ -135,12 +133,18 @@ public class ChatRestController {
     }
 
     @PostMapping("/groupusers/{chatId}")
-    public ResponseEntity<?> addUsersToGroup(@PathVariable UUID chatId, @RequestBody List<UUID> userIds) {
+    public ResponseEntity<?> addUsersToGroup(@PathVariable UUID chatId, @RequestBody List<Long> userIds) {
         Chat chat = chatService.getChatById(chatId);
         if (chat == null) {
             return ResponseEntity.notFound().build();
         }
-        for (UUID userId : userIds) {
+        if (chat.getChatType() != ChatType.GROUP) {
+            return ResponseEntity.badRequest().body("Chat must be a group chat");
+        }
+        if (userIds == null) {
+            return ResponseEntity.badRequest().body("User IDs list must not be null");
+        }
+        for (Long userId : userIds) {
             if (userId == null) {
                 return ResponseEntity.badRequest().body("User IDs in the list must not be null");
             }
@@ -153,14 +157,12 @@ public class ChatRestController {
     }
 
     @DeleteMapping("/groupusers/{chatId}/{userId}")
-    public ResponseEntity<Void> removeUserFromGroup(@PathVariable String chatId, @PathVariable String userId) {
-        Chat chat = chatService.getChatById(UUID.fromString(chatId));
+    public ResponseEntity<Void> removeUserFromGroup(@PathVariable UUID chatId, @PathVariable Long userId) {
+        Chat chat = chatService.getChatById(chatId);
         if (chat == null) {
             return ResponseEntity.notFound().build();
         }
-        UUID chatUuid = UUID.fromString(chatId);
-        UUID userUuid = UUID.fromString(userId);
-        chatService.removeUserFromGroup(chatUuid, userUuid);
+        chatService.removeUserFromGroup(chatId, userId);
         return ResponseEntity.ok().build();
     }
 }

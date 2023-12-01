@@ -21,5 +21,5 @@ public class GroupUser {
     private UUID chatId;
 
     @PrimaryKeyColumn(name = "user_id", ordinal = 0, ordering = ASCENDING)
-    private UUID userId;
+    private Long userId;
 }

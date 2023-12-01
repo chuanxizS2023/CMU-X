@@ -37,9 +37,9 @@ public class ChatService {
     @Autowired
     private UserChatRepository userChatRepository;
 
-    public Chat getOrCreatePrivateChat(UUID user1Id, UUID user2Id) {
-        if (user1Id.compareTo(user2Id) > 0) {
-            UUID temp = user1Id;
+    public Chat getOrCreatePrivateChat(Long user1Id, Long user2Id) {
+        if (user1Id > user2Id) {
+            Long temp = user1Id;
             user1Id = user2Id;
             user2Id = temp;
         }
@@ -91,20 +91,20 @@ public class ChatService {
         return chatMessageRepository.getChatHistory(chatId);
     }
 
-    public List<UUID> getGroupUsers(UUID chatId) {
+    public List<Long> getGroupUsers(UUID chatId) {
         Chat chat = chatRepository.findById(chatId).orElse(null);
         if (chat == null || chat.getChatType() != ChatType.GROUP) {
             // should throw exception
             return null;
         }
         List<GroupUser> groupUsers = groupUserRepository.findByChatId(chatId);
-        List<UUID> userIds = groupUsers.stream()
+        List<Long> userIds = groupUsers.stream()
                 .map(GroupUser::getUserId)
                 .collect(Collectors.toList());
         return userIds;
     }
 
-    public List<Chat> getChatsByUserId(UUID userId) {
+    public List<Chat> getChatsByUserId(Long userId) {
         List<UserChat> userChats = userChatRepository.findByUserId(userId);
         List<UUID> chatIds = userChats.stream()
                 .map(UserChat::getChatId)
@@ -122,7 +122,7 @@ public class ChatService {
         userChatRepository.save(userChat);
     }
 
-    public void removeUserFromGroup(UUID chatId, UUID userId) {
+    public void removeUserFromGroup(UUID chatId, Long userId) {
         groupUserRepository.deleteByChatIdAndUserId(chatId, userId);
         userChatRepository.deleteByChatIdAndUserId(chatId, userId);
         long count = groupUserRepository.countByChatId(chatId);
