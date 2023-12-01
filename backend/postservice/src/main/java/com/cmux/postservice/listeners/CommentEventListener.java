@@ -2,8 +2,11 @@ package com.cmux.postservice.listeners;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
+import com.cmux.postservice.converter.CommentConverter;
 import com.cmux.postservice.model.CommentEvents;
+import com.cmux.postservice.dto.CommentDTO;
 import com.cmux.postservice.service.CommentService;
 
 @Component
@@ -11,6 +14,12 @@ public class CommentEventListener {
 
     @Autowired
     private CommentService commentService;
+
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+
+    @Autowired
+    private CommentConverter commentConverter;
     private final String index = "comment";
 
 
@@ -20,7 +29,9 @@ public class CommentEventListener {
 
         commentService.index(this.index, id, event.getComment());
 
-        System.out.println("Comment indexed");
+        CommentDTO dto = commentConverter.convertEntityToDTO(event.getComment());
+        
+        messagingTemplate.convertAndSend("/topic/comment-create", dto);
     }
 
     @EventListener

@@ -21,6 +21,9 @@ public class CommunityPostController {
 
     @PostMapping
     public ResponseEntity<?> createPost(@RequestBody CommunityPostDTO postDTO) {
+        String dateNow = java.time.LocalDate.now().toString();
+        postDTO.setCreated_Date(dateNow);
+
         communityPostService.savePost(postDTO);
 
         return new ResponseEntity<>("Post created successfully", HttpStatus.OK);

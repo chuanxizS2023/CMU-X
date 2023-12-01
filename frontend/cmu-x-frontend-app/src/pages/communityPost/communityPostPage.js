@@ -1,5 +1,5 @@
 // src/pages/CommunityPage.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Header from '../../components/common/header';
 import PostList from '../../containers/communityPost/postContainer';
 import { getPostById, getAllPosts, createPost } from '../../apis/communitypostAPIs/postAPI'; // Adjust the import path as necessary
@@ -14,6 +14,7 @@ import { saveComment, getComment } from '../../apis/communitypostAPIs/commentAPI
 import { subscribeToTopic, client } from '../../socketClient';
 
 const CommunityPage = () => {
+  const [author_id, setAuthor_id] = useState(1);
   const [post, setPost] = useState([]);
   const [popupContext, setPopupContext] = useState('');
   const [openPopup, setOpenPopup] = useState(false);
@@ -21,12 +22,16 @@ const CommunityPage = () => {
   const [isPostFormOpen, setPostFormOpen] = useState(false);
   const [isCommentFormOpen, setCommentFormOpen] = useState(false);
   const [activeCommentPostId, setActiveCommentPostId] = useState(null);
+  const hasSubscribed = useRef(false);
   const delay = ms => new Promise(res => setTimeout(res, ms));
 
   useEffect(() => {
+    if (!hasSubscribed.current) {
     const initiateSubscription = async () => {
       await delay(1000); 
+      hasSubscribed.current = true;
       const postUpdateSubscribe = subscribeToTopic('/topic/post-update', (message) => {
+        console.log("post-update received: ")
         const { communityPostid, title, content, likes, comments } = message;
         setPost(prevPosts => {
           const existingPostIndex = prevPosts.findIndex(post => post.communityPostid === communityPostid);
@@ -42,16 +47,41 @@ const CommunityPage = () => {
         });
       });
 
-
       const postDeleteSubscribe = subscribeToTopic('/topic/post-delete', (postId) => {
         setPost(prevPosts => prevPosts.filter(post => post.communityPostid !== postId));
       });
 
+      // const commentCreateSubscribe = subscribeToTopic('/topic/comment-create', (message) => {
+      //   const { communityPostid, commentid, content, created_Date, author_id, likes } = message;
+      //   setPost(prevPosts => {
+      //     const existingPostIndex = prevPosts.findIndex(post => post.communityPostid === communityPostid);
+      //     if(existingPostIndex !== -1){
+      //       const updatedPosts = [...prevPosts];
+      //       const newComment = {
+      //         commentid,
+      //         content,
+      //         created_Date,
+      //         author_id,
+      //         likes
+      //       };
+      //       updatedPosts[existingPostIndex].comments = updatedPosts[existingPostIndex].comments ? [...updatedPosts[existingPostIndex].comments, newComment] : [newComment];
+      //       return updatedPosts
+      //     }else{
+      //       return prevPosts;
+      //     }
+      //   }); 
+      // });
+      
     };
-  
     initiateSubscription();
+  }
+  setAuthor_id(3);
   }, []);
   
+  useEffect(() => {
+    console.log("post: ", post);
+  }, [post]);
+
   const handleAddPostClick = () => {
     setPostFormOpen(true);
   };
@@ -73,7 +103,7 @@ const CommunityPage = () => {
   };
   const handlePostSubmit = (postData) => {
     // Logic to submit the post data to the backend
-    postData.author_id = 1;
+    postData.author_id = author_id;
     postData.created = new Date().toLocaleString();
     const response = createPost(postData);
     if (response) {
@@ -84,13 +114,29 @@ const CommunityPage = () => {
       handlepopUpOpen();
     }
   };
-  const handleCommentSubmit = (commentData) => {
+  const handleCommentSubmit = async (commentData) => {
     // Logic to submit the post data to the backend
-    commentData.author_id = 1;
-    commentData.created = new Date().toLocaleString();
+    commentData.author_id = author_id;
     commentData.communityPostid = activeCommentPostId;
-    const response = saveComment(commentData);
-    if (response) {
+    
+    const response = await saveComment(commentData);
+    console.log("status: ", response.status)
+    if (response.status === 200) {
+      setPost(prevPosts => {
+        const existingPostIndex = prevPosts.findIndex(post => post.communityPostid === activeCommentPostId);
+        if(existingPostIndex !== -1){
+          const updatedPosts = [...prevPosts];
+          updatedPosts[existingPostIndex].commentsCount += 1;
+          if (updatedPosts[existingPostIndex].comments) {
+            updatedPosts[existingPostIndex].comments.push(commentData);
+          }else{
+            updatedPosts[existingPostIndex].comments = [commentData];
+          }
+          return updatedPosts
+        }else{ 
+          return prevPosts;
+        }
+      });
       setPopupContext('Comment created successfully!');
       handlepopUpOpen();
     } else {

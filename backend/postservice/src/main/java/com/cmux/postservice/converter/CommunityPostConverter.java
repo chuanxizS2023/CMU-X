@@ -22,7 +22,6 @@ public class CommunityPostConverter {
         dto.setCreated_Date(communityPost.getCreated_Date());
         dto.setAuthor_id(communityPost.getAuthor_id());
         dto.setLikes(communityPost.getLikes());
-        dto.setCommentsCount(communityPost.getCommentsCount());
         dto.set_published(communityPost.is_published());
         if (communityPost.getComments() != null) {
             ArrayList<CommentDTO> commentList = new ArrayList<CommentDTO>();
@@ -30,12 +29,13 @@ public class CommunityPostConverter {
                 commentList.add(commentConverter.convertEntityToDTO(communityPost.getComments().get(i)));
             }
             dto.setComments(commentList);
-
+            dto.setCommentsCount(communityPost.getComments().size());
             // dto.setComments(communityPost.getComments().stream()
             // .map(commentService.convertEntityToDTO)
             // .collect(Collectors.toList()));
         } else {
-            dto.setComments(null);
+            dto.setComments(new ArrayList<>());
+            dto.setCommentsCount(0);
         }
 
         dto.setFindTeammatePost(communityPost.isFindTeammatePost());
