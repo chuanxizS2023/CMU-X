@@ -7,7 +7,7 @@ import ChatIcon from '@mui/icons-material/Chat';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 const BottomBar = () => {
-  const [value, setValue] = React.useState('home');
+  const [value, setValue] = React.useState(undefined);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);

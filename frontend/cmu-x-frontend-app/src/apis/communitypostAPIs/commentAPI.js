@@ -6,7 +6,7 @@ const API_URL = 'http://localhost:9000/comments';
 export const saveComment = async (commentData) => {
     try {
         const response = await axios.post(`${API_URL}`, commentData);
-        return response.data;
+        return response;
     } catch (error) {
         console.error('Error saving comment', error);
         throw error;

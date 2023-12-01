@@ -1,6 +1,8 @@
 package com.cmux.postservice.converter;
 
+import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import com.cmux.postservice.dto.CommentDTO;
 import org.springframework.stereotype.Component;
@@ -20,7 +22,6 @@ public class CommunityPostConverter {
         dto.setCreated_Date(communityPost.getCreated_Date());
         dto.setAuthor_id(communityPost.getAuthor_id());
         dto.setLikes(communityPost.getLikes());
-        dto.setCommentsCount(communityPost.getCommentsCount());
         dto.set_published(communityPost.is_published());
         if (communityPost.getComments() != null) {
             ArrayList<CommentDTO> commentList = new ArrayList<CommentDTO>();
@@ -28,23 +29,25 @@ public class CommunityPostConverter {
                 commentList.add(commentConverter.convertEntityToDTO(communityPost.getComments().get(i)));
             }
             dto.setComments(commentList);
-
+            dto.setCommentsCount(communityPost.getComments().size());
             // dto.setComments(communityPost.getComments().stream()
             // .map(commentService.convertEntityToDTO)
             // .collect(Collectors.toList()));
         } else {
-            dto.setComments(null);
+            dto.setComments(new ArrayList<>());
+            dto.setCommentsCount(0);
         }
 
         dto.setFindTeammatePost(communityPost.isFindTeammatePost());
         dto.setInstructorName(communityPost.getInstructorName());
         dto.setCourseNumber(communityPost.getCourseNumber());
         dto.setSemester(communityPost.getSemester());
-        if (communityPost.getTeamMembers() == null) {
-            dto.setTeamMembers(null);
+        if (communityPost.getTeamMembers() != null && !communityPost.getTeamMembers().isEmpty()) {
+            dto.setTeamMembers(communityPost.getTeamMembers());
         } else {
-            dto.setTeamMembers(communityPost.getTeamMembers().toString());
+            dto.setTeamMembers(new ArrayList<>());
         }
+        
 
         return dto;
     }
@@ -59,6 +62,17 @@ public class CommunityPostConverter {
         communityPost.setLikes(communityPostDTO.getLikes());
         communityPost.setCommentsCount(communityPostDTO.getCommentsCount());
         communityPost.set_published(communityPostDTO.is_published());
+        communityPost.setFindTeammatePost(communityPostDTO.isFindTeammatePost());
+        communityPost.setInstructorName(communityPostDTO.getInstructorName());
+        communityPost.setCourseNumber(communityPostDTO.getCourseNumber());
+        communityPost.setSemester(communityPostDTO.getSemester());
+        if (communityPostDTO.getTeamMembers() != null && !communityPostDTO.getTeamMembers().isEmpty()) {
+            // Split the String into a List<String>
+            communityPost.setTeamMembers(communityPostDTO.getTeamMembers());
+        } else {
+            communityPost.setTeamMembers(new ArrayList<>());
+        }
+
         // set comments
         if (communityPostDTO.getComments() != null) {
             ArrayList<Comment> commentList = new ArrayList<Comment>();
@@ -69,7 +83,7 @@ public class CommunityPostConverter {
         } else {
             communityPost.setComments(null);
         }
-
+        
         return communityPost;
     }
 
@@ -91,6 +105,13 @@ public class CommunityPostConverter {
             }
             existingPost.setComments(commentList);
         }
+
+        existingPost.setFindTeammatePost(updatePost.isFindTeammatePost());
+        existingPost.setInstructorName(updatePost.getInstructorName());
+        existingPost.setCourseNumber(updatePost.getCourseNumber());
+        existingPost.setSemester(updatePost.getSemester());
+        existingPost.setTeamMembers(updatePost.getTeamMembers());
+
         return existingPost;
     }
 }
