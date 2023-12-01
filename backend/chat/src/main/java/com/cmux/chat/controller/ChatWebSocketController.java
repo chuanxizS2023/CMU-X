@@ -35,7 +35,11 @@ public class ChatWebSocketController {
             .timestamp(Instant.now())
             .content(chatMessage.getContent())
             .build();
+        // TODO: make sure chat message has succuessfully been saved
+        // if not, send error message to sender
         chatService.saveMessage(newMessage);
+        // TODO: send notification to online/offline users
+        // TODO: fetch unread messages in a chat group
         messagingTemplate.convertAndSend("/topic/chat." + chatMessage.getChatId(), newMessage);
     }
 }
