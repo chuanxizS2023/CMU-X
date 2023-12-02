@@ -30,8 +30,10 @@ public class PostEventListener {
 
         communityPostService.index(this.id, postID, event.getCommunityPost());
 
+        messagingTemplate.convertAndSend("/topic/post-created", event.getCommunityPost())
         System.out.println("PostEventListener: onPostCreated: indexed document with id " + postID);
     }
+
 
     @EventListener
     public void onPostUpdated(PostEvents.Updated event) {

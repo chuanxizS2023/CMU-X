@@ -50,7 +50,7 @@ function Feed() {
 
 
   useEffect(() => {
-    const postIds = [1]
+    const postIds = [2]
     const establishConnection = async () => {
       await delay(2000);
       await stompClientInstance.ensureConnection();
@@ -73,7 +73,14 @@ function Feed() {
       stompClientInstance.subscribeToTopic('/topic/post-delete', (postId) => {
           setPosts(prevPosts => prevPosts.filter(post => post.communityPostid !== postId));
       });
-      }
+
+      stompClientInstance.subscribeToTopic('/topic/post-created', (message)=>{
+          
+        setPosts(prevPost =>{
+            return [...prevPost, message];
+          })
+      })
+    }
 
 
     fetchPostsByIds(postIds)
