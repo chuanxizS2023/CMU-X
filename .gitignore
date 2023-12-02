@@ -81,3 +81,7 @@ local.properties
 
 #env
 *env.list
+frontend/cmux/package.json
+
+frontend/cmux/node_modules/
+

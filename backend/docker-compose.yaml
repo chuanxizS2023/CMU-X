@@ -4,7 +4,7 @@ services:
   user-service:
     image: user-service
     ports:
-      - "8080:8080"
+      - "5002:5002"
     env_file:
       - userenv.list
 
@@ -16,3 +16,48 @@ services:
       - gatewayenv.list
     depends_on:
       - user-service
+
+  chat-service:
+    image: chat-service
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - cassandra
+      - rabbitmq
+      - cassandra-load-keyspace
+    environment:
+      CASSANDRA_HOST: cassandra
+      RABBITMQ_HOST: rabbitmq
+      AWS_ACCESS_KEY_ID: AKIA2USN5UESAF6CJXE5
+      AWS_SECRET_ACCESS_KEY: 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
+      AWS_REGION: us-east-2
+      
+  cassandra:
+    image: "cassandra:latest"
+    ports:
+      - "9042:9042"
+    restart: always
+    volumes:
+      - cassandra-data:/var/lib/cassandra
+
+  cassandra-load-keyspace:
+      container_name: cassandra-load-keyspace
+      image: cassandra:latest
+      depends_on:
+        - cassandra
+      volumes:
+        - ./chat/src/main/resources/cassandra_schema.cql:/schema.cql 
+      command: /bin/bash -c "sleep 90 && echo loading cassandra keyspace && cqlsh cassandra -f /schema.cql"
+
+  rabbitmq:
+    build:
+      context: .
+      dockerfile: Dockerfile.rabbitmq
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+      - "61613:61613"
+
+volumes:
+  cassandra-data:
