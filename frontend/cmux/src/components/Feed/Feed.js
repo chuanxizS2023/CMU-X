@@ -15,6 +15,7 @@ import { saveComment } from "../../apis/communitypostAPIs/commentAPI";
 import {createPost} from "../../apis/communitypostAPIs/postAPI";
 import PostForm from "./Post/postForm";
 import CommentForm from "./Post/commentForm"
+import SinlgePost from "./Post/singlePost";
 import { fetchPostsByIds } from "../../data/postData";
 
 
@@ -25,9 +26,10 @@ function Feed() {
   const [author_id, setAuthor_id] = React.useState(1);
   const [isCommentFormOpen, setCommentFormOpen] = useState(false);
   const [activeCommentPostId, setActiveCommentPostId] = useState(null);
+  const [activePostId, setActivePostId] = useState(null); 
   const [popupContext, setPopupContext] = useState('');
   const [openPopup, setOpenPopup] = useState(false);
-
+  const [openSinglePost, setOpenSinglePost] = useState(false);
   const [posts, setPosts] = useState([]);
   const delay = ms => new Promise(res => setTimeout(res, ms));
   const handlepopUpOpen = () => setOpenPopup(true);
@@ -57,6 +59,18 @@ function Feed() {
     setCommentFormOpen(false);
     setActiveCommentPostId(null); // Reset the active post id
   };
+
+  const handleOpenSinglePost = (postId) => {
+    setOpenSinglePost(true);
+    setActivePostId(postId)
+  };
+
+  const handleCloseSinglePost = () => {
+    setOpenSinglePost(false);
+    setActivePostId(null);
+  };
+
+
 
   const handleCommentSubmit = async (commentData) => {
     // Logic to submit the post data to the backend
@@ -150,6 +164,7 @@ function Feed() {
       {isDrawerBar && (
         <div onClick={() => setIsDrawerBar(false)} className="drawerBarPanel" />
       )}
+      
       <DrawerBar active={isDrawerBar} />
       <div className="feed-header">
         <div onClick={() => setIsDrawerBar(true)}>
@@ -181,6 +196,7 @@ function Feed() {
               retweets={post.retweets}
               commentsCount={post.commentsCount}
               onCommentClick={handleCommentFormOpen}
+              onPostClick={handleOpenSinglePost}
             />
           ))}
         </article>
@@ -197,6 +213,11 @@ function Feed() {
         onSubmit={handleCommentSubmit}
       />
       <BottomSidebar />
+      <SinlgePost 
+        open={openSinglePost}
+        onClose={handleCloseSinglePost}
+        postid = {activePostId}
+      />
     </section>
   );
 }

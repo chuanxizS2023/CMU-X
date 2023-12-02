@@ -12,12 +12,9 @@ import {addLike, deletePost} from '../../../apis/communitypostAPIs/postAPI'
 import ProfileCard from "../../ProfileCard/ProfileCard";
 import DeleteIcon from "@material-ui/icons/Delete";
 
-function Post({communityPostid, userImage, username, title, content, likes, comments, retweets, onCommentClick, commentsCount, created_Date  }) {
+function Post({communityPostid, userImage, username, title, content, likes, comments, retweets, onCommentClick, onPostClick, commentsCount, created_Date  }) {
   const [isVisibleProfileCard, setIsVisibleProfileCard] = React.useState(false);
-  useEffect(() => {
-    console.log("communityPostid: ", communityPostid);
-    console.log("date: ", created_Date);
-  }, [communityPostid]);
+
   const onLikeClick = async (communityPostid) => {
     console.log("like clicked with id: ", communityPostid);
     const res = await addLike(communityPostid);
@@ -28,7 +25,7 @@ function Post({communityPostid, userImage, username, title, content, likes, comm
   }
   
   return (
-    <div className="post" onMouseLeave={() => setIsVisibleProfileCard(false)}>
+    <div className="post" onMouseLeave={() => setIsVisibleProfileCard(false)} onClick={() => {onPostClick(communityPostid)}}>
       <ProfileCard active={isVisibleProfileCard && true} />
       <div>
         <Avatar src={userImage} />
