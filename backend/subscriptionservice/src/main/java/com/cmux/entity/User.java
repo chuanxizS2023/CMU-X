@@ -1,35 +1,35 @@
 package com.cmux.entity;
 
+import java.util.List;
+
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
+import org.springframework.data.neo4j.core.schema.Relationship;
+import org.springframework.data.neo4j.core.schema.Relationship.Direction;
+
 
 @Node(labels = {"User"})
 public class User {
 
 	@Id
-	@GeneratedValue
-	private Long id;
-
-    private Long CMUid;
+    private Long userId;
 
 	private String name;
 
-	public Long getId() {
-		return id;
-	}
+	@Relationship(type = "SUBSCRIBED_TO", direction = Direction.OUTGOING)
+	private List<User> subscriptions;
 
-    public Long getCMUid() {
-        return CMUid;
+	@Relationship(type = "SUBSCRIBED_BY", direction = Direction.INCOMING)
+	private List<User> subscribers;
+
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setCMUid(Long CMUid) {
-        this.CMUid = CMUid;
+    public void setUID(Long userId) {
+        this.userId = userId;
     }
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public String getName() {
 		return name;
