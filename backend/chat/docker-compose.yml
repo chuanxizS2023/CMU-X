@@ -1,5 +1,4 @@
-version: '3'
-
+version: "3"
 services:
   chat-service:
     build:
@@ -18,7 +17,7 @@ services:
       AWS_ACCESS_KEY_ID: AKIA2USN5UESAF6CJXE5
       AWS_SECRET_ACCESS_KEY: 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
       AWS_REGION: us-east-2
-      
+
   cassandra:
     image: "cassandra:latest"
     ports:
@@ -28,13 +27,13 @@ services:
       - cassandra-data:/var/lib/cassandra
 
   cassandra-load-keyspace:
-      container_name: cassandra-load-keyspace
-      image: cassandra:latest
-      depends_on:
-        - cassandra
-      volumes:
-        - ./src/main/resources/cassandra_schema.cql:/schema.cql 
-      command: /bin/bash -c "sleep 90 && echo loading cassandra keyspace && cqlsh cassandra -f /schema.cql"
+    container_name: cassandra-load-keyspace
+    image: cassandra:latest
+    depends_on:
+      - cassandra
+    volumes:
+      - ./src/main/resources/cassandra_schema.cql:/schema.cql
+    command: /bin/bash -c "sleep 90 && echo loading cassandra keyspace && cqlsh cassandra -f /schema.cql"
 
   rabbitmq:
     build:
