@@ -32,16 +32,25 @@
 
 .loginBtn {
   background-color: #1da1f2;
-  border-color: #000000;
+  border: none; /* Assuming you don't want a border, but add if needed */
   border-radius: 9999px;
-  border-style: solid;
-  border-width: 1px;
-  display: flex;
-  flex-direction: column;
-  margin: 10px;
-  padding-top: 15px;
-  padding-bottom: 15px;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  margin: 10px 15px; /* This will give it the same horizontal padding as the inputs */
+  padding: 15px; /* Adjust vertical padding if needed */
+  text-align: center;
+  display: block; /* Makes it a block-level element */
+  width: calc(100% - 30px); /* 100% of the parent's width minus the padding on both sides */
+  box-sizing: border-box; /* Ensures that padding and border are included in the width */
+  cursor: pointer;
   text-decoration: none;
+  outline: none;
+  transition: background-color 0.2s; /* Smooth transition for hover state */
+}
+
+.loginBtn:hover {
+  background-color: #1a8cd8; /* Slightly darker blue on hover */
 }
 
 .loginText {

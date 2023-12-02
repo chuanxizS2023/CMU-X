@@ -78,7 +78,7 @@ public class Application {
 		// 	}
 		// }
 
-		messageProducer.sendMessage("topicExchange", "cmux.reward", "cnm");
+		messageProducer.sendMessage("topicExchange", "cmux.chat", "aaa");
 
 	}
 }
