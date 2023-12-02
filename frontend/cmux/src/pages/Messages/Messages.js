@@ -6,7 +6,7 @@ import BottomSidebar from "../../components/BottomSidebar/BottomSidebar";
 import Chat from "../../components/Chat/Chat";
 import DrawerBar from "../../components/DrawerBar/DrawerBar";
 import HomeBox from "../../components/HomeBox/HomeBox";
-import { MessagesIcon } from "../../components/icons";
+import { UsersIcon } from "../../components/icons";
 import LastChat from "../../components/LastChat/LastChat";
 import NotSelectedMessage from "../../components/NotSelectedMessage/NotSelectedMessage";
 import SearchInput from "../../components/Widgets/SearchInput/SearchInput";
@@ -34,10 +34,10 @@ const Messages = () => {
             <Avatar src="" />
           </div>
           <span>Messages</span>
-          <MessagesIcon />
+          <UsersIcon />
         </div>
         <div className="messagesSearchInput">
-          <SearchInput placeholder="Search for people and groups" />
+          <SearchInput placeholder="Search for people to talk" />
         </div>
         <div className="lastMessages">
           {messages.map((message) => {
@@ -47,11 +47,9 @@ const Messages = () => {
             return (
               <LastChat
                 username={user.username}
-                displayName={user.displayName}
-                datetime={user.joinMonth + " " + user.joinYear}
                 userimage={user.userimage}
+                lastMessageTime={message.messages.slice(-1)[0].time}
                 lastMessage={message.messages.slice(-1)[0].message}
-                verified={true}
               />
             );
           })}

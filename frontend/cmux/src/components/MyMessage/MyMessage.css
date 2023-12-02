@@ -1,27 +1,45 @@
-.myMessage {
+.myMessageContainer {
   display: flex;
-  align-items: center;
-  margin-left: auto;
+  flex-direction: column;
+  align-items: flex-end;
   margin-right: 15px;
   margin-bottom: 5px;
 }
+
+.messageTimestamp {
+  font-size: 12px;
+  color: #777;
+  margin-bottom: 4px;
+  align-self: flex-end;
+  padding-right: 18px;
+  /* Aligns timestamp above the message and avatar */
+}
+
+.myMessage {
+  display: flex;
+  align-items: center;
+}
+
+.messageContent {
+  background-color: var(--from-message-color);
+  border-radius: 9999px;
+  padding: 12px 15px;
+  font-size: 15px;
+  color: white;
+  display: inline-block;
+  margin-right: 12px;
+  /* Adjust spacing between message and avatar */
+}
+
+.avatarContainer {
+  /* Add additional styles for the avatar if needed */
+}
+
 .myMessage:hover svg {
   display: inline;
 }
-.myMessage > div {
-  display: flex;
-  flex-direction: row;
-  background-color: var(--from-message-color);
-  border-top-left-radius: 9999px;
-  border-bottom-left-radius: 9999px;
-  border-top-right-radius: 9999px;
-  border-bottom-right-radius: px;
-  padding: 12px 15px;
-  margin-left: 12px;
-  font-size: 15px;
-  color: white;
-}
-.myMessage > svg {
+
+.myMessage>svg {
   display: none;
   fill: var(--gray);
   width: 22px;
@@ -29,6 +47,7 @@
   padding: 8px;
   border-radius: 9999px;
 }
-.myMessage > svg:hover {
+
+.myMessage>svg:hover {
   background-color: var(--hover-blue-color);
 }
