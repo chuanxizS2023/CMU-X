@@ -45,10 +45,6 @@ function SinlgePost({open, onClose, communityPostid}) {
     console.log("like clicked with id: ", communityPostid);
     const res = await addLike(communityPostid);
   }
-  const onDeleteClick = async () => {
-    console.log("delete clicked with id: ", communityPostid);
-    const res = await deletePost(communityPostid);
-  }
   
   return (
     <Dialog open={open} onClose={onClose} >
