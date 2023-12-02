@@ -16,6 +16,7 @@ function Post({communityPostid, userImage, username, title, content, likes, comm
   const [isVisibleProfileCard, setIsVisibleProfileCard] = React.useState(false);
   useEffect(() => {
     console.log("communityPostid: ", communityPostid);
+    console.log("date: ", created_Date);
   }, [communityPostid]);
   const onLikeClick = async (communityPostid) => {
     console.log("like clicked with id: ", communityPostid);
@@ -45,9 +46,10 @@ function Post({communityPostid, userImage, username, title, content, likes, comm
           >
             {username}
           </span>
-          <span className="post-header-date">{MillToDate(created_Date)}</span>
+          <span className="post-header-date">{created_Date}</span>
           <MoreHorizIcon className="postMoreIcon" />
         </div>
+        <div style={{fontWeight:"bolder", fontSize:"25px", justifyContent:"center"}}>{title}</div>
         <div className="post-content">{content}</div>
         {/* {shareImage && (
           <div className="post-image">
@@ -56,7 +58,7 @@ function Post({communityPostid, userImage, username, title, content, likes, comm
         )} */}
         <div className="post-event">
           <div>
-            <CommentIcon className="postIcon" />
+            <CommentIcon className="postIcon" onClick={() => onCommentClick(communityPostid)} />
             <span>{commentsCount}</span>
           </div>
           <div>

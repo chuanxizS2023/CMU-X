@@ -11,8 +11,10 @@ import DrawerBar from "../DrawerBar/DrawerBar";
 import Loading from "../Loading/Loading";
 import logo from "../../assets/cmux_logo_no_bg.png";
 import {stompClientInstance} from "../../socketClient";
+import { saveComment } from "../../apis/communitypostAPIs/commentAPI";
 import {createPost} from "../../apis/communitypostAPIs/postAPI";
 import PostForm from "./Post/postForm";
+import CommentForm from "./Post/commentForm"
 import { fetchPostsByIds } from "../../data/postData";
 
 
@@ -21,6 +23,8 @@ function Feed() {
   const [loading, setLoading] = React.useState(true);
   const [isPostFormOpen, setPostFormOpen] = React.useState(false);
   const [author_id, setAuthor_id] = React.useState(1);
+  const [isCommentFormOpen, setCommentFormOpen] = useState(false);
+  const [activeCommentPostId, setActiveCommentPostId] = useState(null);
   const [popupContext, setPopupContext] = useState('');
   const [openPopup, setOpenPopup] = useState(false);
 
@@ -44,13 +48,54 @@ function Feed() {
     }
   };
 
+  const handleCommentFormOpen = (postId) => {
+    setActiveCommentPostId(postId);
+    setCommentFormOpen(true);
+  };
+
+  const handleCloseCommentForm = () => {
+    setCommentFormOpen(false);
+    setActiveCommentPostId(null); // Reset the active post id
+  };
+
+  const handleCommentSubmit = async (commentData) => {
+    // Logic to submit the post data to the backend
+    commentData.author_id = author_id;
+    commentData.communityPostid = activeCommentPostId;
+    
+    const response = await saveComment(commentData);
+    console.log("status: ", response.status)
+    if (response.status === 200) {
+      setPosts(prevPosts => {
+        const existingPostIndex = prevPosts.findIndex(post => post.communityPostid === activeCommentPostId);
+        if(existingPostIndex !== -1){
+          const updatedPosts = [...prevPosts];
+          updatedPosts[existingPostIndex].commentsCount += 1;
+          if (updatedPosts[existingPostIndex].comments) {
+            updatedPosts[existingPostIndex].comments.push(commentData);
+          }else{
+            updatedPosts[existingPostIndex].comments = [commentData];
+          }
+          return updatedPosts
+        }else{ 
+          return prevPosts;
+        }
+      });
+      setPopupContext('Comment created successfully!');
+      handlepopUpOpen();
+    } else {
+      setPopupContext('Failed to create comment!');
+      handlepopUpOpen();
+    }
+  }
+
   setTimeout(() => {
     setLoading(false);
   }, 500);
 
 
   useEffect(() => {
-    const postIds = [2]
+    const postIds = [1,2,3,4,5,6,7]
     const establishConnection = async () => {
       await delay(2000);
       await stompClientInstance.ensureConnection();
@@ -75,20 +120,22 @@ function Feed() {
       });
 
       stompClientInstance.subscribeToTopic('/topic/post-created', (message)=>{
-          
         setPosts(prevPost =>{
             return [...prevPost, message];
           })
       })
     }
 
-
-    fetchPostsByIds(postIds)
-      .then(fetchedPosts => {
-        setPosts(fetchedPosts);
-        setLoading(false);
-      })
-      .catch(error => console.error('Failed to fetch posts', error));
+    const fetchAndSetPosts = async () => {
+      try {
+        const allPosts = await fetchPostsByIds(postIds); // Await the result of fetchPostsByIds
+        setPosts(allPosts);
+      } catch (error) {
+        console.error('Error fetching posts:', error);
+        // Handle error, for example, set an error state or a message to the user
+      }
+    };
+    fetchAndSetPosts();
     establishConnection();
 
   }, []);
@@ -124,16 +171,16 @@ function Feed() {
             <Post
               key={post.communityPostid}
               communityPostid={post.communityPostid}
-              username={post.username}
+              username={post.author_id}
               userimage={post.userimage}
-              date={post.created_Date}
+              created_Date={post.created_Date}
               title={post.title}
               content={post.content}
               likes={post.likes}
               comments={post.comments}
               retweets={post.retweets}
               commentsCount={post.commentsCount}
-              onCommentClick={() => {}}
+              onCommentClick={handleCommentFormOpen}
             />
           ))}
         </article>
@@ -143,6 +190,11 @@ function Feed() {
         isOpen={openPopup}
         handleClose={handlepopUpClose}
         text={popupContext}
+      />
+      <CommentForm
+        open={isCommentFormOpen}
+        onClose={handleCloseCommentForm}
+        onSubmit={handleCommentSubmit}
       />
       <BottomSidebar />
     </section>
