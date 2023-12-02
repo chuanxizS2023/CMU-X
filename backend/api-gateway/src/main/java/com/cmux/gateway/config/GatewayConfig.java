@@ -12,10 +12,13 @@ public class GatewayConfig {
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
         return builder.routes()
             .route("user-service", r -> r.path("/user/**")
-                    .uri("http://user-service:8080"))
+                    .uri("http://user-service:5002"))
             .route("auth-service", r -> r.path("/auth/**")
-                    .uri("http://user-service:8080"))
-            // other service
+                    .uri("http://user-service:5002"))
+            .route("ws-chat-service", r -> r.path("/ws-chat/**")
+                    .uri("ws://chat-service:8080"))
+            .route("ws-post-service", r -> r.path("/ws-communitypost/**")
+                    .uri("ws://post-service:9000"))
             .build();
     }
 }
