@@ -11,8 +11,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import reward.controller.RabbitMQConsumer;
-import reward.controller.RabbitMQProducer;
+import reward.controller.MQProducer;
 import reward.exception.ErrorHandling.RewardException;
 import reward.model.CreditHistory;
 import reward.service.command.credit.*;
@@ -26,11 +25,11 @@ public class Application {
 
 	private final CreditReceiver receiver;
 
-	private final RabbitMQProducer messageProducer;
+	private final MQProducer messageProducer;
 
 	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-	public Application(CreditInvoker invoker, CreditReceiver receiver, RabbitMQProducer messageProducer) {
+	public Application(CreditInvoker invoker, CreditReceiver receiver, MQProducer messageProducer) {
 		this.invoker = invoker;
 		this.receiver = receiver;
 		this.messageProducer = messageProducer;
@@ -78,7 +77,7 @@ public class Application {
 		// 	}
 		// }
 
-		messageProducer.sendMessage("topicExchange", "cmux.reward", "cnm");
+		messageProducer.sendMessage("topicExchange", "cmux.user", "Reward service sending to user service");
 
 	}
 }

@@ -4,11 +4,11 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
-public class RabbitMQProducer {
+public class MQProducer {
 
     private final RabbitTemplate rabbitTemplate;
 
-    public RabbitMQProducer (RabbitTemplate rabbitTemplate){
+    public MQProducer (RabbitTemplate rabbitTemplate){
         this.rabbitTemplate = rabbitTemplate;
     }
 

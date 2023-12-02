@@ -1,4 +1,4 @@
-package reward.config;
+package com.cmux.user.config;
 
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.TopicExchange;
@@ -8,11 +8,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class MessageQueueConfig {
+public class MQConfig {
 
     @Bean
     Queue queue() {
-        return new Queue("cmu-x");
+        return new Queue("cmu-x-user");
     }
 
     @Bean
@@ -22,7 +22,6 @@ public class MessageQueueConfig {
 
     @Bean
     Binding binding(Queue queue, TopicExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with("cmux.reward");
+        return BindingBuilder.bind(queue).to(exchange).with("cmux.user");
     }
 }
-
