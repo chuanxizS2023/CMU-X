@@ -77,7 +77,7 @@ public class Application {
 		// 	}
 		// }
 
-		messageProducer.sendMessage("topicExchange", "cmux.user", "Reward service sending to user service");
+		messageProducer.sendImageToUser("Reward service sending to user service");
 
 	}
 }
