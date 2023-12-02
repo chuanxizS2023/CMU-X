@@ -15,8 +15,10 @@ services:
     restart: always
     depends_on:
       - reward-db
+      - rabbitmq
     networks:
       - reward
+      - rabbitmq
 
   reward-db:
     container_name: user-credit
@@ -32,6 +34,20 @@ services:
     networks:
       - reward
 
+  rabbitmq:
+    build:
+      context: .
+      dockerfile: Dockerfile.rabbitmq
+    hostname: rabbitmq
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+      - "61613:61613"
+    networks: 
+      - rabbitmq
+
 networks:
   reward: 
+    driver: bridge
+  rabbitmq:
     driver: bridge
