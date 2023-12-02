@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { Avatar } from "@material-ui/core";
 import "./Post.css";
 import FavoriteIcon from "../../icons/FavoriteIcon";
@@ -7,15 +7,30 @@ import RetweetIcon from "../../icons/RetweetIcon";
 import SharePostIcon from "../../icons/SharePostIcon";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import { MillToDate } from "../../../utils/MillToDate";
+import {StompClientSingleton} from "../../../socketClient";
+import {addLike, deletePost} from '../../../apis/communitypostAPIs/postAPI'
 import ProfileCard from "../../ProfileCard/ProfileCard";
+import DeleteIcon from "@material-ui/icons/Delete";
 
-function Post({ userimage, username, displayName, text, shareImage, date }) {
+function Post({communityPostid, userImage, username, title, content, likes, comments, retweets, onCommentClick, commentsCount, created_Date  }) {
   const [isVisibleProfileCard, setIsVisibleProfileCard] = React.useState(false);
+  useEffect(() => {
+    console.log("communityPostid: ", communityPostid);
+  }, [communityPostid]);
+  const onLikeClick = async (communityPostid) => {
+    console.log("like clicked with id: ", communityPostid);
+    const res = await addLike(communityPostid);
+  }
+  const onDeleteClick = async () => {
+    console.log("delete clicked with id: ", communityPostid);
+    const res = await deletePost(communityPostid);
+  }
+  
   return (
     <div className="post" onMouseLeave={() => setIsVisibleProfileCard(false)}>
       <ProfileCard active={isVisibleProfileCard && true} />
       <div>
-        <Avatar src={userimage} />
+        <Avatar src={userImage} />
       </div>
       <div className="post-content-col">
         <div className="post-header">
@@ -28,30 +43,28 @@ function Post({ userimage, username, displayName, text, shareImage, date }) {
               }, 1000);
             }}
           >
-            {displayName}
+            {username}
           </span>
-          <span className="post-header-username">{"@" + username}</span>
-          <span className="post-header-date">{MillToDate(date)}</span>
+          <span className="post-header-date">{MillToDate(created_Date)}</span>
           <MoreHorizIcon className="postMoreIcon" />
         </div>
-        <div className="post-content">{text}</div>
-        {shareImage && (
+        <div className="post-content">{content}</div>
+        {/* {shareImage && (
           <div className="post-image">
             <img src={shareImage} alt="shareimage" />
           </div>
-        )}
+        )} */}
         <div className="post-event">
           <div>
             <CommentIcon className="postIcon" />
-            <span>5</span>
+            <span>{commentsCount}</span>
           </div>
           <div>
-            <FavoriteIcon className="postIcon" />
-            <span>5</span>
+            <FavoriteIcon className="postIcon" onClick={()=>{onLikeClick(communityPostid)}}/>
+            <span>{likes}</span>
           </div>
           <div>
-            <RetweetIcon className="postIcon" />
-            <span>5</span>
+            <DeleteIcon className="deleteIcon" onClick={onDeleteClick} /> 
           </div>
           <div>
             <SharePostIcon className="postIcon" />
