@@ -48,6 +48,6 @@ public interface UserRepository extends Neo4jRepository<User, Long> {
     // Remove a subscriber (another user unsubscribes from the current user)
     @Query("MATCH (u:User)<-[r:SUBSCRIBED_TO]-(other:User) WHERE u.userId = $userId AND other.userId = $otherUserId " +
            "DELETE r")
-    void removeSubscriber(@Param("userId") Long userId, @Param("otherUserId") Long otherUserId);
+    void removeFollower(@Param("userId") Long userId, @Param("otherUserId") Long otherUserId);
 }
    
