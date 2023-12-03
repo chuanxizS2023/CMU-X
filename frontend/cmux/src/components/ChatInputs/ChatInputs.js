@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { useLocation } from "react-router";
 import { addMessageAction } from "../../store/actions/messagesActions";
-import { EmojiIcon, GifIcon, PhotoIcon, SendIcon } from "../icons";
+import { EmojiIcon, FileIcon, PhotoIcon, SendIcon } from "../icons";
 import "./ChatInputs.css";
 
 const ChatInputs = () => {
@@ -19,7 +19,7 @@ const ChatInputs = () => {
   return (
     <div className="chatInputs">
       <PhotoIcon />
-      <GifIcon />
+      <FileIcon />
       <div
         className={
           isFocus ? "chatTextInput chatTextInputFocus" : "chatTextInput"
