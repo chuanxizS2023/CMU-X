@@ -80,3 +80,13 @@ export const addTeamMembers = async (postId, username) => {
     throw error;
   }
 };
+
+export const searchPosts = async (query) => {
+  try {
+    const response = await axios.get(`${baseUrl}/search?query=${encodeURIComponent(query)}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error during search:", error);
+    return [];
+  }
+};
