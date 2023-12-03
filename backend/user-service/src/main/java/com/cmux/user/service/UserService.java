@@ -119,6 +119,14 @@ public class UserService {
                 currentUser.setEmail(updateRequest.getEmail());
             }
 
+            if (updateRequest.getUserImage() != null) {
+                currentUser.setUserImage(updateRequest.getUserImage());
+            }
+
+            if (updateRequest.getUnlockedImages() != null) {
+                currentUser.setUnlockedImages(updateRequest.getUnlockedImages());
+            }
+
             return userRepository.save(currentUser);
         }
         throw new RuntimeException("User not found");
