@@ -12,6 +12,7 @@ import {StompClientSingleton} from "../../../socketClient";
 import {addLike, deletePost, getPostById} from '../../../apis/communitypostAPIs/postAPI'
 import ProfileCard from "../../ProfileCard/ProfileCard";
 import DeleteIcon from "@material-ui/icons/Delete";
+import Comments from "./comments";
 
 // communityPostid, userImage, username, title, content, likes, comments, retweets, onCommentClick, commentsCount, created_Date  
 function SinlgePost({open, onClose, communityPostid}) {
@@ -23,6 +24,12 @@ function SinlgePost({open, onClose, communityPostid}) {
     const [comments, setComments] = useState(null);
     const [commentsCount, setCommentsCount] = useState(null);
     const [created_Date, setCreated_Date] = useState(null);
+    const [findTeammatePost, setFindTeammatePost] = useState(false);
+    const [instructorName, setInstructorName] = useState(null);
+    const [courseNumber, setCourseNumber] = useState(null);
+    const [semester, setSemester] = useState(null);
+    const [teamMembers, setTeamMembers] = useState(null);
+
   useEffect(() => {
     const fetchPost = async () => {
         try{
@@ -35,6 +42,11 @@ function SinlgePost({open, onClose, communityPostid}) {
             setComments(res.comments);
             setCommentsCount(res.commentsCount);
             setCreated_Date(res.created_Date);
+            setFindTeammatePost(res.findTeammatePost);
+            setInstructorName(res.instructorName);
+            setCourseNumber(res.courseNumber);
+            setSemester(res.semester);
+            setTeamMembers(res.teamMembers);
         }catch(err){
             console.log(err);
         }
@@ -42,13 +54,12 @@ function SinlgePost({open, onClose, communityPostid}) {
     fetchPost();
   }, []);
   const onLikeClick = async (communityPostid) => {
-    console.log("like clicked with id: ", communityPostid);
     const res = await addLike(communityPostid);
   }
   
   return (
     <Dialog open={open} onClose={onClose} >
-    <div className="post-with-comment" style={{width:"25vw", maxWidth:"30vw"}}>
+    <div className="post-with-comment" style={{minWidth:"25vw"}}>
         <div className="post" onMouseLeave={() => setIsVisibleProfileCard(false)}>
             <ProfileCard active={isVisibleProfileCard && true} />
             <div>
@@ -64,6 +75,7 @@ function SinlgePost({open, onClose, communityPostid}) {
                         setIsVisibleProfileCard(false);
                     }, 1000);
                     }}
+                    style={{color:"black"}}
                 >
                     {author_id}
                 </span>
@@ -71,7 +83,32 @@ function SinlgePost({open, onClose, communityPostid}) {
                 <MoreHorizIcon className="postMoreIcon" />
                 </div>
                 <div style={{fontWeight:"bolder", fontSize:"25px", justifyContent:"center"}}>{title}</div>
-                <div className="post-content">{content}</div>
+                <div className="post-content" style={{color:"black"}}>{content}</div>
+                {findTeammatePost && (
+          <div style={{marginTop:"10px", color:"black"}}>
+            <div>This is a FindTeammate Post</div>
+            <div className="post-findTeammate-section" style={{ border:"1px solid black"}}>
+              <div style={{display:"flex", justifyContent:"space-evenly"}}>
+                <div className="post-findTeammate-course">
+                  <span>Course: </span>
+                  <span>{courseNumber}</span>
+                </div>
+                <div className="post-findTeammate-semester">
+                  <span>Semester: </span>
+                  <span>{semester}</span>
+                </div>
+              </div>
+                <div className="post-findTeammate-teamMembers" style={{display:"flex", justifyContent:"center"}}>
+                  <span>Team Members: </span>
+                  <span>{teamMembers}</span>
+                </div>
+                <div className="post-findTeammate-instructor" style={{display:"flex", justifyContent:"center"}}>
+                  <span>Instructor: </span>
+                  <span>{instructorName}</span>
+                </div>
+              </div>
+          </div>
+        )}
                 {/* {shareImage && (
                 <div className="post-image">
                     <img src={shareImage} alt="shareimage" />
@@ -93,6 +130,11 @@ function SinlgePost({open, onClose, communityPostid}) {
             </div>
         </div>
     </div>
+    {comments &&
+        comments.map((comment) => (
+            <Comments key={comment.commentid} comment={comment}/>
+        ))
+    }
     </Dialog>
   );
 }

@@ -8,6 +8,7 @@ const PostForm = ({ open, onClose, onSubmit }) => {
     content: '',
     author_id: null,
     created_Date: null,
+    findTeammatePost: isFindTeammatePost,
     semester: '',
     teamMembers: '',
     instructorName: '',
@@ -22,6 +23,7 @@ const PostForm = ({ open, onClose, onSubmit }) => {
 
   const handleCheckboxChange = (e) => {
     setIsFindTeammatePost(e.target.checked);
+    setPostData({ ...postData, findTeammatePost: e.target.checked });
   };
 
   const handleSubmit = () => {

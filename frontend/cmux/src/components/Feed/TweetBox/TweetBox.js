@@ -35,7 +35,7 @@ function TweetBox({setPostFormOpen}) {
           <div style={{ flex: 0.1 }}></div>
           <div style={{justifyContent:"center"}} className="tweetboxOptions">
             <button type="submit" className="tweetbox-button" onClick={()=>{setPostFormOpen(true)}}>
-              Tweet
+              Post
             </button>
           </div>
         </div>

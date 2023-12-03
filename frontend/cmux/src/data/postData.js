@@ -15,6 +15,6 @@ export const fetchPostsByIds = async (postIds) => {
 
   // Filter out null values (failed fetches)
   const validPosts = posts.filter(post => post !== null);
-  console.log("type of validPosts: ", typeof validPosts)
+  console.log("type of validPosts: ", typeof validPosts);
   return validPosts;
 };

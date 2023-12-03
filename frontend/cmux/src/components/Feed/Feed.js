@@ -50,7 +50,8 @@ function Feed() {
     }
   };
 
-  const handleCommentFormOpen = (postId) => {
+  const handleCommentFormOpen = (e, postId) => {
+    e.stopPropagation();
     setActiveCommentPostId(postId);
     setCommentFormOpen(true);
   };
@@ -78,7 +79,6 @@ function Feed() {
     commentData.communityPostid = activeCommentPostId;
     
     const response = await saveComment(commentData);
-    console.log("status: ", response.status)
     if (response.status === 200) {
       setPosts(prevPosts => {
         const existingPostIndex = prevPosts.findIndex(post => post.communityPostid === activeCommentPostId);
@@ -114,7 +114,6 @@ function Feed() {
       await delay(2000);
       await stompClientInstance.ensureConnection();
        stompClientInstance.subscribeToTopic('/topic/post-update', (message) => {
-          console.log("post-update received: ")
           const { communityPostid, title, content, likes, comments } = message;
           setPosts(prevPosts => {
             const existingPostIndex = prevPosts.findIndex(post => post.communityPostid === communityPostid);
@@ -195,6 +194,11 @@ function Feed() {
               comments={post.comments}
               retweets={post.retweets}
               commentsCount={post.commentsCount}
+              findTeammatePost={post.findTeammatePost}
+              instructorName={post.instructorName}
+              courseNumber={post.courseNumber}
+              semester={post.semester}
+              teamMembers={post.teamMembers}
               onCommentClick={handleCommentFormOpen}
               onPostClick={handleOpenSinglePost}
             />
@@ -213,11 +217,13 @@ function Feed() {
         onSubmit={handleCommentSubmit}
       />
       <BottomSidebar />
-      <SinlgePost 
-        open={openSinglePost}
-        onClose={handleCloseSinglePost}
-        postid = {activePostId}
-      />
+      {openSinglePost && (
+        <SinlgePost 
+          open={openSinglePost}
+          onClose={handleCloseSinglePost}
+          communityPostid={activePostId}
+        />
+      )}
     </section>
   );
 }
