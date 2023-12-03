@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import com.cmux.user.entity.User; 
 import jakarta.validation.Valid;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/auth")
 public class AuthController {

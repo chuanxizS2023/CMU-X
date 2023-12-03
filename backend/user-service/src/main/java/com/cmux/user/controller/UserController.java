@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import com.cmux.user.entity.User; 
 import java.util.List;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/user")
 public class UserController {

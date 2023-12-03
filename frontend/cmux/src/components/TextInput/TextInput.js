@@ -1,10 +1,11 @@
+// TextInput Component
 import React from "react";
 import "./TextInput.css";
 
-function TextInput({ text }) {
+function TextInput({ text, value, onChange }) {
   const [clicked, setClicked] = React.useState(false);
   const [inputFocus, setInputFocus] = React.useState(false);
-  const [value, setValue] = React.useState("");
+
   function isValueSet() {
     if (value === "") {
       setClicked(false);
@@ -13,17 +14,14 @@ function TextInput({ text }) {
     }
     setInputFocus(false);
   }
+
   return (
     <div
-      className={
-        inputFocus ? "textInputRow textInputRowActive" : "textInputRow"
-      }
+      className={inputFocus ? "textInputRow textInputRowActive" : "textInputRow"}
     >
       <label
-        for={text}
-        className={
-          clicked ? "textInputLabel textInputLabelActive" : "textInputLabel"
-        }
+        htmlFor={text}
+        className={clicked ? "textInputLabel textInputLabelActive" : "textInputLabel"}
       >
         {text}
       </label>
@@ -31,8 +29,9 @@ function TextInput({ text }) {
         type="text"
         className="textInput"
         id={text}
-        name={value}
-        onChange={(e) => setValue(e.target.value)}
+        name={text}
+        value={value}
+        onChange={onChange}
         onFocus={() => {
           setInputFocus(true);
           setClicked(true);
