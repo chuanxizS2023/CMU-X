@@ -8,7 +8,7 @@ import { formatDistanceToNow } from 'date-fns';
 const Comment = ({ content, author, create_Date }) => {
     let author_avatar;
     if(author[0]){
-        console.log("author: ", author)
+
         author_avatar = author[0].toUpperCase();
     }else{
         author_avatar = null;

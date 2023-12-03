@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -27,6 +29,12 @@ public class User implements Serializable {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    private String userImage;
+
+    @ElementCollection
+    private List<String> unlockedImages = new ArrayList<>();
+
     public User() {
     }
 
@@ -34,6 +42,8 @@ public class User implements Serializable {
         this.username = username;
         this.email = email;
         this.password = password;
+        this.userImage = "https://cmux-reward.s3.us-east-2.amazonaws.com/default_img.jpg";
+        this.unlockedImages.add(this.userImage);
     }
 
     public Long getId() {
@@ -55,6 +65,22 @@ public class User implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getUserImage() {
+        return userImage;
+    }
+
+    public void setUserImage(String userImage) {
+        this.userImage = userImage;
+    }
+
+    public List<String> getUnlockedImages() {
+        return unlockedImages;
+    }
+
+    public void setUnlockedImages(List<String> unlockedImages) {
+        this.unlockedImages = unlockedImages;
     }
 
     @JsonIgnore

@@ -19,22 +19,17 @@ const StyledCard = styled(Card)(({ theme }) => ({
 
 const onLikeClick = (e, communityPostid) => {
   e.stopPropagation();
-  console.log("like clicked with id: ", communityPostid);
   addLike(communityPostid);
 }
 
 const onDeleteClick = (e, communityPostid) => {
   e.stopPropagation();
-  console.log("delete clicked with id: ", communityPostid);
   deletePost(communityPostid);
 }
 
 
 const Post = ({ communityPostid, username, title, content, likes, comments, retweets, onCommentClick, commentsCount  }) => {
-  useEffect(() => {
-    console.log("comments change: ", comments);
-  }
-  , [comments]);
+
   
   return (
       <Fade in={true} timeout={1100}>

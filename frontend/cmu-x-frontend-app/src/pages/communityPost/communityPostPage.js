@@ -31,7 +31,6 @@ const CommunityPage = () => {
       await delay(1000); 
       hasSubscribed.current = true;
       const postUpdateSubscribe = subscribeToTopic('/topic/post-update', (message) => {
-        console.log("post-update received: ")
         const { communityPostid, title, content, likes, comments } = message;
         setPost(prevPosts => {
           const existingPostIndex = prevPosts.findIndex(post => post.communityPostid === communityPostid);
@@ -78,9 +77,7 @@ const CommunityPage = () => {
   setAuthor_id(3);
   }, []);
   
-  useEffect(() => {
-    console.log("post: ", post);
-  }, [post]);
+
 
   const handleAddPostClick = () => {
     setPostFormOpen(true);
@@ -120,7 +117,6 @@ const CommunityPage = () => {
     commentData.communityPostid = activeCommentPostId;
     
     const response = await saveComment(commentData);
-    console.log("status: ", response.status)
     if (response.status === 200) {
       setPost(prevPosts => {
         const existingPostIndex = prevPosts.findIndex(post => post.communityPostid === activeCommentPostId);

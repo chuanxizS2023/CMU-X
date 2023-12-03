@@ -69,8 +69,13 @@ public class ChatService {
         }
     }
 
-    public Chat createChat(Chat chat) {
-        return chatRepository.save(chat);
+    public Chat createGroupChat(Chat chat, Long userId) {
+        Chat savedChat = chatRepository.save(chat);
+        UserChat userChat = new UserChat(userId, chat.getChatId());
+        userChatRepository.save(userChat);
+        GroupUser groupUser = new GroupUser(chat.getChatId(), userId);
+        groupUserRepository.save(groupUser);
+        return savedChat;
     }
 
     public void deleteChat(UUID chatId) {

@@ -1,16 +1,17 @@
-package com.cmux.user.dto;
+package reward.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
+import lombok.Setter;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SignUpRequest {
+public class NewUserMessage {
+    private Long userId;
     private String username;
-    private String email;
-    private String password;
 }
