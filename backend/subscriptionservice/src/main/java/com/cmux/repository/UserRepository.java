@@ -29,15 +29,17 @@ public interface UserRepository extends Neo4jRepository<User, Long> {
     List<User> findMutualSubscriptionsByUserId(@Param("userId") Long userId);
 
     // Add a subscription (current user subscribes to another user)
-    @Query("MATCH (u:User {userId: $userId}), (other:User {userId: $otherUserId}) " +
-       "MERGE (u)-[:SUBSCRIBED_TO]->(other)")
+    //     @Query("MATCH (u:User {userId: $userId}), (other:User {userId: $otherUserId}) " +
+    //        "MERGE (u)-[:SUBSCRIBED_TO]->(other)")
+
+       @Query(
+              "MATCH (u:User {userId: $userId})\n" + 
+                            "MATCH (other:User {userId: $otherUserId})\n" + 
+                            "WHERE NOT (u)-[:SUBSCRIBED_TO]->(other)\n" + 
+                            "MERGE (u)-[:SUBSCRIBED_TO]->(other)"
+       )
        void addSubscription(@Param("userId") Long userId, @Param("otherUserId") Long otherUserId);
-
-    // Add a subscriber (another user subscribes to the current user)
-    @Query("MATCH (u:User {userId: $userId}), (other:User {userId: $otherUserId}) " +
-       "MERGE (u)-[:SUBSCRIBED_BY]->(other)")
-    void addSubscriber(@Param("userId") Long userId, @Param("otherUserId") Long otherUserId);
-
+  
     // Remove a subscription (current user unsubscribes from another user)
     @Query("MATCH (u:User)-[r:SUBSCRIBED_TO]->(other:User) WHERE u.userId = $userId AND other.userId = $otherUserId " +
            "DELETE r")
@@ -48,3 +50,4 @@ public interface UserRepository extends Neo4jRepository<User, Long> {
            "DELETE r")
     void removeSubscriber(@Param("userId") Long userId, @Param("otherUserId") Long otherUserId);
 }
+   
