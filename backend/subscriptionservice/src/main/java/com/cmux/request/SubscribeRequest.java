@@ -3,29 +3,28 @@ package com.cmux.request;
 public class SubscribeRequest {
 
     // Define the properties of the subscription, such as user ID and subscription details
-    private String userId;
-    private String subscriptionType;
-    // ... other relevant fields
+    private Long userId;
+    private Long userIdSubscribeTo;
 
-    public SubscribeRequest(String userId, String subscriptionType /*, other fields */) {
+    public SubscribeRequest(Long userId, Long userIdSubscribeTo) {
         this.userId = userId;
-        this.subscriptionType = subscriptionType;
+        this.userIdSubscribeTo = userIdSubscribeTo;
     }
 
     // Getters and setters for each field
-    public String getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
-    public String getSubscriptionType() {
-        return subscriptionType;
+    public Long getUserIdSubscribeTo() {
+        return userIdSubscribeTo;
     }
 
-    public void setSubscriptionType(String subscriptionType) {
-        this.subscriptionType = subscriptionType;
+    public void setUserIdSubscribeTo(Long userIdSubscribeTo) {
+        this.userIdSubscribeTo = userIdSubscribeTo;
     }
 }

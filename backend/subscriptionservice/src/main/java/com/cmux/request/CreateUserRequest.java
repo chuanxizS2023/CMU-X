@@ -9,7 +9,7 @@ public class CreateUserRequest {
         
     }
 
-    public CreateUserRequest(String username, Long userId) {
+    public CreateUserRequest(Long userId, String username) {
         this.username = username;
         this.userId = userId;
     }
