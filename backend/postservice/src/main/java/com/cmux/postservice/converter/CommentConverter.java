@@ -28,6 +28,7 @@ public class CommentConverter {
         Optional<CommunityPost> communityPost = communityPostRepository.findById(commentdto.getCommunityPostid());
         if (communityPost.isPresent()) {
             comment.setCommunityPost(communityPost.get());
+            System.out.println("CommentConverter: convertDTOToEntity, communityPostid: " + comment.getCommunityPost().getCommunityPostid());
         } else {
             throw new NoSuchElementException("Community post not found for this id");
         }

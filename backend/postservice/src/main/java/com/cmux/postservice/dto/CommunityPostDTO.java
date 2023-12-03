@@ -24,7 +24,7 @@ public class CommunityPostDTO {
     private String instructorName;
     private String semester;
     private String courseNumber;
-    private String teamMembers;
+    private List<String> teamMembers;
 
 
     

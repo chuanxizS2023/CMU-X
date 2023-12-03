@@ -1,5 +1,6 @@
 # Compiled class file
 *.class
+.metals/
 
 # Log file
 *.log
@@ -21,8 +22,11 @@
 
 # Maven
 target/
-!target/*.war
-!target/*.jar
+*.war
+*.jar
+backend/reward/.mvn
+backend/reward/mvnw
+backend/reward/mvnw.cmd
 
 # Gradle
 .gradle/
@@ -78,3 +82,10 @@ local.properties
 # Testing
 /coverage
 /.nyc_output
+
+#env
+*env.list
+frontend/cmux/package.json
+
+frontend/cmux/node_modules/
+

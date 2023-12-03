@@ -3,6 +3,7 @@ package com.cmux.postservice.service;
 import org.springframework.stereotype.Service;
 import com.cmux.postservice.model.Comment;
 import com.cmux.postservice.dto.CommentDTO;
+import com.cmux.postservice.model.PostEvents;
 import com.cmux.postservice.model.CommentEvents;
 import java.util.NoSuchElementException;
 import com.cmux.postservice.converter.CommentConverter;
@@ -31,7 +32,8 @@ public class CommentService extends AbstractESService<Comment> {
 
     public CommentDTO saveComment(CommentDTO commentdto) {
         Comment comment = commentConverter.convertDTOToEntity(commentdto);
-
+        System.out.println("CommentService: saveComment, comment: " + comment.getCommunityPost().getCommunityPostid());
+        // System.out.println("CommentService: saveComment, communitypostId: " + comment.getCommunityPost().getCommunityPostid);
         commentRepository.save(comment);
 
         this.publisher.publishEvent(new CommentEvents.Created(comment));

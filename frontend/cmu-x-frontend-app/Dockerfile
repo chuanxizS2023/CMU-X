@@ -1,16 +1,23 @@
-# Base image
-FROM node:latest
+# Stage 1: Build the React application
+FROM node:latest as build-stage
 
-# Set working directory
 WORKDIR /app
 
-# Install dependencies
-# Only copy the package.json file to work directory
-COPY package.json /app/
-RUN npm install
-COPY . /app/
-# Expose port 3000
-EXPOSE 3000
+COPY package*.json /app/
 
-# Start the application
-CMD ["npm", "start"]
+RUN npm install
+
+COPY . /app/
+
+RUN npm run build
+
+# Stage 2: Serve the app with Nginx
+FROM nginx:stable-alpine
+
+COPY --from=build-stage /app/build /usr/share/nginx/html
+
+COPY nginx.conf /etc/nginx/nginx.conf
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]

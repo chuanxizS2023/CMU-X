@@ -19,6 +19,8 @@ public class CommentController {
 
     @PostMapping
     public CommentDTO savComment(@RequestBody CommentDTO commentdto) {
+        String dateNow = java.time.LocalDate.now().toString();
+        commentdto.setCreated_Date(dateNow);
         return commentService.saveComment(commentdto);
     }
 
