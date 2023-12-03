@@ -81,7 +81,7 @@ public class ChatRestController {
                 .chatType(ChatType.GROUP)
                 .chatName(groupChatRequest.getChatName())
                 .build();
-        return ResponseEntity.ok(chatService.createChat(newGroupChat));
+        return ResponseEntity.ok(chatService.createGroupChat(newGroupChat, groupChatRequest.getUserId()));
     }
 
     @DeleteMapping("/{chatId}")
