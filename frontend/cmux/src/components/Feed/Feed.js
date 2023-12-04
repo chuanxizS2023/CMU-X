@@ -24,6 +24,7 @@ function Feed() {
   const [loading, setLoading] = React.useState(true);
   const [isPostFormOpen, setPostFormOpen] = React.useState(false);
   const [authorid, setAthorid] = React.useState(2);
+  const [username, setUsername] = React.useState('testuser');
   const [isCommentFormOpen, setCommentFormOpen] = useState(false);
   const [activeCommentPostId, setActiveCommentPostId] = useState(null);
   const [activePostId, setActivePostId] = useState(null); 
@@ -39,6 +40,7 @@ function Feed() {
   const handlePostSubmit = (postData) => {
     // Logic to submit the post data to the backend
     postData.authorid = authorid;
+    postData.username = username;
     postData.created = new Date().toLocaleString();
     const response = createPost(postData);
     if (response) {
@@ -76,6 +78,7 @@ function Feed() {
   const handleCommentSubmit = async (commentData) => {
     // Logic to submit the post data to the backend
     commentData.authorid = authorid;
+    commentData.username = username;
     commentData.communityPostid = activeCommentPostId;
     
     const response = await saveComment(commentData);
@@ -110,7 +113,7 @@ function Feed() {
 
   useEffect(() => {
     const postIds = [1,2,3,4,5,6,7]
-    const authorid_list = [1]
+    const authorid_list = [2]
     const establishConnection = async () => {
       await delay(2000);
       await stompClientInstance.ensureConnection();
@@ -196,7 +199,7 @@ function Feed() {
             <Post
               key={post.communityPostid}
               communityPostid={post.communityPostid}
-              username={post.authorid}
+              username={post.username}
               userimage={post.userimage}
               created_Date={post.created_Date}
               title={post.title}

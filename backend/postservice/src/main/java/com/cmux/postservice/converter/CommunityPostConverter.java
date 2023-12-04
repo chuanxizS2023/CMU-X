@@ -23,6 +23,7 @@ public class CommunityPostConverter {
         dto.setAuthorid(communityPost.getAuthorid());
         dto.setLikes(communityPost.getLikes());
         dto.set_published(communityPost.is_published());
+        dto.setUsername(communityPost.getUsername());
         if (communityPost.getComments() != null) {
             ArrayList<CommentDTO> commentList = new ArrayList<CommentDTO>();
             for (int i = 0; i < communityPost.getComments().size(); i++) {
@@ -66,6 +67,7 @@ public class CommunityPostConverter {
         communityPost.setInstructorName(communityPostDTO.getInstructorName());
         communityPost.setCourseNumber(communityPostDTO.getCourseNumber());
         communityPost.setSemester(communityPostDTO.getSemester());
+        communityPost.setUsername(communityPostDTO.getUsername());
         if (communityPostDTO.getTeamMembers() != null && !communityPostDTO.getTeamMembers().isEmpty()) {
             // Split the String into a List<String>
             communityPost.setTeamMembers(communityPostDTO.getTeamMembers());
@@ -97,6 +99,7 @@ public class CommunityPostConverter {
         existingPost.setLikes(updatePost.getLikes());
         existingPost.setCommentsCount(updatePost.getCommentsCount());
         existingPost.set_published(updatePost.is_published());
+        existingPost.setUsername(updatePost.getUsername());
         // set comments
         if (updatePost.getComments() != null) {
             ArrayList<Comment> commentList = new ArrayList<Comment>();

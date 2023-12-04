@@ -14,6 +14,7 @@ public class CommunityPostDTO {
     private String content;
     private String created_Date;
     private long authorid;
+    private String username;
     private long likes;
     private int commentsCount;
     private boolean is_published;

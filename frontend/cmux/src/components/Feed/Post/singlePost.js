@@ -35,7 +35,7 @@ function SinlgePost({open, onClose, communityPostid}) {
         try{
             const res = await getPostById(communityPostid);
             if(!res) return console.log("no post found");
-            setAuthor_id(res.author_id);
+            setAuthor_id(res.username);
             setTitle(res.title);
             setContent(res.content);
             setLikes(res.likes);

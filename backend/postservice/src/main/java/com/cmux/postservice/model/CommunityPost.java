@@ -22,6 +22,7 @@ public class CommunityPost {
     private String created_Date;
     // foreign key from user table
     private long authorid;
+    private String username;
     private long likes;
     private int commentsCount;
     private boolean is_published;

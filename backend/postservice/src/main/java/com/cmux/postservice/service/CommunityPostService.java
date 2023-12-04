@@ -39,7 +39,6 @@ public class CommunityPostService extends AbstractESService<CommunityPost> {
     public CommunityPostDTO savePost(CommunityPostDTO communityPostDTO) {
 
         CommunityPost communityPost = communityPostConverter.convertToEntity(communityPostDTO);
-
         communityPost = communityPostRepository.save(communityPost);
 
         // after save to mysql, publish event for elastic search
