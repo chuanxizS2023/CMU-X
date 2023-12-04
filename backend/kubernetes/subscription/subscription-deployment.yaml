@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: subscription-container
-        image: leolando/subscription-service:v2
+        image: raystudyhardworkhard/subscription-service:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
