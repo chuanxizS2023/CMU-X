@@ -17,7 +17,7 @@ spec:
         image: raystudyhardworkhard/subscription-service:latest
         imagePullPolicy: Always
         ports:
-        - containerPort: 8080
+        - containerPort: 8082
         envFrom:
         - configMapRef:
             name: subscription-config
