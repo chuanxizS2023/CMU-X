@@ -132,4 +132,12 @@ public class UserService {
         throw new RuntimeException("User not found");
     }
 
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    public List<User> searchUsersByKeyword(String keyword) {
+        return userRepository.findByUsernameContaining(keyword);
+    }
+
 }

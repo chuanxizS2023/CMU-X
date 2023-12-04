@@ -44,36 +44,36 @@
 }
 
 .signupBtn {
-  background-color: #1da1f2; /* 蓝色背景 */
-  color: white; /* 白色文字 */
-  border: none; /* 无边框 */
-  border-radius: 9999px; /* 圆角 */
-  padding: 15px; /* 内边距 */
-  margin: 15px 0; /* 外边距 */
-  font-size: 15px; /* 字体大小 */
-  font-weight: bold; /* 字体加粗 */
-  cursor: pointer; /* 鼠标光标 */
-  display: block; /* 块级元素 */
-  width: 100%; /* 按钮宽度 */
-  text-align: center; /* 文字居中 */
-  transition: background-color 0.3s; /* 背景色过渡效果 */
+  background-color: #1da1f2;
+  color: white;
+  border: none; 
+  border-radius: 9999px; 
+  padding: 15px; 
+  margin: 15px 0; 
+  font-size: 15px; 
+  font-weight: bold;
+  cursor: pointer; 
+  display: block; 
+  width: 100%; 
+  text-align: center; 
+  transition: background-color 0.3s; 
 }
 
 .error-message {
-  color: #f44336; /* 明显的红色，用于错误信息 */
-  background-color: #fff3f3; /* 轻微的红色背景 */
-  border: 1px solid #f44336; /* 红色边框 */
-  border-radius: 4px; /* 轻微的圆角 */
-  padding: 10px; /* 内边距 */
-  margin: 10px 0; /* 与其他元素的间距 */
-  text-align: center; /* 文字居中 */
-  font-size: 14px; /* 适当的字体大小 */
+  color: #f44336; 
+  background-color: #fff3f3; 
+  border: 1px solid #f44336; 
+  border-radius: 4px; 
+  padding: 10px;
+  margin: 10px 0; 
+  text-align: center; 
+  font-size: 14px; 
 }
 
-/* 响应式设计调整 */
+
 @media (min-width: 0) and (max-width: 700px) {
   .error-message {
-    margin: 10px; /* 在小屏幕上调整间距 */
+    margin: 10px;
   }
 }
 
