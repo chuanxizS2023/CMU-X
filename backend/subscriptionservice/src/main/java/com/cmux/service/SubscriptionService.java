@@ -59,8 +59,5 @@ public class SubscriptionService {
 		userRepository.removeSubscription(userId, subscriptionId);
 	}
 
-	// Remove a subscriber from a user
-	public void removeSubscriber(Long userId, Long subscriberId) {
-		userRepository.removeSubscriber(userId, subscriberId);
-	}
+
 }
