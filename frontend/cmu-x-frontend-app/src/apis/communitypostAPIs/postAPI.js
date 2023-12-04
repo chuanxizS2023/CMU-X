@@ -6,9 +6,8 @@ const baseUrl = 'http://localhost:9000/community';
 // Create a new post
 export const createPost = async (postData) => {
   try {
-    console.log("post data on submit", postData);
     const response = await axios.post(baseUrl, postData);
-    sendMessage('/app/communityPost.createPost', postData);
+    // sendMessage('/app/communityPost.createPost', postData);
     return response;
   } catch (error) {
     console.error("Error creating post:", error.message);

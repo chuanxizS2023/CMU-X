@@ -27,14 +27,16 @@ services:
       - user
     
 
-  # gateway-service:
-  #   image: gateway-service
-  #   ports:
-  #     - "5001:5001"
-  #   env_file:
-  #     - gatewayenv.list
-  #   depends_on:
-  #     - user-service
+  gateway-service:
+    image: gateway-service
+    ports:
+      - "5001:5001"
+    env_file:
+      - gatewayenv.list
+    depends_on:
+      - user-service
+    networks:
+      - user
   # chat-service:
   #   image: chat-service
   #   restart: always
@@ -51,43 +53,22 @@ services:
   #     AWS_SECRET_ACCESS_KEY: iM3TWULWL00XVMWCTtGp7VN12/XIfHtLcxR7gj23
   #     AWS_REGION: us-east-2
       
-  # cassandra:
-  #   image: "cassandra:latest"
-  #   ports:
-  #     - "9042:9042"
-  #   restart: always
-  #   volumes:
-  #     - cassandra-data:/var/lib/cassandra
-
-  # cassandra-load-keyspace:
-  #     container_name: cassandra-load-keyspace
-  #     image: cassandra:latest
-  #     depends_on:
-  #       - cassandra
-  #     volumes:
-  #       - ./chat/src/main/resources/cassandra_schema.cql:/schema.cql 
-  #     command: /bin/bash -c "sleep 180 && echo loading cassandra keyspace && cqlsh cassandra -f /schema.cql"
-
-  reward-service:
-    container_name: reward-service
-    image: reward-service
-    build:
-      context: ./reward
-      dockerfile: Dockerfile-reward
-    environment:
-      - DB_HOST=user-credit
-      - AWS_ACCESS_KEY_ID=AKIA2USN5UESAF6CJXE5
-      - AWS_SECRET_ACCESS_KEY=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
-      - AWS_REGION=us-east-2
+  cassandra:
+    image: "cassandra:latest"
     ports:
-      - 8081:8081
+      - "9042:9042"
     restart: always
-    depends_on:
-      - reward-db
-      - rabbitmq
-    networks:
-      - reward
-      - rabbitmq
+    volumes:
+      - cassandra-data:/var/lib/cassandra
+
+  cassandra-load-keyspace:
+      container_name: cassandra-load-keyspace
+      image: cassandra:latest
+      depends_on:
+        - cassandra
+      volumes:
+        - ./chat/src/main/resources/cassandra_schema.cql:/schema.cql 
+      command: /bin/bash -c "sleep 180 && echo loading cassandra keyspace && cqlsh cassandra -f /schema.cql"
 
   reward-db:
     container_name: user-credit
@@ -107,13 +88,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.rabbitmq
-    hostname: rabbitmq
     ports:
       - "15672:15672"
       - "5672:5672"
       - "61613:61613"
-    networks: 
-      - rabbitmq
 
 networks:
   reward: 

@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useContext,useState } from "react";
+import {AuthContext} from '../../components/AuthProvider';
 import { Link, useHistory } from "react-router-dom";
 import Logo from "../../components/icons/Logo";
 import TextInput from "../../components/TextInput/TextInput";
@@ -10,11 +11,14 @@ function Login() {
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
+  const { signIn } = useContext(AuthContext);
+
   // useHistory hook to programmatically navigate
   const history = useHistory();
 
   // Function to update state with the user's email
   const handleUserNameChange = (e) => {
+    console.log('Username change:', e.target.value);
     setUserName(e.target.value);
   };
 
@@ -25,22 +29,33 @@ function Login() {
 
   // Function to handle the login when the user submits the form
   const handleLogin = async () => {
+    console.log(userName, password);
     try {
       // Replace `YOUR_BACKEND_ENDPOINT` with your actual login API endpoint
-      const response = await fetch('http://localhost:5002/user/login', {
+      const response = await fetch('http://localhost:5001/auth/signin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ userName, password }),
+        body: JSON.stringify({
+          username: userName,
+          password: password
+        }),
       });
 
       const json = await response.json();
-
+    
       if (response.ok) {
         // Handle successful login here
         // You might want to store the tokens in local storage or context
         // and redirect the user to the home page
+        console.log(json.userName);
+        signIn({
+          accessToken: json.accessToken,
+          refreshToken: json.refreshToken,
+          userId: json.userId,
+          username: json.username,
+        });
         history.push('/home');
       } else {
         // If the login wasn't successful, display the error message

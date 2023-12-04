@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext }from "react";
 import "./Sidebar.css";
 import SidebarItem from "./SidebarItem/SidebarItem";
 import {
@@ -12,18 +12,30 @@ import {
   BookmarkIcon,
   MoreIcon,
 } from "../icons/index";
-import TwitterIcon from "@material-ui/icons/Twitter";
+// import TwitterIcon from "@material-ui/icons/Twitter";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
-import { Avatar } from "@material-ui/core";
+import { Avatar} from "@material-ui/core";
 import { Link, useLocation } from "react-router-dom";
 import MoreMenu from "../MoreMenu/MoreMenu";
+import logo from "../../assets/cmux_logo_no_bg.png";
+import {AuthContext} from '../../components/AuthProvider';
+import LogoutIcon from "../icons/LogoutIcon";
 
 function Sidebar() {
   const [location] = React.useState(useLocation().pathname);
   const [moreActive, setMoreActive] = React.useState(false);
+  const { signOut } = useContext(AuthContext);
+
+  const handleLogout = () => {
+    signOut();
+    // You can add more actions after logout, like redirecting to the login page
+  };
   return (
     <div className="sidebar">
-      <TwitterIcon className="twitter-icon" />
+      <img 
+        src={logo} 
+        style={{ width: '60px', height: '50px',  paddingLeft: '10px'}} 
+      />
       <Link to="/home" style={{ textDecoration: "none" }}>
         <SidebarItem
           text="Home"
@@ -31,7 +43,7 @@ function Sidebar() {
           active={location === "/home" && true}
         />
       </Link>
-      <Link to="/explore" style={{ textDecoration: "none" }}>
+      {/* <Link to="/explore" style={{ textDecoration: "none" }}>
         <SidebarItem
           text="Explore"
           Icon={ExploreIcon}
@@ -44,7 +56,7 @@ function Sidebar() {
           Icon={NotificationsIcon}
           active={location === "/Notifications" && true}
         />
-      </Link>
+      </Link> */}
       <Link to="/Messages" style={{ textDecoration: "none" }}>
         <SidebarItem
           text="Messages"
@@ -52,7 +64,7 @@ function Sidebar() {
           active={location === "/Messages" && true}
         />
       </Link>
-      <Link to="/Bookmarks" style={{ textDecoration: "none" }}>
+      {/* <Link to="/Bookmarks" style={{ textDecoration: "none" }}>
         <SidebarItem
           text="Bookmarks"
           Icon={BookmarkIcon}
@@ -65,7 +77,7 @@ function Sidebar() {
           Icon={ListIcon}
           active={location === "/Lists" && true}
         />
-      </Link>
+      </Link> */}
       <Link to="/Profile" style={{ textDecoration: "none" }}>
         <SidebarItem
           text="Profile"
@@ -73,6 +85,12 @@ function Sidebar() {
           active={location === "/Profile" && true}
         />
       </Link>
+      <div className="logoutButton" onClick={handleLogout}>
+      <SidebarItem
+          text="Logout"
+          Icon={LogoutIcon}
+      />
+      </div>
       <div
         onClick={() => setMoreActive(!moreActive)}
         className="moreMenuButton"
@@ -80,11 +98,11 @@ function Sidebar() {
         <SidebarItem text="More" Icon={MoreIcon} />
         <MoreMenu active={moreActive} />
         {moreActive && <div className="closeMoreMenuPanel" />}
-      </div>
-      <div className="tweetButton">
+      </div> */}
+      {/* <div className="tweetButton">
         <SetTweetIcon className="setTweetIcon" />
         <span>Tweet</span>
-      </div>
+      </div> */}
       <div className="profileCard">
         <div className="profileCardImage">
           <Avatar src="https://avatars2.githubusercontent.com/u/38807255?s=460&u=deb087d587be7f6a4000e4e710ec4d1daa6fde84&v=4" />

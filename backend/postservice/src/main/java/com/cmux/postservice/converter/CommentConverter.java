@@ -23,8 +23,9 @@ public class CommentConverter {
         comment.setCommentid(commentdto.getCommentid());
         comment.setContent(commentdto.getContent());
         comment.setCreated_Date(commentdto.getCreated_Date());
-        comment.setAuthor_id(commentdto.getAuthor_id());
+        comment.setAuthorid(commentdto.getAuthorid());
         comment.setLikes(commentdto.getLikes());
+        comment.setUsername(commentdto.getUsername());
         Optional<CommunityPost> communityPost = communityPostRepository.findById(commentdto.getCommunityPostid());
         if (communityPost.isPresent()) {
             comment.setCommunityPost(communityPost.get());
@@ -41,8 +42,9 @@ public class CommentConverter {
         dto.setCommentid(comment.getCommentid());
         dto.setContent(comment.getContent());
         dto.setCreated_Date(comment.getCreated_Date());
-        dto.setAuthor_id(comment.getAuthor_id());
+        dto.setAuthorid(comment.getAuthorid());
         dto.setLikes(comment.getLikes());
+        dto.setUsername(comment.getUsername());
         dto.setCommunityPostid(comment.getCommunityPost().getCommunityPostid());
         return dto;
     }
@@ -51,8 +53,9 @@ public class CommentConverter {
         Comment comment = this.convertDTOToEntity(commentDTO);
         existingComment.setContent(comment.getContent());
         existingComment.setCreated_Date(comment.getCreated_Date());
-        existingComment.setAuthor_id(comment.getAuthor_id());
+        existingComment.setAuthorid(comment.getAuthorid());
         existingComment.setLikes(comment.getLikes());
+        existingComment.setUsername(comment.getUsername());
         CommunityPost communityPost = comment.getCommunityPost();
         if (communityPost != null) {
             existingComment.setCommunityPost(communityPost);

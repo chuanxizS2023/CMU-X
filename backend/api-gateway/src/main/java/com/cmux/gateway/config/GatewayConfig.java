@@ -17,8 +17,20 @@ public class GatewayConfig {
                     .uri("http://user-service:5002"))
             .route("ws-chat-service", r -> r.path("/ws-chat/**")
                     .uri("ws://chat-service:8080"))
+            .route("chat-service", r -> r.path("/api/chats/**")
+                    .uri("http://chat-service:8080"))
             .route("ws-post-service", r -> r.path("/ws-communitypost/**")
                     .uri("ws://post-service:9000"))
+            .route("post-comments", r -> r.path("/comments/**")
+                    .uri("http://post-service:9000"))
+            .route("post-community", r -> r.path("/community/**")
+                    .uri("http://post-service:9000"))
+            .route("reward-service", r -> r.path("/shop/**")
+                    .uri("http://reward-service:8081"))
+            .route("subscription-followers", r -> r.path("/followers/**")
+                    .uri("http://subscription-service:8080"))
+            .route("subscription-subscriptions", r -> r.path("/subscriptions/**")
+                    .uri("http://subscription-service:8080"))
             .build();
     }
 }

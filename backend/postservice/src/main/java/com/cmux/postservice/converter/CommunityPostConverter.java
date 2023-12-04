@@ -20,9 +20,10 @@ public class CommunityPostConverter {
         dto.setTitle(communityPost.getTitle());
         dto.setContent(communityPost.getContent());
         dto.setCreated_Date(communityPost.getCreated_Date());
-        dto.setAuthor_id(communityPost.getAuthor_id());
+        dto.setAuthorid(communityPost.getAuthorid());
         dto.setLikes(communityPost.getLikes());
         dto.set_published(communityPost.is_published());
+        dto.setUsername(communityPost.getUsername());
         if (communityPost.getComments() != null) {
             ArrayList<CommentDTO> commentList = new ArrayList<CommentDTO>();
             for (int i = 0; i < communityPost.getComments().size(); i++) {
@@ -58,7 +59,7 @@ public class CommunityPostConverter {
         communityPost.setTitle(communityPostDTO.getTitle());
         communityPost.setContent(communityPostDTO.getContent());
         communityPost.setCreated_Date(communityPostDTO.getCreated_Date());
-        communityPost.setAuthor_id(communityPostDTO.getAuthor_id());
+        communityPost.setAuthorid(communityPostDTO.getAuthorid());
         communityPost.setLikes(communityPostDTO.getLikes());
         communityPost.setCommentsCount(communityPostDTO.getCommentsCount());
         communityPost.set_published(communityPostDTO.is_published());
@@ -66,6 +67,7 @@ public class CommunityPostConverter {
         communityPost.setInstructorName(communityPostDTO.getInstructorName());
         communityPost.setCourseNumber(communityPostDTO.getCourseNumber());
         communityPost.setSemester(communityPostDTO.getSemester());
+        communityPost.setUsername(communityPostDTO.getUsername());
         if (communityPostDTO.getTeamMembers() != null && !communityPostDTO.getTeamMembers().isEmpty()) {
             // Split the String into a List<String>
             communityPost.setTeamMembers(communityPostDTO.getTeamMembers());
@@ -93,10 +95,11 @@ public class CommunityPostConverter {
         existingPost.setTitle(updatePost.getTitle());
         existingPost.setContent(updatePost.getContent());
         existingPost.setCreated_Date(updatePost.getCreated_Date());
-        existingPost.setAuthor_id(updatePost.getAuthor_id());
+        existingPost.setAuthorid(updatePost.getAuthorid());
         existingPost.setLikes(updatePost.getLikes());
         existingPost.setCommentsCount(updatePost.getCommentsCount());
         existingPost.set_published(updatePost.is_published());
+        existingPost.setUsername(updatePost.getUsername());
         // set comments
         if (updatePost.getComments() != null) {
             ArrayList<Comment> commentList = new ArrayList<Comment>();

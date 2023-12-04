@@ -20,6 +20,7 @@ public class Comment {
     private String content;
     private String created_Date;
     private String author_id;
+    private String username;
     private long likes;
     
     @ManyToOne(fetch = FetchType.LAZY) // Changed to LAZY to prevent immediate fetching

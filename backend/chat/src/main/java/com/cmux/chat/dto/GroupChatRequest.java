@@ -9,4 +9,6 @@ import jakarta.validation.constraints.NotNull;
 public class GroupChatRequest {
     @NotNull
     private String chatName;
+    @NotNull
+    private Long userId;
 }
