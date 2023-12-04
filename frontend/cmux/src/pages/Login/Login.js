@@ -32,7 +32,7 @@ function Login() {
     console.log(userName, password);
     try {
       // Replace `YOUR_BACKEND_ENDPOINT` with your actual login API endpoint
-      const response = await fetch('http://localhost:5001/auth/signin', {
+      const response = await fetch(`${process.env.REACT_APP_URL}auth/signin`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

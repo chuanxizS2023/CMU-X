@@ -74,3 +74,21 @@
   color: white;
   margin: 5px;
 }
+
+.error-message {
+  color: #f44336; /* 明显的红色，用于错误信息 */
+  background-color: #fff3f3; /* 轻微的红色背景 */
+  border: 1px solid #f44336; /* 红色边框 */
+  border-radius: 4px; /* 轻微的圆角 */
+  padding: 10px; /* 内边距 */
+  margin: 10px 0; /* 与其他元素的间距 */
+  text-align: center; /* 文字居中 */
+  font-size: 14px; /* 适当的字体大小 */
+}
+
+/* 响应式设计调整 */
+@media (min-width: 0) and (max-width: 700px) {
+  .error-message {
+    margin: 10px; /* 在小屏幕上调整间距 */
+  }
+}
