@@ -80,6 +80,19 @@ public class CommunityPostService extends AbstractESService<CommunityPost> {
     }
 
     @Transactional
+    public List<CommunityPostDTO> getPostsByAuthorId(List<Long> authorId_list) {
+        List<CommunityPost> posts = communityPostRepository.findByAuthoridIn(authorId_list);
+
+        List<CommunityPostDTO> communityPostDTOs = new ArrayList<CommunityPostDTO>();
+
+        for (CommunityPost post : posts) {
+            communityPostDTOs.add(communityPostConverter.convertToDTO(post));
+        }
+
+        return communityPostDTOs;
+    }
+
+    @Transactional
     public List<CommunityPostDTO> searchPosts(String query) {
         try {
             System.out.println("CommunityPostService: searchPosts: query: " + query);

@@ -59,6 +59,11 @@ public class CommunityPostController {
                 .orElseThrow(() -> new NoSuchElementException("Post not found with id: " + communityPostid));
     }
 
+    @GetMapping("/authors/{authorId_list}")
+    public List<CommunityPostDTO> getPostsByAuthorId(@PathVariable List<Long> authorId_list) {
+        return communityPostService.getPostsByAuthorId(authorId_list);
+    }
+
     @DeleteMapping("/{communityPostId}")
     public ResponseEntity<?> deletePost(@PathVariable long communityPostId) {
         try {

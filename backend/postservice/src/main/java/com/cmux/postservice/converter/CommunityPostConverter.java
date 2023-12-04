@@ -20,7 +20,7 @@ public class CommunityPostConverter {
         dto.setTitle(communityPost.getTitle());
         dto.setContent(communityPost.getContent());
         dto.setCreated_Date(communityPost.getCreated_Date());
-        dto.setAuthor_id(communityPost.getAuthor_id());
+        dto.setAuthorid(communityPost.getAuthorid());
         dto.setLikes(communityPost.getLikes());
         dto.set_published(communityPost.is_published());
         if (communityPost.getComments() != null) {
@@ -58,7 +58,7 @@ public class CommunityPostConverter {
         communityPost.setTitle(communityPostDTO.getTitle());
         communityPost.setContent(communityPostDTO.getContent());
         communityPost.setCreated_Date(communityPostDTO.getCreated_Date());
-        communityPost.setAuthor_id(communityPostDTO.getAuthor_id());
+        communityPost.setAuthorid(communityPostDTO.getAuthorid());
         communityPost.setLikes(communityPostDTO.getLikes());
         communityPost.setCommentsCount(communityPostDTO.getCommentsCount());
         communityPost.set_published(communityPostDTO.is_published());
@@ -93,7 +93,7 @@ public class CommunityPostConverter {
         existingPost.setTitle(updatePost.getTitle());
         existingPost.setContent(updatePost.getContent());
         existingPost.setCreated_Date(updatePost.getCreated_Date());
-        existingPost.setAuthor_id(updatePost.getAuthor_id());
+        existingPost.setAuthorid(updatePost.getAuthorid());
         existingPost.setLikes(updatePost.getLikes());
         existingPost.setCommentsCount(updatePost.getCommentsCount());
         existingPost.set_published(updatePost.is_published());
