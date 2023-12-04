@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.nio.file.AccessDeniedException;
 import java.util.NoSuchElementException;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 
@@ -26,6 +27,17 @@ public class CommunityPostController {
         communityPostService.savePost(postDTO);
 
         return new ResponseEntity<>("Post created successfully", HttpStatus.OK);
+    }
+    
+    @GetMapping("/search")
+    public ResponseEntity<List<CommunityPostDTO>> searchPosts(@RequestParam String query) {
+        try {
+            List<CommunityPostDTO> searchResults = communityPostService.searchPosts(query);
+            return new ResponseEntity<>(searchResults, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PostMapping("/likes/{communityPostId}")

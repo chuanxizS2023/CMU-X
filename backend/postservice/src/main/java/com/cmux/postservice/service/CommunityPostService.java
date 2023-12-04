@@ -79,6 +79,28 @@ public class CommunityPostService extends AbstractESService<CommunityPost> {
         }
     }
 
+    @Transactional
+    public List<CommunityPostDTO> searchPosts(String query) {
+        try {
+            System.out.println("CommunityPostService: searchPosts: query: " + query);
+            var searchResponse = elasticsearchClient.search(s -> s
+                    .index("communitypost")
+                    .query(q -> q
+                        .queryString(d -> d
+                            .query(query)
+                        )
+                    ),
+                CommunityPost.class
+            );
+
+            List<CommunityPostDTO> result = new ArrayList<>();
+            searchResponse.hits().hits().forEach(hit -> result.add(communityPostConverter.convertToDTO(hit.source())));
+            return result;
+        } catch (Exception e) {
+            throw new IndexingException("Error during search: " + e.getMessage(), e);
+        }
+    }
+
     public void deletePostById(long communityPostId) {
         CommunityPost communityPost = communityPostRepository.findById(communityPostId)
                 .orElseThrow(() -> new NoSuchElementException("Post not found with id: " + communityPostId));

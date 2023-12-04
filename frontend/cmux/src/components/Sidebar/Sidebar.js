@@ -43,7 +43,7 @@ function Sidebar() {
           active={location === "/home" && true}
         />
       </Link>
-      <Link to="/explore" style={{ textDecoration: "none" }}>
+      {/* <Link to="/explore" style={{ textDecoration: "none" }}>
         <SidebarItem
           text="Explore"
           Icon={ExploreIcon}
@@ -56,7 +56,7 @@ function Sidebar() {
           Icon={NotificationsIcon}
           active={location === "/Notifications" && true}
         />
-      </Link>
+      </Link> */}
       <Link to="/Messages" style={{ textDecoration: "none" }}>
         <SidebarItem
           text="Messages"
@@ -64,7 +64,7 @@ function Sidebar() {
           active={location === "/Messages" && true}
         />
       </Link>
-      <Link to="/Bookmarks" style={{ textDecoration: "none" }}>
+      {/* <Link to="/Bookmarks" style={{ textDecoration: "none" }}>
         <SidebarItem
           text="Bookmarks"
           Icon={BookmarkIcon}
@@ -77,7 +77,7 @@ function Sidebar() {
           Icon={ListIcon}
           active={location === "/Lists" && true}
         />
-      </Link>
+      </Link> */}
       <Link to="/Profile" style={{ textDecoration: "none" }}>
         <SidebarItem
           text="Profile"
@@ -98,11 +98,11 @@ function Sidebar() {
         <SidebarItem text="More" Icon={MoreIcon} />
         <MoreMenu active={moreActive} />
         {moreActive && <div className="closeMoreMenuPanel" />}
-      </div>
-      <div className="tweetButton">
+      </div> */}
+      {/* <div className="tweetButton">
         <SetTweetIcon className="setTweetIcon" />
         <span>Tweet</span>
-      </div>
+      </div> */}
       <div className="profileCard">
         <div className="profileCardImage">
           <Avatar src="https://avatars2.githubusercontent.com/u/38807255?s=460&u=deb087d587be7f6a4000e4e710ec4d1daa6fde84&v=4" />

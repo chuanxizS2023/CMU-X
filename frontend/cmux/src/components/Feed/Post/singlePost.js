@@ -86,8 +86,8 @@ function SinlgePost({open, onClose, communityPostid}) {
                 <div className="post-content" style={{color:"black"}}>{content}</div>
                 {findTeammatePost && (
           <div style={{marginTop:"10px", color:"black"}}>
-            <div>This is a FindTeammate Post</div>
-            <div className="post-findTeammate-section" style={{ border:"1px solid black"}}>
+            <div style={{display:"flex", justifyContent:"center"}}> FindTeammate Post</div>
+            <div className="post-findTeammate-section" style={{ border:"1px solid white"}}>
               <div style={{display:"flex", justifyContent:"space-evenly"}}>
                 <div className="post-findTeammate-course">
                   <span>Course: </span>
