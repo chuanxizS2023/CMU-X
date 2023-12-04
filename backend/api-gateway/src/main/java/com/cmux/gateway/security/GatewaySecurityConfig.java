@@ -17,6 +17,7 @@ public class GatewaySecurityConfig {
 
     private static final String[] WHITE_LIST_URL = {
         "/auth/**", 
+        "/ws**",
     };
 
     @Autowired
@@ -46,7 +47,7 @@ public class GatewaySecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(Arrays.asList("*")); // Configure as needed
-        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         config.setAllowedHeaders(Arrays.asList("*")); // Configure as needed
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

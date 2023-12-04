@@ -25,6 +25,9 @@ const Profile = () => {
   let history = useHistory();
   document.title = "Test User (@testuser) / Twitter";
   const [loading, setLoading] = React.useState(true);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editedUsername, setEditedUsername] = useState('');
+  const [selectedImage, setSelectedImage] = useState('');
   setTimeout(() => {
     setLoading(false);
   }, 2000);
@@ -53,6 +56,37 @@ const Profile = () => {
     loadUserProfile();
   }, [userId, username]);
 
+  const fetchUpdateProfile = useFetchWithTokenRefresh(`http://localhost:5001/user/${userId}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      username: editedUsername,
+      userImage: selectedImage
+    })
+  });
+  const handleEditClick = () => {
+    setIsEditMode(true);
+    setEditedUsername(userProfile.username);
+    setSelectedImage(userProfile.userImage);
+  };
+
+  const handleSaveClick = async () => {
+    setIsEditMode(false);
+
+    try {
+      const response = await fetchUpdateProfile();
+      if (response.ok) {
+        loadUserProfile();
+      } else {
+        console.error('Failed to update user profile');
+      }
+    } catch (error) {
+      console.error('Error updating user profile:', error);
+    }
+  };
+
   return (
     <HomeBox>
       <section className="feed">
@@ -79,12 +113,19 @@ const Profile = () => {
                 <div className="profileImage">
                   <Avatar src={userProfile.userImage} />
                 </div>
-                <div className="editProfile">
-                  <span>Edit Profile</span>
+                <div className="editProfile" onClick={isEditMode ? handleSaveClick : handleEditClick}>
+                  <span>{isEditMode ? 'Save' : 'Edit Profile'}</span>
                 </div>
               </div>
               <div className="profileBiography">
-                <span>{userProfile.username}</span>
+                {isEditMode ? (
+                  <input
+                    value={editedUsername}
+                    onChange={(e) => setEditedUsername(e.target.value)}
+                  />
+                ) : (
+                  <span>{userProfile.username}</span>
+                )}
                 <span>@{userProfile.username}</span>
                 <span>Junior Software Developer</span>
                 <span>
