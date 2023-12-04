@@ -36,6 +36,18 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> users = userService.getAllUsers();
+        return ResponseEntity.ok(users);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<User>> searchUsers(@RequestParam String keyword) {
+        List<User> users = userService.searchUsersByKeyword(keyword);
+        return ResponseEntity.ok(users);
+    }
+
     @PatchMapping("/{id}")
     public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody UserUpdateRequest updateRequest,
                                     HttpServletRequest request) {

@@ -160,17 +160,17 @@
 
 .avatarModal {
   position: absolute;
-  top: 0%; /* 相对于头像的底部 */
-  left: 5%; /* 相对于头像的中心 */
-  background-color: #fff; /* 白色背景 */
+  top: 0%;
+  left: 5%; 
+  background-color: #fff;
   padding: 10px;
   border-radius: 10px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   display: flex;
-  flex-direction: column; /* 竖直排列 */
-  z-index: 100; /* 确保在最上层 */
-  max-height: 300px; /* 最大高度 */
-  overflow-y: auto; /* 超出时滚动 */
+  flex-direction: column; 
+  z-index: 100; 
+  max-height: 300px; 
+  overflow-y: auto; 
 }
 
 
