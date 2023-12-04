@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogTitle, TextField, DialogActions, Button } 
 
 const CommentForm = ({ open, onClose, onSubmit }) => {
   const [commentData, setcommentData] = useState({
+    username: '',
     content: '',
     author_id: null,
     created: null,

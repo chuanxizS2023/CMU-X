@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogTitle, TextField, DialogActions, Button, C
 const PostForm = ({ open, onClose, onSubmit }) => {
   const [isFindTeammatePost, setIsFindTeammatePost] = useState(false);
   const [postData, setPostData] = useState({
+    username: '',
     title: '',
     content: '',
     author_id: null,

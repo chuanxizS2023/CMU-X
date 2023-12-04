@@ -37,6 +37,16 @@ export const getPostById = async (postId) => {
   }
 };
 
+export const fetchPostsByAuthorIds = async (authorId_list) => {
+  try {
+    const response = await axios.get(`${baseUrl}/authors/${authorId_list}`);
+    console.log("fetchPostsByAuthorIds: ", response);
+    return response.data;
+  } catch (error) {
+    console.error("Error getting posts:", error.message);
+    throw error;
+  }
+}
 // Delete a post by ID
 export const deletePost = async (postId) => {
   try {

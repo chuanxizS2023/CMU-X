@@ -24,6 +24,7 @@ public class CommunityPostController {
     public ResponseEntity<?> createPost(@RequestBody CommunityPostDTO postDTO) {
         String dateNow = java.time.LocalDate.now().toString();
         postDTO.setCreated_Date(dateNow);
+        System.out.println("postDTO controller: " + postDTO.getUsername());
         communityPostService.savePost(postDTO);
 
         return new ResponseEntity<>("Post created successfully", HttpStatus.OK);
@@ -57,6 +58,11 @@ public class CommunityPostController {
     public CommunityPostDTO getPostById(@PathVariable long communityPostid) {
         return communityPostService.getPostById(communityPostid)
                 .orElseThrow(() -> new NoSuchElementException("Post not found with id: " + communityPostid));
+    }
+
+    @GetMapping("/authors/{authorId_list}")
+    public List<CommunityPostDTO> getPostsByAuthorId(@PathVariable List<Long> authorId_list) {
+        return communityPostService.getPostsByAuthorId(authorId_list);
     }
 
     @DeleteMapping("/{communityPostId}")

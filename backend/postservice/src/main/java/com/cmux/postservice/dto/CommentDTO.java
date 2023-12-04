@@ -11,7 +11,8 @@ public class CommentDTO {
     private long commentid;
     private String content;
     private String created_Date;
-    private String author_id;
+    private long authorid;
+    private String username;
     private long likes;
     private long communityPostid;
 

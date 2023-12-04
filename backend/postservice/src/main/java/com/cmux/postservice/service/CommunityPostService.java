@@ -39,7 +39,6 @@ public class CommunityPostService extends AbstractESService<CommunityPost> {
     public CommunityPostDTO savePost(CommunityPostDTO communityPostDTO) {
 
         CommunityPost communityPost = communityPostConverter.convertToEntity(communityPostDTO);
-
         communityPost = communityPostRepository.save(communityPost);
 
         // after save to mysql, publish event for elastic search
@@ -77,6 +76,19 @@ public class CommunityPostService extends AbstractESService<CommunityPost> {
             throw new NoSuchElementException("Post not found for id: " + id);
 
         }
+    }
+
+    @Transactional
+    public List<CommunityPostDTO> getPostsByAuthorId(List<Long> authorId_list) {
+        List<CommunityPost> posts = communityPostRepository.findByAuthoridIn(authorId_list);
+
+        List<CommunityPostDTO> communityPostDTOs = new ArrayList<CommunityPostDTO>();
+
+        for (CommunityPost post : posts) {
+            communityPostDTOs.add(communityPostConverter.convertToDTO(post));
+        }
+
+        return communityPostDTOs;
     }
 
     @Transactional
