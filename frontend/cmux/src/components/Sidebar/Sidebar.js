@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext }from "react";
 import "./Sidebar.css";
 import SidebarItem from "./SidebarItem/SidebarItem";
 import {
@@ -12,18 +12,30 @@ import {
   BookmarkIcon,
   MoreIcon,
 } from "../icons/index";
-import TwitterIcon from "@material-ui/icons/Twitter";
+// import TwitterIcon from "@material-ui/icons/Twitter";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
-import { Avatar } from "@material-ui/core";
+import { Avatar} from "@material-ui/core";
 import { Link, useLocation } from "react-router-dom";
 import MoreMenu from "../MoreMenu/MoreMenu";
+import logo from "../../assets/cmux_logo_no_bg.png";
+import {AuthContext} from '../../components/AuthProvider';
+import LogoutIcon from "../icons/LogoutIcon";
 
 function Sidebar() {
   const [location] = React.useState(useLocation().pathname);
   const [moreActive, setMoreActive] = React.useState(false);
+  const { signOut } = useContext(AuthContext);
+
+  const handleLogout = () => {
+    signOut();
+    // You can add more actions after logout, like redirecting to the login page
+  };
   return (
     <div className="sidebar">
-      <TwitterIcon className="twitter-icon" />
+      <img 
+        src={logo} 
+        style={{ width: '60px', height: '50px',  paddingLeft: '10px'}} 
+      />
       <Link to="/home" style={{ textDecoration: "none" }}>
         <SidebarItem
           text="Home"
@@ -73,7 +85,13 @@ function Sidebar() {
           active={location === "/Profile" && true}
         />
       </Link>
-      {/* <div
+      <div className="logoutButton" onClick={handleLogout}>
+      <SidebarItem
+          text="Logout"
+          Icon={LogoutIcon}
+      />
+      </div>
+      <div
         onClick={() => setMoreActive(!moreActive)}
         className="moreMenuButton"
       >

@@ -15,7 +15,9 @@ import com.cmux.user.utils.RefreshTokenFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -47,11 +49,11 @@ public class UserService {
 
     public User registerUser(SignUpRequest signUpRequest) {
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-            throw new RuntimeException("Error: Username is already taken!");
+            throw new DataIntegrityViolationException("Error: Username is already taken!");
         }
 
         if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-            throw new RuntimeException("Error: Email is already in use!");
+            throw new DataIntegrityViolationException("Error: Email is already in use!");
         }
 
         // Creating user's account
@@ -97,7 +99,7 @@ public class UserService {
         if (userOptional.isPresent()) {
             return userOptional.get();
         }
-        throw new RuntimeException("User not found");
+        throw new UsernameNotFoundException("User not found");
     }
 
     public List<User> getUsersByIds(List<Long> ids) {
@@ -115,6 +117,14 @@ public class UserService {
 
             if (updateRequest.getEmail() != null) {
                 currentUser.setEmail(updateRequest.getEmail());
+            }
+
+            if (updateRequest.getUserImage() != null) {
+                currentUser.setUserImage(updateRequest.getUserImage());
+            }
+
+            if (updateRequest.getUnlockedImages() != null) {
+                currentUser.setUnlockedImages(updateRequest.getUnlockedImages());
             }
 
             return userRepository.save(currentUser);
