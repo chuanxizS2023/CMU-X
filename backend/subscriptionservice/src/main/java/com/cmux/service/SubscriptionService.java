@@ -42,6 +42,21 @@ public class SubscriptionService {
 		return userRepository.findMutualSubscriptionsByUserId(userId);
 	}
 
+	// Get whether the user with userId is subscribed to the user with otherUserId
+	public boolean getHasSubscription(Long userId, Long otherUserId) {
+		return userRepository.findHasSubscriptionByUserId(userId, otherUserId) != null;
+	}
+
+	//Get user by userId
+	public User getUserByUserId(Long userId) {
+		return userRepository.getUserByUserId(userId);
+	}
+
+	//Get user by name
+	public List<User> getUserByName(String name) {
+		return userRepository.getUsersByName(name);
+	}
+
 	// Add a subscription for a user
 	public void addSubscription(Long userId, Long subscriptionId) {
 		try {
