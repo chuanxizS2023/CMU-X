@@ -17,8 +17,8 @@ public class CreditHistory {
 
     private Long userId;
     private LocalDateTime timestamp;
-    private int coins;
-    private int points;
+    private Integer coins;
+    private Integer points;
 
     protected CreditHistory() {
     }

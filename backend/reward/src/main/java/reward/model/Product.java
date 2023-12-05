@@ -18,13 +18,15 @@ public class Product {
 
     private int price;
     private String imageUrl;
+    private boolean isPurchasable;
 
     protected Product() {
     }
 
-    public Product(String name, int price, String imageUrl) {
+    public Product(String name, int price, String imageUrl, boolean isPurchasable) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+        this.isPurchasable = isPurchasable;
     }
 }

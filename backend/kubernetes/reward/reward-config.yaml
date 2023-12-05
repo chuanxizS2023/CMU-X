@@ -24,5 +24,8 @@ data:
   RABBITMQ_QUEUE_NAME_UPDATE_COINS: "cmu-x-reward-update-coins"
   RABBITMQ_QUEUE_NAME_UPDATE_POINTS: "cmu-x-reward-update-points"
   RABBITMQ_EXCHANGE_NAME: "cmuxExchange"
-  RABBITMQ_REWARD_ROUTING_KEY: "cmux.reward.#"
+  RABBITMQ_REWARD_ROUTING_KEY_NEWUSER: "cmux.reward.newuser"
+  RABBITMQ_REWARD_ROUTING_KEY_NEWFOLLOWER: "cmux.reward.newfollower"
+  RABBITMQ_REWARD_ROUTING_KEY_NEWLIKE: "cmux.reward.newlike"
   RABBITMQ_USER_ROUTING_KEY: "cmux.user.#"
+

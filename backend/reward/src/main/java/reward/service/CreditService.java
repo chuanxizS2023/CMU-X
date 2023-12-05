@@ -20,6 +20,9 @@ public class CreditService {
     private final CreditHistoryRepository creditHistoryRepository;
     private Optional<Credit> userCreditInfo;
 
+    private static final Integer NEW_USER_POINT = 5;
+    private static final Integer NEW_USER_COIN = 5;
+
     public CreditService(CreditRepository creditRepository, CreditHistoryRepository creditHistoryRepository) {
         this.creditRepository = creditRepository;
         this.creditHistoryRepository = creditHistoryRepository;
@@ -29,7 +32,7 @@ public class CreditService {
         this.userCreditInfo = creditRepository.findById(userId);
     }
 
-    public void createUserCredit(long userId, int coins, int points) throws RewardException {
+    public void createUserCredit(long userId, String username) throws RewardException {
         // Check if user already exists
         this.setUserCreditInfo(userId);
         if (this.userCreditInfo.isPresent()) {
@@ -37,31 +40,22 @@ public class CreditService {
         }
 
         // Insert new user credit into db
-        Credit creditInfo = new Credit(userId, coins, points);
+        Credit creditInfo = new Credit(userId, username, 10, 10);
         userCreditInfo = Optional.of(creditInfo);
         creditRepository.save(creditInfo);
 
         // Create history and save it in credit history table
         CreditHistory creditHistory = new CreditHistory(userId);
-        creditHistory.setPoints(points);
+        creditHistory.setPoints(NEW_USER_POINT);
         creditHistory.setTimestamp(LocalDateTime.now());
-        creditHistory.setCoins(coins);
+        creditHistory.setCoins(NEW_USER_COIN);
         creditHistoryRepository.save(creditHistory);
     }
 
-    public int getPonts() throws RewardException {
+    public Credit getCredit() throws RewardException {
         // Check if user is valid
         if (this.userCreditInfo.isPresent()) {
-            return userCreditInfo.get().getPoints();
-        } else {
-            throw new RewardException(ExceptionType.USERNOTFOUND);
-        }
-    }
-
-    public int getCoins() throws RewardException {
-        // Check if user is valid
-        if (this.userCreditInfo.isPresent()) {
-            return userCreditInfo.get().getCoins();
+            return userCreditInfo.get();
         } else {
             throw new RewardException(ExceptionType.USERNOTFOUND);
         }
