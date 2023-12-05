@@ -29,8 +29,14 @@ public class MQConfig {
     @Value("${rabbitmq.exchange.name}")
     private String exchange;
 
-    @Value("${rabbitmq.reward.routing.key}")
-    private String routingKey;
+    @Value("${rabbitmq.reward.routing.key.newuser}")
+    private String newUserRoutingKey;
+
+    @Value("${rabbitmq.reward.routing.key.newfollower}")
+    private String newFollowerRoutingKey;
+
+    @Value("${rabbitmq.reward.routing.key.newlike}")
+    private String newLikeRoutingKey;
 
     @Bean
     Queue newUserQueue() {
@@ -54,17 +60,17 @@ public class MQConfig {
 
     @Bean
     Binding newUserBinding() {
-        return BindingBuilder.bind(newUserQueue()).to(exchange()).with(routingKey);
+        return BindingBuilder.bind(newUserQueue()).to(exchange()).with(newUserRoutingKey);
     }
 
     @Bean
     Binding updateCoinsBinding() {
-        return BindingBuilder.bind(updateCoinsQueue()).to(exchange()).with(routingKey);
+        return BindingBuilder.bind(updateCoinsQueue()).to(exchange()).with(newFollowerRoutingKey);
     }
 
     @Bean
     Binding updatePointsBinding() {
-        return BindingBuilder.bind(updatePointsQueue()).to(exchange()).with(routingKey);
+        return BindingBuilder.bind(updatePointsQueue()).to(exchange()).with(newLikeRoutingKey);
     }
 
 

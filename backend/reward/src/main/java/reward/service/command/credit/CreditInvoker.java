@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import reward.exception.ErrorHandling.ExceptionType;
 import reward.exception.ErrorHandling.RewardException;
+import reward.model.Credit;
 import reward.model.CreditHistory;
 
 @Service
@@ -26,9 +27,9 @@ public class CreditInvoker {
         }
     }
 
-    public Integer getValue() throws RewardException {
-        if (value instanceof Integer) {
-            return (Integer) value;
+    public Credit getCreditInfo() throws RewardException {
+        if (value instanceof Credit) {
+            return (Credit) value;
         } else {
             throw new RewardException(ExceptionType.WRONGCOMMANDTYPE);
         }

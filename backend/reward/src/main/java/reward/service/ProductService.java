@@ -23,10 +23,10 @@ public class ProductService {
         this.productInfo = productRepository.findById(id);
     }
 
-    public void createProduct(String name, int price, String imageUrl) throws RewardException {
+    public void createProduct(String name, int price, String imageUrl, boolean isPurchasable) throws RewardException {
         Optional<Product> existProduct = this.productRepository.findByName(name);
         if (!existProduct.isPresent()) {
-            Product product = new Product(name, price, imageUrl);
+            Product product = new Product(name, price, imageUrl, isPurchasable);
             this.productInfo = Optional.of(product);
             this.productRepository.save(product);
         } else {
@@ -86,6 +86,19 @@ public class ProductService {
         // Update image
         Product product = productInfo.get();
         product.setImageUrl(imageUrl);
+        productInfo = Optional.of(product);
+        this.productRepository.save(product);
+    }
+
+    public void updateProductPurchasable(boolean isPurchasable) throws RewardException {
+        // Check if product exists
+        if (!productInfo.isPresent()) {
+            throw new RewardException(ExceptionType.PRODUCTNOTFOUND);
+        }
+
+        // Update if it is purchasable
+        Product product = productInfo.get();
+        product.setPurchasable(isPurchasable);
         productInfo = Optional.of(product);
         this.productRepository.save(product);
     }

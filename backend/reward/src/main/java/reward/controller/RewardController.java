@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +27,7 @@ import reward.service.command.credit.CreditCommand;
 import reward.service.command.credit.CreditInvoker;
 import reward.service.command.credit.CreditReceiver;
 import reward.service.command.credit.DeductCoinsCommand;
-import reward.service.command.credit.GetCoinsCommand;
+import reward.service.command.credit.GetCreditInfoCommand;
 import reward.service.command.product.ProductCommand;
 import reward.service.command.product.CreateProductCommand;
 import reward.service.command.product.GetAllProductCommand;
@@ -37,7 +40,9 @@ import reward.service.command.product.UpdateProductPriceCommand;
 import reward.dto.CreateProductRequest;
 import reward.dto.PurchaseProductRequest;
 import reward.dto.UpdateProductRequest;
+import reward.dto.PurchaseProductMessage;
 import reward.exception.ErrorHandling.RewardException;
+import reward.model.Credit;
 import reward.model.Product;
 
 @RestController
@@ -55,6 +60,10 @@ public class RewardController {
 
     private final S3Service s3Service;
 
+    private final MQProducer messageProducer;
+
+    private final ObjectMapper mapper = new ObjectMapper();
+
     private static final Logger LOGGER = LoggerFactory.getLogger(RewardController.class);
 
     private static final String LOGFORMAT = "\n{}\n";
@@ -66,7 +75,7 @@ public class RewardController {
         int price = createProductRequest.getPrice();
         // Check if product exists
         try {
-            // Get all product command
+            // Get all product
             ProductCommand getAllProductCommand = new GetAllProductCommand(productReceiver);
             productInvoker.setCommand(getAllProductCommand);
             productInvoker.executeCommand();
@@ -215,12 +224,13 @@ public class RewardController {
 
         try {
             // Get user coins
-            CreditCommand getCoinsCommand = new GetCoinsCommand(creditReceiver);
-            creditInvoker.setCommand(getCoinsCommand);
+            CreditCommand getCreditInfoCommand = new GetCreditInfoCommand(creditReceiver);
+            creditInvoker.setCommand(getCreditInfoCommand);
             creditInvoker.executeCommand();
-            int coins = creditInvoker.getValue();
+            Credit creditInfo = creditInvoker.getCreditInfo();
+            int coins = creditInfo.getCoins();
 
-            // Get the product command
+            // Get the product
             ProductCommand getProductCommand = new GetProductCommand(productReceiver);
             productInvoker.setCommand(getProductCommand);
             productInvoker.executeCommand();
@@ -243,11 +253,17 @@ public class RewardController {
 
             coins = coins - price;
 
+            PurchaseProductMessage purchaseProductMessage = new PurchaseProductMessage(userId, productId, imageUrl);
+
+            String jsonString = mapper.writeValueAsString(purchaseProductMessage);
+
+            messageProducer.sendImageToUser(jsonString);
+
             return ResponseEntity.ok("Purchase Successfully, imageUrl: " + imageUrl + ", remain coins: " + coins);
-        } catch (RewardException e) {
+        } catch (RewardException | JsonProcessingException e) {
             LOGGER.info(LOGFORMAT, e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
+        } 
     }
 
 }

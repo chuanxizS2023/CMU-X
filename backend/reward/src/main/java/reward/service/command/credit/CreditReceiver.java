@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import lombok.*;
 import reward.exception.ErrorHandling.ExceptionType;
 import reward.exception.ErrorHandling.RewardException;
+import reward.model.Credit;
 import reward.model.CreditHistory;
 import reward.service.CreditService;
 
@@ -16,6 +17,7 @@ import java.util.List;
 public class CreditReceiver {
 
     private Long userId;
+    private String username;
     private Integer changePointsAmount;
     private Integer changeCoinsAmount;
     private final CreditService creditService;
@@ -38,20 +40,14 @@ public class CreditReceiver {
     public void createUserCreditInfo() throws RewardException {
         // Check if coins or points is missing
         this.checkCreditValue();
-        creditService.createUserCredit(userId, changeCoinsAmount, changePointsAmount);
+        creditService.createUserCredit(userId, username);
 
     }
 
-    // Method to get current points for the user
-    public int getPoints() throws RewardException {
+    // Method to get current credit info for the user
+    public Credit getCreditInfo() throws RewardException {
         creditService.setUserCreditInfo(userId);
-        return creditService.getPonts();
-    }
-
-    // Method to get current coins for the user
-    public int getCoins() throws RewardException {
-        creditService.setUserCreditInfo(userId);
-        return creditService.getCoins();
+        return creditService.getCredit();
     }
 
     // Method to add points for the user
