@@ -19,6 +19,7 @@ public class ProductReceiver {
     private String newName;
     private Integer newPrice;
     private String newImageUrl;
+    private Boolean isPurchasable;
     private final ProductService productService;
 
     public ProductReceiver(ProductService productService) {
@@ -31,15 +32,15 @@ public class ProductReceiver {
     }
 
     public void checkProductValue() throws RewardException {
-        if (newName == null || newPrice == null || newImageUrl == null) {
-            throw new RewardException(ExceptionType.MISSINGCREDITVALUE);
+        if (newName == null || newPrice == null || newImageUrl == null || isPurchasable == null) {
+            throw new RewardException(ExceptionType.MISSINGPRODUCTINFO);
         }
     }
 
     public void createNewProduct() throws RewardException {
         // Check if any field is missing
         this.checkProductValue();
-        productService.createProduct(newName, newPrice, newImageUrl);
+        productService.createProduct(newName, newPrice, newImageUrl, isPurchasable);
 
     }
 
@@ -65,6 +66,12 @@ public class ProductReceiver {
     public void updateProductImageUrl() throws RewardException {
         productService.setProductInfo(productId);
         productService.updateImageUrl(newImageUrl);
+    }
+
+    // Method to update product image url
+    public void updateProductPurchasable() throws RewardException {
+        productService.setProductInfo(productId);
+        productService.updateProductPurchasable(isPurchasable);
     }
 
     // Method to get all product
