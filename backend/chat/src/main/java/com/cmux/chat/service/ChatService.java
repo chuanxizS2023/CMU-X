@@ -61,6 +61,7 @@ public class ChatService {
             Chat newChat = Chat.builder()
                            .chatId(chatId)
                            .chatType(ChatType.PRIVATE)
+                           .chatName(user1Id + "-" + user2Id)
                            .build();
             chatRepository.save(newChat);
             UserChat user1Chat = new UserChat(user1Id, chatId);
