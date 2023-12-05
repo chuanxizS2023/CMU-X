@@ -15,8 +15,8 @@ const ProfileCard = ({ active, username, userId, initialIsFollowing, following, 
   // const userId = useContext(AuthContext).userId;
 
   const [ isSelf, setIsSelf ] = useState(userId === myuserId);
-  const baseURL = 'http://localhost:8082';
-  const subscription_url = `${baseURL}/subscriptions`;
+  const baseUrl = process.env.REACT_APP_SUBSCRIPTION_SERVICE_URL;
+  const subscription_url = `${baseUrl}/subscriptions`;
   useEffect(() => {
     setIsSelf(userId === myuserId);
   }, [ userId, myuserId ]);

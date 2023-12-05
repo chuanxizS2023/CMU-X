@@ -11,7 +11,7 @@ import { Alarm } from "@material-ui/icons";
 
 
 function SearchInput({ placeholder }) {
-  const baseUrl = 'http://localhost:8082';
+  const baseUrl = process.env.REACT_APP_SUBSCRIPTION_SERVICE_URL;
   const [ isFocus, setIsFocus ] = React.useState(false);
   const [ searchText, setSearchText ] = React.useState('');
   const [ isPopupOpen, setIsPopupOpen ] = useState(false);
