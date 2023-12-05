@@ -24,7 +24,7 @@ function SearchInput({ placeholder }) {
   const hasSubscription_url = baseUrl + '/subscriptions/has';
   // Mock userId, should be replaced by the real userId
   // const userId = useContext(AuthContext).userId;
-  const userId = '1';
+  const userId = 1;
   //========================================
   const fetchUser = async (query) => {
     try {

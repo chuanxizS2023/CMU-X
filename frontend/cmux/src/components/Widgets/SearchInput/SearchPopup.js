@@ -51,7 +51,6 @@ function SearchResultsPopup({ open, onClose, searchResults, userSearchResults })
                 isFollowing={ userSearchResults.isFollowing }
                 following={ user.following }
                 followers={ user.followers }
-                isSelf={ user.isSelf}
               />
             ))
           }
