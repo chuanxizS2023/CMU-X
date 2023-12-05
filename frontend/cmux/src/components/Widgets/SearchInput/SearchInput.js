@@ -101,7 +101,6 @@ function SearchInput({ placeholder }) {
         setIsPopupOpen(false);
         return;
       }
-      console.log(user_res);
       // Iterate over user_res array to update each user object
       for (let i = 0; i < user_res.length; i++) {
         const user = user_res[i];
@@ -124,7 +123,6 @@ function SearchInput({ placeholder }) {
         user.following = user_subscriptions;
         user.isFollowing = user_has_subscription;
         user.isSelf = userId === user.userId;
-        console.log(user);
       }
   
       setResults(res);

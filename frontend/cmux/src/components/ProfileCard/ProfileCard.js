@@ -28,7 +28,8 @@ const ProfileCard = ({ active, username, userId, initialIsFollowing, following, 
         url: `${subscription_url}?${query}`,
       });
       if (response.status === 200) {
-        setIsFollowing(method === 'put');
+        setIsFollowing(!isFollowing);
+
       }
     } catch (error) {
       console.error("Error during update:", error);

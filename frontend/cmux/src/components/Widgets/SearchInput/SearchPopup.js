@@ -48,7 +48,7 @@ function SearchResultsPopup({ open, onClose, searchResults, userSearchResults })
                 active={ true }
                 username={ user.name }
                 userId={ user.userId }
-                isFollowing={ userSearchResults.isFollowing }
+                initialIsFollowing={ user.isFollowing }
                 following={ user.following }
                 followers={ user.followers }
               />
