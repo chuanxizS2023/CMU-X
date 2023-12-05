@@ -28,4 +28,5 @@ data:
   RABBITMQ_REWARD_ROUTING_KEY_NEWFOLLOWER: "cmux.reward.newfollower"
   RABBITMQ_REWARD_ROUTING_KEY_NEWLIKE: "cmux.reward.newlike"
   RABBITMQ_USER_ROUTING_KEY: "cmux.user.#"
+  SERVER_PORT: "8081"
 
