@@ -18,6 +18,8 @@ import java.util.Optional;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.Comparator;
+
 
 @Service
 public class ChatService {
@@ -59,6 +61,7 @@ public class ChatService {
             Chat newChat = Chat.builder()
                            .chatId(chatId)
                            .chatType(ChatType.PRIVATE)
+                           .chatName(user1Id + "-" + user2Id)
                            .build();
             chatRepository.save(newChat);
             UserChat user1Chat = new UserChat(user1Id, chatId);
@@ -115,7 +118,7 @@ public class ChatService {
                 .map(UserChat::getChatId)
                 .collect(Collectors.toList());
         List<Chat> chats = chatRepository.findAllById(chatIds);
-        chats.sort((c1, c2) -> c2.getLastMessageTime().compareTo(c1.getLastMessageTime()));
+        chats.sort(Comparator.comparing(Chat::getLastMessageTime, Comparator.nullsLast(Comparator.naturalOrder())));
         return chats;
     }
 

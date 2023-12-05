@@ -35,6 +35,9 @@ public class User implements Serializable {
     @ElementCollection
     private List<String> unlockedImages = new ArrayList<>();
 
+    @ElementCollection
+    private List<Long> unlockedImageIds = new ArrayList<>();
+
     public User() {
     }
 
@@ -42,8 +45,9 @@ public class User implements Serializable {
         this.username = username;
         this.email = email;
         this.password = password;
-        this.userImage = "https://cmux-reward.s3.us-east-2.amazonaws.com/default_img.jpg";
+        this.userImage = "https://cmux-reward.s3.us-east-2.amazonaws.com/base.png";
         this.unlockedImages.add(this.userImage);
+        this.unlockedImages.add("https://cmux-reward.s3.us-east-2.amazonaws.com/itermediate.png");
     }
 
     public Long getId() {
@@ -81,6 +85,14 @@ public class User implements Serializable {
 
     public void setUnlockedImages(List<String> unlockedImages) {
         this.unlockedImages = unlockedImages;
+    }
+
+    public List<Long> getUnlockedImageIds() {
+        return unlockedImageIds;
+    }
+
+    public void setUnlockedImageIds(List<Long> unlockedImageIds) {
+        this.unlockedImageIds = unlockedImageIds;
     }
 
     @JsonIgnore

@@ -28,11 +28,12 @@ const Profile = () => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [editedUsername, setEditedUsername] = useState('');
   const [selectedImage, setSelectedImage] = useState('');
+  const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
   setTimeout(() => {
     setLoading(false);
   }, 2000);
 
-  const fetchUserProfile = useFetchWithTokenRefresh(`http://localhost:5001/user/${userId}`, {
+  const fetchUserProfile = useFetchWithTokenRefresh(`${process.env.REACT_APP_URL}user/${userId}`, {
     method: 'GET'
   });
 
@@ -40,6 +41,7 @@ const Profile = () => {
     console.log('Fetching user profile');
     try {
       const response = await fetchUserProfile();
+      console.log(response);
       if (response.ok) {
         const data = await response.json();
         console.log('User profile:', data);
@@ -56,7 +58,7 @@ const Profile = () => {
     loadUserProfile();
   }, [userId, username]);
 
-  const fetchUpdateProfile = useFetchWithTokenRefresh(`http://localhost:5001/user/${userId}`, {
+  const fetchUpdateProfile = useFetchWithTokenRefresh(`${process.env.REACT_APP_URL}user/${userId}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json'
@@ -87,6 +89,18 @@ const Profile = () => {
     }
   };
 
+  const handleAvatarClick = () => {
+    if (isEditMode) {
+      setIsAvatarModalOpen(true);
+    }
+  };
+
+  const handleAvatarSelect = (image) => {
+    setSelectedImage(image);
+    setIsAvatarModalOpen(false);
+  };
+
+
   return (
     <HomeBox>
       <section className="feed">
@@ -110,9 +124,20 @@ const Profile = () => {
             <div className="profile">
               <div className="backgroundImage"></div>
               <div className="profileTitle">
-                <div className="profileImage">
+                <div className="profileImage" onClick={ handleAvatarClick }>
                   <Avatar src={userProfile.userImage} />
                 </div>
+                {
+                  isAvatarModalOpen && (
+                    <div className="avatarModal">
+                      {userProfile.unlockedImages.map((image) => (
+                        <div key={image} className="avatarOption" onClick={() => handleAvatarSelect(image)}>
+                          <Avatar src={image} className="selectableAvatar" />
+                        </div>
+                      ))}
+                    </div>
+                  )
+                }
                 <div className="editProfile" onClick={isEditMode ? handleSaveClick : handleEditClick}>
                   <span>{isEditMode ? 'Save' : 'Edit Profile'}</span>
                 </div>

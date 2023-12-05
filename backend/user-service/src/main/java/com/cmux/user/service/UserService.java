@@ -127,9 +127,21 @@ public class UserService {
                 currentUser.setUnlockedImages(updateRequest.getUnlockedImages());
             }
 
+            if (updateRequest.getUnlockedImageIds() != null) {
+                currentUser.setUnlockedImageIds(updateRequest.getUnlockedImageIds());
+            }
+
             return userRepository.save(currentUser);
         }
         throw new RuntimeException("User not found");
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    public List<User> searchUsersByKeyword(String keyword) {
+        return userRepository.findByUsernameContaining(keyword);
     }
 
 }
