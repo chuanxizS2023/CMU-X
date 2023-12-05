@@ -15,4 +15,5 @@ public class UserUpdateRequest {
     private String email;
     private String userImage;
     private List<String> unlockedImages;
+    private List<Long> unlockedImageIds;
 }

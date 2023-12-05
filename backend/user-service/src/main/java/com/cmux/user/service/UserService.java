@@ -127,6 +127,10 @@ public class UserService {
                 currentUser.setUnlockedImages(updateRequest.getUnlockedImages());
             }
 
+            if (updateRequest.getUnlockedImageIds() != null) {
+                currentUser.setUnlockedImageIds(updateRequest.getUnlockedImageIds());
+            }
+
             return userRepository.save(currentUser);
         }
         throw new RuntimeException("User not found");
