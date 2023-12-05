@@ -75,7 +75,7 @@ public class RewardController {
         int price = createProductRequest.getPrice();
         // Check if product exists
         try {
-            // Get all product command
+            // Get all product
             ProductCommand getAllProductCommand = new GetAllProductCommand(productReceiver);
             productInvoker.setCommand(getAllProductCommand);
             productInvoker.executeCommand();
@@ -230,7 +230,7 @@ public class RewardController {
             Credit creditInfo = creditInvoker.getCreditInfo();
             int coins = creditInfo.getCoins();
 
-            // Get the product command
+            // Get the product
             ProductCommand getProductCommand = new GetProductCommand(productReceiver);
             productInvoker.setCommand(getProductCommand);
             productInvoker.executeCommand();

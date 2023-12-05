@@ -82,21 +82,23 @@ public class MQConsumer {
             Long userId = m.getUserId();
             int amount = m.getAmount();
 
+            //
+            CreditCommand getCreditCommand = new GetCreditInfoCommand(creditReceiver);
+            creditInvoker.setCommand(getCreditCommand);
+            creditInvoker.executeCommand();
+            int oldPoint = creditInvoker.getCreditInfo().getPoints();
+
             // Set up credit receiver info
             // When there is a new follower, give one more point
             creditReceiver.setUserId(userId);
             creditReceiver.setChangePointsAmount(amount);
 
+            // Write into db
             CreditCommand addPointsCommand = new AddPointsCommand(creditReceiver);
             creditInvoker.setCommand(addPointsCommand);
             creditInvoker.executeCommand();
 
-            // Check if user point is high enough to unlock some advanced icons
-            // Get user points
-            CreditCommand getCreditCommand = new GetCreditInfoCommand(creditReceiver);
-            creditInvoker.setCommand(getCreditCommand);
-            creditInvoker.executeCommand();
-            Integer point = creditInvoker.getCreditInfo().getPoints();
+            int point = oldPoint + amount;
 
             ProductCommand getAllProductCommand = new GetAllProductCommand(productReceiver);
             productInvoker.setCommand(getAllProductCommand);
@@ -105,13 +107,14 @@ public class MQConsumer {
 
             for (Product p : allProducts) {
                 // Give a message to user service that the product is unlocked
-                if (p.getPrice() == point) {
+                // Check if the old point is smaller than price as well to avoid sending product
+                // that user already unlocked
+                int price = p.getPrice();
+                if (oldPoint < price && price <= point) {
                     // Send message to MQ
                     PurchaseProductMessage purchaseProductMessage = new PurchaseProductMessage(userId, p.getId(),
                             p.getImageUrl());
-
                     String jsonString = mapper.writeValueAsString(purchaseProductMessage);
-
                     messageProducer.sendImageToUser(jsonString);
                 }
             }
