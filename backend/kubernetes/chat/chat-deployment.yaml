@@ -13,10 +13,10 @@ spec:
         app: chat
     spec:
       containers:
-      - name: chat-container
-        image: liyangc2/chat-service
-        ports:
-        - containerPort: 8080
-        envFrom:
-        - configMapRef:
-            name: chat-config
+        - name: chat-container
+          image: liyangc2/chat-service
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: chat-config
