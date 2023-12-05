@@ -29,17 +29,33 @@ function SearchResultsPopup({ open, onClose, searchResults, userSearchResults })
         </ButtonGroup>
       </div>
       { userOrPost === 'user' ?
-        <ProfileCard
-          key={ userSearchResults.userId }
-          active={ true }
-          username={ userSearchResults.name }
-          userId={ userSearchResults.userId }
-          isFollowing={ isFollowing }
-          setIsFollowing={ setIsFollowing }
-          following={ userSearchResults.following }
-          followers={ userSearchResults.followers }
-          isSelf={ userSearchResults.isSelf}
-        />
+        // <ProfileCard
+        //   key={ userSearchResults.userId }
+        //   active={ true }
+        //   username={ userSearchResults.name }
+        //   userId={ userSearchResults.userId }
+        //   isFollowing={ isFollowing }
+        //   setIsFollowing={ setIsFollowing }
+        //   following={ userSearchResults.following }
+        //   followers={ userSearchResults.followers }
+        //   isSelf={ userSearchResults.isSelf}
+        // />
+        <List>
+          {
+            userSearchResults.map((user) => (
+              <ProfileCard
+                key={ user.userId }
+                active={ true }
+                username={ user.name }
+                userId={ user.userId }
+                isFollowing={ userSearchResults.isFollowing }
+                following={ user.following }
+                followers={ user.followers }
+                isSelf={ user.isSelf}
+              />
+            ))
+          }
+        </List>
        :
         <List>
           { searchResults.map((post) => (

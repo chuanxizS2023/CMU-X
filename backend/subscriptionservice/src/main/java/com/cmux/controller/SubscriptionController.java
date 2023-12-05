@@ -70,7 +70,7 @@ public class SubscriptionController {
 
     // Get all subscribers for a specific user
     @GetMapping("/subscriptions/user-id")
-    public User getUser(@RequestParam("userId") Long userId) {
+    public List<User> getUser(@RequestParam("userId") Long userId) {
         System.out.println("Get user " + userId);
         return subscriptionService.getUserByUserId(userId);
     }

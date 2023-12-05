@@ -17,7 +17,7 @@ public interface UserRepository extends Neo4jRepository<User, Long> {
 
        // Get a user by userId
        @Query("MATCH (u:User) WHERE u.userId = $userId RETURN u")
-       User getUserByUserId(@Param("userId") Long userId);
+       List<User> getUserByUserId(@Param("userId") Long userId);
 
        // Get all users to whom the user with userId is subscribed
        @Query("MATCH (u:User)-[:SUBSCRIBED_TO]->(sub:User) WHERE u.userId = $userId RETURN sub")

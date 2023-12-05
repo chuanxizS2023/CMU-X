@@ -48,7 +48,7 @@ public class SubscriptionService {
 	}
 
 	//Get user by userId
-	public User getUserByUserId(Long userId) {
+	public List<User> getUserByUserId(Long userId) {
 		return userRepository.getUserByUserId(userId);
 	}
 

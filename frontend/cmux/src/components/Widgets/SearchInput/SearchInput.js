@@ -82,34 +82,51 @@ function SearchInput({ placeholder }) {
         setIsPopupOpen(false);
         return;
       }
-      const params = { userId: searchText };
-      const query = new URLSearchParams(params).toString();
+      
       const res = await searchPosts(searchText);
       let user_res = [];
       // if searchText contains only numbers, search by userId
       const isNumericSearch = /^\d+$/.test(searchText);
       if (isNumericSearch) {
+        const params = { userId: searchText };
+        const query = new URLSearchParams(params).toString();
         user_res = await fetchUser(query);
       }
       else {
+        const params = { username: searchText };
+        const query = new URLSearchParams(params).toString();
         user_res = await fetchUserByName(query);
       }
       if (res.length === 0 && user_res.length === 0) {
         setIsPopupOpen(false);
         return;
       }
-
-      const has_subscription_params = { userId: userId, otherUserId: searchText };
-      const has_subscription_query = new URLSearchParams(has_subscription_params).toString();
-
-      const user_followers = await fetchFollowers(query);
-      const user_subscriptions = await fetchSubscriptions(query);
-      const user_has_subscription = await fetchHasSubscription(has_subscription_query);
-      user_res.followers = user_followers;
-      user_res.following = user_subscriptions;
-      user_res.isFollowing = user_has_subscription;
-      user_res.isSelf = userId === searchText;
       console.log(user_res);
+      // Iterate over user_res array to update each user object
+      for (let i = 0; i < user_res.length; i++) {
+        const user = user_res[i];
+        // Use the actual user ID from the user object
+        const followerParams = { userId: user.userId };
+        const subscriptionParams = { userId: user.userId };
+        const followerQuery = new URLSearchParams(followerParams).toString();
+        const subscriptionQuery = new URLSearchParams(subscriptionParams).toString();
+      
+        const user_followers = await fetchFollowers(followerQuery);
+        const user_subscriptions = await fetchSubscriptions(subscriptionQuery);
+      
+        const has_subscription_params = { userId: userId, otherUserId: user.userId };
+        const has_subscription_query = new URLSearchParams(has_subscription_params).toString();
+      
+        const user_has_subscription = await fetchHasSubscription(has_subscription_query);
+      
+        // Update the user object
+        user.followers = user_followers;
+        user.following = user_subscriptions;
+        user.isFollowing = user_has_subscription;
+        user.isSelf = userId === user.userId;
+        console.log(user);
+      }
+  
       setResults(res);
       setUserResults(user_res);
       setIsPopupOpen(true);
@@ -119,6 +136,7 @@ function SearchInput({ placeholder }) {
       console.log(err);
     }
   }
+  
 
   return (
     <div
