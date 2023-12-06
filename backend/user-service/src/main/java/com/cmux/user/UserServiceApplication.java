@@ -25,11 +25,11 @@ public class UserServiceApplication {
 
 	@EventListener(ApplicationReadyEvent.class)
 	public void sendMessage() throws JsonProcessingException {
-		for (int i = 0; i < 10; i++) {
-			NewUserMessage newUserMessage = new NewUserMessage(1L, "aaa");
-			ObjectMapper mapper = new ObjectMapper();
-			String jsonString = mapper.writeValueAsString(newUserMessage);
-			messageProducer.sendNewUserMessage(jsonString);
-		}
+		// for (int i = 0; i < 10; i++) {
+		// NewUserMessage newUserMessage = new NewUserMessage(1L, "aaa");
+		// ObjectMapper mapper = new ObjectMapper();
+		// String jsonString = mapper.writeValueAsString(newUserMessage);
+		// messageProducer.sendNewUserMessage(jsonString);
+		// }
 	}
 }

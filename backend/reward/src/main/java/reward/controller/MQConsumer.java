@@ -56,9 +56,14 @@ public class MQConsumer {
     }
 
     // Helper function to execute command
-    private void executeCommand(Command productCommand) throws RewardException {
+    private void executeProductCommand(Command productCommand) throws RewardException {
         productInvoker.setCommand(productCommand);
         productInvoker.executeCommand();
+    }
+
+    private void executeCreditCommand(Command creditCommand) throws RewardException {
+        creditInvoker.setCommand(creditCommand);
+        creditInvoker.executeCommand();
     }
 
     @RabbitListener(queues = { "${rabbitmq.queue.name.newuser}" })
@@ -66,12 +71,11 @@ public class MQConsumer {
         NewUserMessage m = mapper.readValue(message, NewUserMessage.class);
         String username = m.getUsername();
         Long userId = m.getUserId();
-        System.out.println(username + "is Created");
         // Set up credit receiver info
         creditReceiver.setUserId(userId);
         creditReceiver.setUsername(username);
         try {
-            executeCommand(new CreateCreditCommand(creditReceiver));
+            executeCreditCommand(new CreateCreditCommand(creditReceiver));
         } catch (RewardException e) {
             LOGGER.info(LOGFORMAT, e.getMessage());
         }
@@ -89,18 +93,18 @@ public class MQConsumer {
             creditReceiver.setUserId(userId);
 
             // Get user's point before adding
-            executeCommand(new GetCreditInfoCommand(creditReceiver));
+            executeCreditCommand(new GetCreditInfoCommand(creditReceiver));
             int oldPoint = creditInvoker.getCreditInfo().getPoints();
 
             // Set up change amount
             creditReceiver.setChangePointsAmount(amount);
 
             // Execute command to write into db
-            executeCommand(new AddPointsCommand(creditReceiver));
+            executeCreditCommand(new AddPointsCommand(creditReceiver));
 
             int point = oldPoint + amount;
 
-            executeCommand(new GetAllProductCommand(productReceiver));
+            executeProductCommand(new GetAllProductCommand(productReceiver));
             List<Product> allProducts = productInvoker.getAllProducts();
 
             for (Product p : allProducts) {
@@ -135,7 +139,7 @@ public class MQConsumer {
             creditReceiver.setUserId(userId);
             creditReceiver.setChangeCoinsAmount(amount);
 
-            executeCommand(new AddCoinsCommand(creditReceiver));
+            executeCreditCommand(new AddCoinsCommand(creditReceiver));
         } catch (RewardException | JsonProcessingException e) {
             LOGGER.info(LOGFORMAT, e.getMessage());
         }

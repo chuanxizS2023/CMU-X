@@ -19,9 +19,7 @@ public class GetAllProductCommand implements GetCommand<List<Product>> {
     public void execute() throws RewardException {
         this.allProducts.clear();
         List<Product> products = receiver.getAllProducts();
-        for (Product p : products) {
-            this.allProducts.add(p);
-        }
+        this.allProducts.addAll(products);
     }
 
     public List<Product> getValue() {

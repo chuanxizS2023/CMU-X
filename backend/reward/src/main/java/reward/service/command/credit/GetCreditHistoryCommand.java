@@ -19,9 +19,7 @@ public class GetCreditHistoryCommand implements GetCommand<List<CreditHistory>> 
     public void execute() throws RewardException {
         this.creditHistories.clear();
         List<CreditHistory> history = receiver.getCreditHistory();
-        for (CreditHistory ch : history) {
-            this.creditHistories.add(ch);
-        }
+        this.creditHistories.addAll(history);
     }
 
     public List<CreditHistory> getValue() {

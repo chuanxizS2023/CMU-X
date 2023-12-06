@@ -31,29 +31,30 @@ public class ProductReceiver {
         productService.setProductInfo(productId);
     }
 
-    public void checkProductValue() throws RewardException {
+    public void checkNewProductValue() throws RewardException {
         if (newName == null || newPrice == null || newImageUrl == null || isPurchasable == null) {
             throw new RewardException(ExceptionType.MISSINGPRODUCTINFO);
         }
     }
 
-    public void createNewProduct() throws RewardException {
+    // Method to create new product
+    public Product createNewProduct() throws RewardException {
         // Check if any field is missing
-        this.checkProductValue();
-        productService.createProduct(newName, newPrice, newImageUrl, isPurchasable);
+        this.checkNewProductValue();
+        return productService.createProduct(newName, newPrice, newImageUrl, isPurchasable);
 
     }
 
-    // Method to get product image url
+    // Method to get product
     public Product getProduct() throws RewardException {
         productService.setProductInfo(productId);
         return productService.getProduct();
     }
 
     // Method to update product
-    public void updateProduct() throws RewardException {
+    public Product updateProduct() throws RewardException {
         productService.setProductInfo(productId);
-        productService.updateProduct(newName, newPrice, newImageUrl, isPurchasable);
+        return productService.updateProduct(newName, newPrice, newImageUrl, isPurchasable);
     }
 
     // Method to get all product

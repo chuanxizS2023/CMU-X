@@ -16,11 +16,11 @@ public class MQConsumer {
 
     @RabbitListener(queues = { "${rabbitmq.queue.name.user.newicon}" })
     public void receiveMessage(String message) throws JsonMappingException, JsonProcessingException {
-        // TODO: Update new icon into the database
         PurchaseProductMessage m = mapper.readValue(message, PurchaseProductMessage.class);
         Long userId = m.getUserId();
         Long productId = m.getProductId();
         String imageUrl = m.getImageUrl();
-        System.out.println("Received: " + message);
+        // TODO: Update new icon into the database
+        
     }
 }
