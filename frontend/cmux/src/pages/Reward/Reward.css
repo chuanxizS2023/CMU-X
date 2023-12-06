@@ -1,15 +1,24 @@
-.notificationsTitle {
+.rewardTitle {
   padding: 15px;
-  display: flex;
   align-items: center;
 }
-.notificationsTitle > span {
+.rewardTitle > span {
+  margin-top: 2px;
   color: #ffffff;
   display: inline;
   font-size: 19px;
   font-weight: 800;
 }
-.notificationsTitle > .MuiSvgIcon-root {
+
+.rewardTitle > p {
+  margin-top: 20px;
+  color: #ffffff;
+  display: inline;
+  font-size: 19px;
+  font-weight: 800;
+}
+
+.rewardTitle > .MuiSvgIcon-root {
   margin-left: auto;
   border-color: var(--blue);
   color: var(--blue);
@@ -20,15 +29,15 @@
   text-align: center;
   border-radius: 9999px;
 }
-.notificationsTitle > .MuiSvgIcon-root:hover {
+.rewardTitle > .MuiSvgIcon-root:hover {
   background-color: var(--hover-blue-color);
 }
-.notificationsCategory {
+.rewardCategory {
   display: flex;
   flex: 1;
   border-bottom: 0.5px var(--border-color) solid;
 }
-.notificationsCategory > div {
+.rewardCategory > div {
   flex: 0.5;
   text-align: center;
   color: #fff;
@@ -37,22 +46,22 @@
   font-weight: 700;
   padding: 15px;
 }
-.notificationActive {
+.rewardActive {
   border-bottom: 2px var(--blue) solid;
 }
-.notificationActive > span {
+.rewardActive > span {
   color: var(--blue);
 }
-.notificationsCategory > div:hover {
+.rewardCategory > div:hover {
   background-color: var(--hover-blue-color);
   color: var(--blue);
 }
 
-.notificationsTitle .MuiAvatar-root {
+.rewardTitle .MuiAvatar-root {
   display: none;
 }
 @media (min-width: 0) and (max-width: 450px) {
-  .notificationsTitle .MuiAvatar-root {
+  .rewardTitle .MuiAvatar-root {
     display: block;
     margin-right: 20px;
     height: 32px;
