@@ -1,77 +1,84 @@
 package com.cmux.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
-import com.cmux.repository.UserRepository;
-
-import jakarta.validation.ConstraintViolationException;
-
 import com.cmux.entity.User;
+import com.cmux.service.strategy.SubscriptionStrategy;
+import com.cmux.service.strategy.UserCreation;
+import com.cmux.service.strategy.UserRetrievalStrategy;
+import com.cmux.service.strategy.UserCreationStrategy;
+import com.cmux.service.strategy.UserRetrieval;
 
 import java.util.List;
 
 @Service
 public class SubscriptionService {
 
-	// init SubscriptionService
-	SubscriptionService() {
-
-	}
+    @Autowired
+    private SubscriptionStrategy subscriptionStrategy;
 
 	@Autowired
-	UserRepository userRepository;
+	private UserRetrievalStrategy userRetrievalStrategy;
 
-	// Create a new user with name and userId
-	public User createUser(Long userId, String name) {
-		return userRepository.createUser(userId, name);
+	@Autowired
+	private UserCreationStrategy userCreationStrategy;
+
+    public SubscriptionService(SubscriptionStrategy subscriptionStrategy, UserRetrievalStrategy userRetrievalStrategy, UserCreationStrategy userCreationStrategy) {
+        this.subscriptionStrategy = subscriptionStrategy;
+		this.userRetrievalStrategy = userRetrievalStrategy;
+		this.userCreationStrategy = userCreationStrategy;
+    }
+	
+	// Setter methods for runtime Subscription Strategy switching
+	public void setSubscriptionStrategy(SubscriptionStrategy subscriptionStrategy) {
+        this.subscriptionStrategy = subscriptionStrategy;
+    }
+
+	// Setter methods for runtime User Retrieval Strategy switching
+	 public void setUserRetrievalStrategy(UserRetrievalStrategy userRetrievalStrategy) {
+		this.userRetrievalStrategy = userRetrievalStrategy;
 	}
 
-	// Get all subscribers for a specific user
-	public List<User> getAllFollowers(Long userId) {
-		return userRepository.findFollowersByUserId(userId);
+	// Setter methods for runtime User Creation Strategy switching
+	 public void setUserCreationStrategy(UserCreationStrategy userCreationStrategy) {
+		this.userCreationStrategy = userCreationStrategy;
 	}
 
-	// Get all subscriptions for a specific user
-	public List<User> getAllSubscriptions(Long userId) {
-		return userRepository.findSubscriptionsByUserId(userId);
-	}
 
-	// Get all mutual subscriptions for a specific user
-	public List<User> getAllMutualSubscriptions(Long userId) {
-		return userRepository.findMutualSubscriptionsByUserId(userId);
-	}
+    public void addSubscription(Long userId, Long subscriptionId) {
+        subscriptionStrategy.addSubscription(userId, subscriptionId);
+    }
 
-	// Get whether the user with userId is subscribed to the user with otherUserId
-	public boolean getHasSubscription(Long userId, Long otherUserId) {
-		return userRepository.findHasSubscriptionByUserId(userId, otherUserId) != null;
-	}
+    public void removeSubscription(Long userId, Long subscriptionId) {
+        subscriptionStrategy.removeSubscription(userId, subscriptionId);
+    }
 
-	//Get user by userId
+    public List<User> getAllFollowers(Long userId) {
+        return subscriptionStrategy.getAllFollowers(userId);
+    }
+
+    public List<User> getAllSubscriptions(Long userId) {
+        return subscriptionStrategy.getAllSubscriptions(userId);
+    }
+
+    public List<User> getAllMutualSubscriptions(Long userId) {
+        return subscriptionStrategy.getAllMutualSubscriptions(userId);
+    }
+
+    public boolean getHasSubscription(Long userId, Long otherUserId) {
+        return subscriptionStrategy.getHasSubscription(userId, otherUserId);
+    }
+
 	public List<User> getUserByUserId(Long userId) {
-		return userRepository.getUserByUserId(userId);
+		return userRetrievalStrategy.getUserByUserId(userId);
 	}
 
-	//Get user by name
-	public List<User> getUserByName(String name) {
-		return userRepository.getUsersByName(name);
+	public List<User> getUsersByName(String name) {
+		return userRetrievalStrategy.getUsersByName(name);
 	}
 
-	// Add a subscription for a user
-	public void addSubscription(Long userId, Long subscriptionId) {
-		try {
-			// Assuming userRepository.addSubscription checks if both users exist
-			userRepository.addSubscription(userId, subscriptionId);
-		} catch (DataAccessException e) {
-			System.out.println("DataAccessException");
-		} catch (ConstraintViolationException e) {
-			System.out.println("ConstraintViolationException");
-		}
-	}
-
-	// Remove a subscription from a user
-	public void removeSubscription(Long userId, Long subscriptionId) {
-		userRepository.removeSubscription(userId, subscriptionId);
+	public void createUser(Long userId, String name) {
+		userCreationStrategy.createUser(userId, name);
 	}
 
 

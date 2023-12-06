@@ -6,20 +6,25 @@ import org.springframework.beans.factory.annotation.Value;
 
 @Service
 public class MQProducer {
-    
+
     private final RabbitTemplate rabbitTemplate;
 
     @Value("${rabbitmq.exchange.name}")
     private String exchange;
 
-    @Value("${rabbitmq.user.routing.key}")
-    private String userRoutingKey;
+    @Value("${rabbitmq.reward.routing.key}")
+    private String rewardRoutingKey;
 
-    public MQProducer (RabbitTemplate rabbitTemplate){
-        this.rabbitTemplate = rabbitTemplate;
-    }
+    @Value("${rabbitmq.post.routing.key}")
+    private String postRoutingKey;
 
-    public void sendImageToUser(String message) {
-        rabbitTemplate.convertAndSend(exchange, userRoutingKey, message);
+    public MQProducer(RabbitTemplate rabbitTemplate) {
+            this.rabbitTemplate = rabbitTemplate;
+        }
+
+    // When a user recieved a new follower, send a message to the reward service
+    // to add 10 points to the user's account
+    public void sendNewFollowerMessageToReward(String message) {
+        rabbitTemplate.convertAndSend(exchange, rewardRoutingKey, message);
     }
 }
