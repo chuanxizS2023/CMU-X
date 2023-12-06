@@ -23,12 +23,12 @@ public class ProductService {
         this.productInfo = productRepository.findById(id);
     }
 
-    public void createProduct(String name, int price, String imageUrl, boolean isPurchasable) throws RewardException {
+    public Product createProduct(String name, int price, String imageUrl, boolean isPurchasable) throws RewardException {
         Optional<Product> existProduct = this.productRepository.findByName(name);
         if (!existProduct.isPresent()) {
             Product product = new Product(name, price, imageUrl, isPurchasable);
             this.productInfo = Optional.of(product);
-            this.productRepository.save(product);
+            return this.productRepository.save(product);
         } else {
             throw new RewardException(ExceptionType.PRODUCTEXISTS);
         }
@@ -46,61 +46,20 @@ public class ProductService {
         return productInfo.get();
     }
 
-    public void updatePrice(int amount) throws RewardException {
+    public Product updateProduct(String name, Integer amount, String imageUrl, Boolean isPurchasable) throws RewardException {
         // Check if product exists
         if (!productInfo.isPresent()) {
             throw new RewardException(ExceptionType.PRODUCTNOTFOUND);
         }
 
-        // Update price
+        // Update product
         Product product = productInfo.get();
+        product.setName(name);
         product.setPrice(amount);
-        productInfo = Optional.of(product);
-        this.productRepository.save(product);
-    }
-
-    public void updateName(String name) throws RewardException {
-        // Check if product exists
-        if (!productInfo.isPresent()) {
-            throw new RewardException(ExceptionType.PRODUCTNOTFOUND);
-        }
-        // Check if product name exists
-        Optional<Product> existProduct = this.productRepository.findByName(name);
-        if (!existProduct.isPresent()) {
-            // Update name
-            Product product = productInfo.get();
-            product.setName(name);
-            productInfo = Optional.of(product);
-            this.productRepository.save(product);
-        } else {
-            throw new RewardException(ExceptionType.INVALIDPRODUCTNAME);
-        }
-    }
-
-    public void updateImageUrl(String imageUrl) throws RewardException {
-        // Check if product exists
-        if (!productInfo.isPresent()) {
-            throw new RewardException(ExceptionType.PRODUCTNOTFOUND);
-        }
-
-        // Update image
-        Product product = productInfo.get();
         product.setImageUrl(imageUrl);
-        productInfo = Optional.of(product);
-        this.productRepository.save(product);
-    }
-
-    public void updateProductPurchasable(boolean isPurchasable) throws RewardException {
-        // Check if product exists
-        if (!productInfo.isPresent()) {
-            throw new RewardException(ExceptionType.PRODUCTNOTFOUND);
-        }
-
-        // Update if it is purchasable
-        Product product = productInfo.get();
         product.setPurchasable(isPurchasable);
         productInfo = Optional.of(product);
-        this.productRepository.save(product);
+        return this.productRepository.save(product);
     }
 
     public void deleteProduct() throws RewardException {

@@ -2,6 +2,7 @@ package reward.controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,26 +24,25 @@ import org.slf4j.LoggerFactory;
 
 import lombok.AllArgsConstructor;
 import reward.service.S3Service;
-import reward.service.command.credit.CreditCommand;
 import reward.service.command.credit.CreditInvoker;
 import reward.service.command.credit.CreditReceiver;
 import reward.service.command.credit.DeductCoinsCommand;
+import reward.service.command.credit.GetCreditHistoryCommand;
 import reward.service.command.credit.GetCreditInfoCommand;
-import reward.service.command.product.ProductCommand;
+import reward.service.command.Command;
 import reward.service.command.product.CreateProductCommand;
 import reward.service.command.product.GetAllProductCommand;
 import reward.service.command.product.GetProductCommand;
 import reward.service.command.product.ProductInvoker;
 import reward.service.command.product.ProductReceiver;
-import reward.service.command.product.UpdateProductImageUrlCommand;
-import reward.service.command.product.UpdateProductNameCommand;
-import reward.service.command.product.UpdateProductPriceCommand;
+import reward.service.command.product.UpdateProductCommand;
 import reward.dto.CreateProductRequest;
 import reward.dto.PurchaseProductRequest;
 import reward.dto.UpdateProductRequest;
 import reward.dto.PurchaseProductMessage;
 import reward.exception.ErrorHandling.RewardException;
 import reward.model.Credit;
+import reward.model.CreditHistory;
 import reward.model.Product;
 
 @RestController
@@ -68,29 +68,47 @@ public class RewardController {
 
     private static final String LOGFORMAT = "\n{}\n";
 
+    private void executeProductCommand(Command productCommand) throws RewardException {
+        productInvoker.setCommand(productCommand);
+        productInvoker.executeCommand();
+    }
+
+    private void executeCreditCommand(Command creditCommand) throws RewardException {
+        creditInvoker.setCommand(creditCommand);
+        creditInvoker.executeCommand();
+    }
+
+    private List<Product> getProducts() throws RewardException {
+        executeProductCommand(new GetAllProductCommand(productReceiver));
+        return productInvoker.getAllProducts();
+    }
+
+    private List<CreditHistory> getHistory(Long userId) throws RewardException {
+        this.creditReceiver.setUserId(userId);
+        executeCreditCommand(new GetCreditHistoryCommand(creditReceiver));
+        return creditReceiver.getCreditHistory();
+    }
+
     @PostMapping(value = "/createProduct", consumes = "multipart/form-data")
-    public ResponseEntity<String> createProduct(@RequestPart CreateProductRequest createProductRequest,
+    public ResponseEntity<?> createProduct(@RequestPart CreateProductRequest createProductRequest,
             @RequestPart("image") MultipartFile image) throws IOException {
         String name = createProductRequest.getName();
         int price = createProductRequest.getPrice();
         // Check if product exists
         try {
-            // Get all product
-            ProductCommand getAllProductCommand = new GetAllProductCommand(productReceiver);
-            productInvoker.setCommand(getAllProductCommand);
-            productInvoker.executeCommand();
-
-            List<Product> products = productInvoker.getAllProducts();
-
-            for (Product p : products) {
-                if (p.getName().equals(name)) {
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                            .body("Error: Product already exists");
-                }
+            List<Product> products = getProducts();
+            if (products.stream().anyMatch(p -> p.getName().equals(name))) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body("Error: Product already exists");
             }
         } catch (RewardException e) {
             LOGGER.info(LOGFORMAT, e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+
+        if (image.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Bad request: Need to provide an icon image");
         }
 
         // Upload image
@@ -109,10 +127,9 @@ public class RewardController {
 
         try {
             // Create product command
-            ProductCommand createProductCommand = new CreateProductCommand(productReceiver);
-            productInvoker.setCommand(createProductCommand);
-            productInvoker.executeCommand();
-            return ResponseEntity.ok("Successfully create product");
+            executeProductCommand(new CreateProductCommand(productReceiver));
+            Product newProduct = productInvoker.getProduct();
+            return ResponseEntity.ok(newProduct);
         } catch (RewardException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
@@ -121,15 +138,8 @@ public class RewardController {
 
     @GetMapping("/allProducts")
     public ResponseEntity<List<Product>> getAllProducts() {
-
         try {
-            // Get all product command
-            ProductCommand getAllProductCommand = new GetAllProductCommand(productReceiver);
-            productInvoker.setCommand(getAllProductCommand);
-            productInvoker.executeCommand();
-
-            List<Product> products = productInvoker.getAllProducts();
-
+            List<Product> products = getProducts();
             return ResponseEntity.ok(products);
         } catch (RewardException e) {
             LOGGER.info(LOGFORMAT, e.getMessage());
@@ -138,57 +148,44 @@ public class RewardController {
     }
 
     @PatchMapping(value = "/update/{productId}", consumes = "multipart/form-data")
-    public ResponseEntity<String> updateProduct(@PathVariable long productId,
+    public ResponseEntity<?> updateProduct(@PathVariable long productId,
             @RequestPart UpdateProductRequest updateProductRequest,
             @RequestPart(value = "image", required = false) MultipartFile image) {
-        // Set the target product id
-        productReceiver.setProductId(productId);
-
         // Check if product exists
         try {
             // Get the product command
-            ProductCommand getProductCommand = new GetProductCommand(productReceiver);
-            productInvoker.setCommand(getProductCommand);
-            productInvoker.executeCommand();
+            executeProductCommand(new GetProductCommand(productReceiver));
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
 
-        // Upload image
         String name = updateProductRequest.getName();
         Integer price = updateProductRequest.getPrice();
+        Boolean isPurchasable = updateProductRequest.getIsPurchasable();
         String imageUrl = "";
-        try {
-            imageUrl = s3Service.uploadFile(image);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        if (!image.isEmpty()) {
+            // Upload image
+            try {
+                imageUrl = s3Service.uploadFile(image);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            }
+        }
+        // Set the target product
+        productReceiver.setProductId(productId);
+        productReceiver.setNewName(name);
+        productReceiver.setNewPrice(price);
+        productReceiver.setIsPurchasable(isPurchasable);
+        if (!imageUrl.isEmpty()) {
+            productReceiver.setNewImageUrl(imageUrl);
         }
 
         try {
-            if (!imageUrl.equals("")) {
-                // Set attribute and run command
-                productReceiver.setNewImageUrl(imageUrl);
-                ProductCommand updateImageUrlCommand = new UpdateProductImageUrlCommand(productReceiver);
-                productInvoker.setCommand(updateImageUrlCommand);
-                productInvoker.executeCommand();
-            }
-            if (name != null) {
-                // Set attribute and run command
-                productReceiver.setNewName(name);
-                ProductCommand updateNameCommand = new UpdateProductNameCommand(productReceiver);
-                productInvoker.setCommand(updateNameCommand);
-                productInvoker.executeCommand();
-            }
-            if (price != null) {
-                // Set attribute and run command
-                productReceiver.setNewPrice(price);
-                ProductCommand updatePriceCommand = new UpdateProductPriceCommand(productReceiver);
-                productInvoker.setCommand(updatePriceCommand);
-                productInvoker.executeCommand();
-            }
-            return ResponseEntity.ok("Successfully updated");
+            executeProductCommand(new UpdateProductCommand(productReceiver));
+            Product product = productInvoker.getProduct();
+            return ResponseEntity.ok(product);
         } catch (RewardException e) {
             LOGGER.info(LOGFORMAT, e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
@@ -202,9 +199,7 @@ public class RewardController {
             productReceiver.setProductId(productId);
 
             // Get the product command
-            ProductCommand getProductCommand = new GetProductCommand(productReceiver);
-            productInvoker.setCommand(getProductCommand);
-            productInvoker.executeCommand();
+            executeProductCommand(new GetProductCommand(productReceiver));
             Product product = productInvoker.getProduct();
             return ResponseEntity.ok(product);
         } catch (RewardException e) {
@@ -214,7 +209,7 @@ public class RewardController {
     }
 
     @PostMapping("/purchaseProduct")
-    public ResponseEntity<String> purchaseProduct(@RequestBody PurchaseProductRequest purchaseProductRequest) {
+    public ResponseEntity<?> purchaseProduct(@RequestBody PurchaseProductRequest purchaseProductRequest) {
         long userId = purchaseProductRequest.getUserId();
         long productId = purchaseProductRequest.getProductId();
         // Target user id
@@ -224,16 +219,12 @@ public class RewardController {
 
         try {
             // Get user coins
-            CreditCommand getCreditInfoCommand = new GetCreditInfoCommand(creditReceiver);
-            creditInvoker.setCommand(getCreditInfoCommand);
-            creditInvoker.executeCommand();
+            executeCreditCommand(new GetCreditInfoCommand(creditReceiver));
             Credit creditInfo = creditInvoker.getCreditInfo();
             int coins = creditInfo.getCoins();
 
             // Get the product
-            ProductCommand getProductCommand = new GetProductCommand(productReceiver);
-            productInvoker.setCommand(getProductCommand);
-            productInvoker.executeCommand();
+            executeProductCommand(new GetProductCommand(productReceiver));
             Product product = productInvoker.getProduct();
             int price = product.getPrice();
 
@@ -241,29 +232,37 @@ public class RewardController {
                 return ResponseEntity.badRequest().body("Cannot buy item because of not enough coins");
             }
 
-            // Deduct user coins command
-            CreditCommand deductCoinsCommand = new DeductCoinsCommand(creditReceiver);
             // Set deduct amount
             creditReceiver.setChangeCoinsAmount(price);
-            creditInvoker.setCommand(deductCoinsCommand);
-            creditInvoker.executeCommand();
+            // Deduct user coins command
+            executeCreditCommand(new DeductCoinsCommand(creditReceiver));
 
             // Return the image url
             String imageUrl = product.getImageUrl();
 
-            coins = coins - price;
-
+            // Message that user successfully buy the product
             PurchaseProductMessage purchaseProductMessage = new PurchaseProductMessage(userId, productId, imageUrl);
-
             String jsonString = mapper.writeValueAsString(purchaseProductMessage);
-
             messageProducer.sendImageToUser(jsonString);
 
-            return ResponseEntity.ok("Purchase Successfully, imageUrl: " + imageUrl + ", remain coins: " + coins);
+            return ResponseEntity.ok(product);
         } catch (RewardException | JsonProcessingException e) {
             LOGGER.info(LOGFORMAT, e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        } 
+        }
+    }
+
+    @GetMapping("/creditHistory/{userId}")
+    public ResponseEntity<List<CreditHistory>> getCreditHistory(@PathVariable long userId) {
+        try {
+            List<CreditHistory> creditHistories = getHistory(userId);
+            List<CreditHistory> res = creditHistories.stream().filter(history -> history.getUserId() == userId)
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(res);
+        } catch (RewardException e) {
+            LOGGER.info(LOGFORMAT, e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
 }

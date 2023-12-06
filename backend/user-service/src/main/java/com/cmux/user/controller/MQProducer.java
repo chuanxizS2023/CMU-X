@@ -9,18 +9,15 @@ public class MQProducer {
 
     private final RabbitTemplate rabbitTemplate;
 
-    @Value("${rabbitmq.exchange.name}")
-    private String exchange;
-
-    @Value("${rabbitmq.reward.routing.key}")
-    private String rewardRoutingKey;
+    @Value("${rabbitmq.exchange.fanout.name}")
+    private String fanoutExchange;
 
     public MQProducer (RabbitTemplate rabbitTemplate){
         this.rabbitTemplate = rabbitTemplate;
     }
 
     public void sendNewUserMessage(String message) {
-        rabbitTemplate.convertAndSend(exchange, rewardRoutingKey, message);
+        rabbitTemplate.convertAndSend(fanoutExchange, "", message);
     }
 }
 

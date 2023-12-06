@@ -3,7 +3,6 @@ package reward.service.command.credit;
 import org.springframework.stereotype.Service;
 
 import lombok.*;
-import reward.exception.ErrorHandling.ExceptionType;
 import reward.exception.ErrorHandling.RewardException;
 import reward.model.Credit;
 import reward.model.CreditHistory;
@@ -31,17 +30,9 @@ public class CreditReceiver {
         creditService.setUserCreditInfo(userId);
     }
 
-    public void checkCreditValue() throws RewardException {
-        if (changeCoinsAmount == null || changePointsAmount == null) {
-            throw new RewardException(ExceptionType.MISSINGCREDITVALUE);
-        }
-    }
-
-    public void createUserCreditInfo() throws RewardException {
-        // Check if coins or points is missing
-        this.checkCreditValue();
-        creditService.createUserCredit(userId, username);
-
+    // Method to create new user's credit info
+    public Credit createUserCreditInfo() throws RewardException {
+        return creditService.createUserCredit(userId, username);
     }
 
     // Method to get current credit info for the user
@@ -51,22 +42,21 @@ public class CreditReceiver {
     }
 
     // Method to add points for the user
-    public void addPoints() throws RewardException {
+    public Credit addPoints() throws RewardException {
         creditService.setUserCreditInfo(userId);
-        creditService.addPoints(changePointsAmount);
-
+        return creditService.addPoints(changePointsAmount);
     }
 
     // Method to add coins for the user
-    public void addCoins() throws RewardException {
+    public Credit addCoins() throws RewardException {
         creditService.setUserCreditInfo(userId);
-        creditService.addCoins(changeCoinsAmount);
+        return creditService.addCoins(changeCoinsAmount);
     }
 
     // Method to deduct coins for the user
-    public void deductCoins() throws RewardException {
+    public Credit deductCoins() throws RewardException {
         creditService.setUserCreditInfo(userId);
-        creditService.deductCoins(changeCoinsAmount);
+        return creditService.deductCoins(changeCoinsAmount);
     }
 
     // Method to find credit history

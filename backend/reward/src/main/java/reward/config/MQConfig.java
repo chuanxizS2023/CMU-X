@@ -1,9 +1,10 @@
 package reward.config;
 
 import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.DirectExchange;
+import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.annotation.Bean;
@@ -29,13 +30,16 @@ public class MQConfig {
     @Value("${rabbitmq.exchange.name}")
     private String exchange;
 
-    @Value("${rabbitmq.reward.routing.key.newuser}")
+    @Value("${rabbitmq.exchange.fanout.name}")
+    private String fanoutExchange;
+
+    @Value("${rabbitmq.newuser.routing.key}")
     private String newUserRoutingKey;
 
-    @Value("${rabbitmq.reward.routing.key.newfollower}")
+    @Value("${rabbitmq.newfollower.routing.key}")
     private String newFollowerRoutingKey;
 
-    @Value("${rabbitmq.reward.routing.key.newlike}")
+    @Value("${rabbitmq.newicon.routing.key}")
     private String newLikeRoutingKey;
 
     @Bean
@@ -54,23 +58,28 @@ public class MQConfig {
     }
 
     @Bean
-    TopicExchange exchange() {
-        return new TopicExchange(exchange);
+    DirectExchange exchange() {
+        return new DirectExchange(exchange);
+    }
+
+    @Bean
+    FanoutExchange fanoutExchange() {
+        return new FanoutExchange(fanoutExchange);
     }
 
     @Bean
     Binding newUserBinding() {
-        return BindingBuilder.bind(newUserQueue()).to(exchange()).with(newUserRoutingKey);
+        return BindingBuilder.bind(newUserQueue()).to(fanoutExchange());
     }
 
     @Bean
     Binding updateCoinsBinding() {
-        return BindingBuilder.bind(updateCoinsQueue()).to(exchange()).with(newFollowerRoutingKey);
+        return BindingBuilder.bind(updateCoinsQueue()).to(exchange()).with(newLikeRoutingKey);
     }
 
     @Bean
     Binding updatePointsBinding() {
-        return BindingBuilder.bind(updatePointsQueue()).to(exchange()).with(newLikeRoutingKey);
+        return BindingBuilder.bind(updatePointsQueue()).to(exchange()).with(newFollowerRoutingKey);
     }
 
 

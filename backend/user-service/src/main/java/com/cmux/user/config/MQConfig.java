@@ -1,8 +1,9 @@
 package com.cmux.user.config;
 
 import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.TopicExchange;
+import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,28 +17,36 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 @Configuration
 public class MQConfig {
     
-    @Value("${rabbitmq.queue.name.user}")
-    private String userqueue;
+    @Value("${rabbitmq.queue.name.user.newicon}")
+    private String newIconQueue;
 
     @Value("${rabbitmq.exchange.name}")
     private String exchange;
 
-    @Value("${rabbitmq.user.routing.key}")
-    private String userRoutingKey;
+    @Value("${rabbitmq.exchange.fanout.name}")
+    private String fanoutExchange;
+
+    @Value("${rabbitmq.newicon.routing.key}")
+    private String newIconRoutingKey;
 
     @Bean
     Queue userQueue() {
-        return new Queue(userqueue);
+        return new Queue(newIconQueue);
     }
 
     @Bean
-    TopicExchange exchange() {
-        return new TopicExchange(exchange);
+    DirectExchange exchange() {
+        return new DirectExchange(exchange);
+    }
+
+    @Bean
+    FanoutExchange fanoutExchange() {
+        return new FanoutExchange(fanoutExchange);
     }
 
     @Bean
     Binding userBinding() {
-        return BindingBuilder.bind(userQueue()).to(exchange()).with(userRoutingKey);
+        return BindingBuilder.bind(userQueue()).to(exchange()).with(newIconRoutingKey);
     }
 
     @Bean

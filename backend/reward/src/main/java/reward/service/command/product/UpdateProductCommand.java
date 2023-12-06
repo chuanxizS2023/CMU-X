@@ -4,16 +4,16 @@ import reward.exception.ErrorHandling.RewardException;
 import reward.model.Product;
 import reward.service.command.GetCommand;
 
-public class CreateProductCommand implements GetCommand<Product> {
+public class UpdateProductCommand implements GetCommand<Product> {
     private ProductReceiver receiver;
     private Product product;
 
-    public CreateProductCommand(ProductReceiver receiver) {
+    public UpdateProductCommand(ProductReceiver receiver) {
         this.receiver = receiver;
     }
 
     public void execute() throws RewardException {
-        this.product = receiver.createNewProduct();
+        this.product = receiver.updateProduct();
     }
 
     public Product getValue() {

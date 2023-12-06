@@ -21,9 +21,8 @@ import reward.service.command.credit.AddPointsCommand;
 import reward.service.command.credit.CreateCreditCommand;
 import reward.service.command.credit.CreditInvoker;
 import reward.service.command.credit.CreditReceiver;
-import reward.service.command.credit.CreditCommand;
+import reward.service.command.Command;
 import reward.service.command.credit.GetCreditInfoCommand;
-import reward.service.command.product.ProductCommand;
 import reward.service.command.product.GetAllProductCommand;
 import reward.service.command.product.ProductInvoker;
 import reward.service.command.product.ProductReceiver;
@@ -56,6 +55,17 @@ public class MQConsumer {
         this.messageProducer = messageProducer;
     }
 
+    // Helper function to execute command
+    private void executeProductCommand(Command productCommand) throws RewardException {
+        productInvoker.setCommand(productCommand);
+        productInvoker.executeCommand();
+    }
+
+    private void executeCreditCommand(Command creditCommand) throws RewardException {
+        creditInvoker.setCommand(creditCommand);
+        creditInvoker.executeCommand();
+    }
+
     @RabbitListener(queues = { "${rabbitmq.queue.name.newuser}" })
     public void receiveNewUserMessage(String message) throws JsonProcessingException {
         NewUserMessage m = mapper.readValue(message, NewUserMessage.class);
@@ -65,10 +75,7 @@ public class MQConsumer {
         creditReceiver.setUserId(userId);
         creditReceiver.setUsername(username);
         try {
-
-            CreditCommand createCreditInfoCommand = new CreateCreditCommand(creditReceiver);
-            creditInvoker.setCommand(createCreditInfoCommand);
-            creditInvoker.executeCommand();
+            executeCreditCommand(new CreateCreditCommand(creditReceiver));
         } catch (RewardException e) {
             LOGGER.info(LOGFORMAT, e.getMessage());
         }
@@ -82,27 +89,22 @@ public class MQConsumer {
             Long userId = m.getUserId();
             int amount = m.getAmount();
 
-            //
-            CreditCommand getCreditCommand = new GetCreditInfoCommand(creditReceiver);
-            creditInvoker.setCommand(getCreditCommand);
-            creditInvoker.executeCommand();
+            // Target user
+            creditReceiver.setUserId(userId);
+
+            // Get user's point before adding
+            executeCreditCommand(new GetCreditInfoCommand(creditReceiver));
             int oldPoint = creditInvoker.getCreditInfo().getPoints();
 
-            // Set up credit receiver info
-            // When there is a new follower, give one more point
-            creditReceiver.setUserId(userId);
+            // Set up change amount
             creditReceiver.setChangePointsAmount(amount);
 
-            // Write into db
-            CreditCommand addPointsCommand = new AddPointsCommand(creditReceiver);
-            creditInvoker.setCommand(addPointsCommand);
-            creditInvoker.executeCommand();
+            // Execute command to write into db
+            executeCreditCommand(new AddPointsCommand(creditReceiver));
 
             int point = oldPoint + amount;
 
-            ProductCommand getAllProductCommand = new GetAllProductCommand(productReceiver);
-            productInvoker.setCommand(getAllProductCommand);
-            productInvoker.executeCommand();
+            executeProductCommand(new GetAllProductCommand(productReceiver));
             List<Product> allProducts = productInvoker.getAllProducts();
 
             for (Product p : allProducts) {
@@ -133,13 +135,11 @@ public class MQConsumer {
             int amount = m.getAmount();
 
             // Set up receiver info
-            // When there is a new like, give one more coin
+            // When there is a new like, give more coins
             creditReceiver.setUserId(userId);
             creditReceiver.setChangeCoinsAmount(amount);
 
-            CreditCommand addCoinsCommand = new AddCoinsCommand(creditReceiver);
-            creditInvoker.setCommand(addCoinsCommand);
-            creditInvoker.executeCommand();
+            executeCreditCommand(new AddCoinsCommand(creditReceiver));
         } catch (RewardException | JsonProcessingException e) {
             LOGGER.info(LOGFORMAT, e.getMessage());
         }

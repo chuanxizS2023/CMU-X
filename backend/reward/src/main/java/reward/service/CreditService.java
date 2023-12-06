@@ -32,7 +32,7 @@ public class CreditService {
         this.userCreditInfo = creditRepository.findById(userId);
     }
 
-    public void createUserCredit(long userId, String username) throws RewardException {
+    public Credit createUserCredit(long userId, String username) throws RewardException {
         // Check if user already exists
         this.setUserCreditInfo(userId);
         if (this.userCreditInfo.isPresent()) {
@@ -40,9 +40,9 @@ public class CreditService {
         }
 
         // Insert new user credit into db
-        Credit creditInfo = new Credit(userId, username, 10, 10);
+        Credit creditInfo = new Credit(userId, username, 5, 5);
         userCreditInfo = Optional.of(creditInfo);
-        creditRepository.save(creditInfo);
+        Credit credit = creditRepository.save(creditInfo);
 
         // Create history and save it in credit history table
         CreditHistory creditHistory = new CreditHistory(userId);
@@ -50,6 +50,7 @@ public class CreditService {
         creditHistory.setTimestamp(LocalDateTime.now());
         creditHistory.setCoins(NEW_USER_COIN);
         creditHistoryRepository.save(creditHistory);
+        return credit;
     }
 
     public Credit getCredit() throws RewardException {
@@ -61,7 +62,7 @@ public class CreditService {
         }
     }
 
-    public void addPoints(int amount) throws RewardException {
+    public Credit addPoints(int amount) throws RewardException {
         // Check if user is valid
         if (this.userCreditInfo.isPresent()) {
             Credit creditInfo = userCreditInfo.get();
@@ -82,13 +83,13 @@ public class CreditService {
             // Update credit table
             creditInfo.setPoints(newPoints);
             userCreditInfo = Optional.of(creditInfo);
-            creditRepository.save(creditInfo);
+            return creditRepository.save(creditInfo);
         } else {
             throw new RewardException(ExceptionType.USERNOTFOUND);
         }
     }
 
-    public void addCoins(int amount) throws RewardException {
+    public Credit addCoins(int amount) throws RewardException {
         // Check if user is valid
         if (this.userCreditInfo.isPresent()) {
             Credit creditInfo = userCreditInfo.get();
@@ -109,13 +110,13 @@ public class CreditService {
             // Update credit table
             creditInfo.setCoins(newCoins);
             userCreditInfo = Optional.of(creditInfo);
-            creditRepository.save(creditInfo);
+            return creditRepository.save(creditInfo);
         } else {
             throw new RewardException(ExceptionType.USERNOTFOUND);
         }
     }
 
-    public void deductCoins(int amount) throws RewardException {
+    public Credit deductCoins(int amount) throws RewardException {
         // Check if user is valid
         if (this.userCreditInfo.isPresent()) {
             Credit creditInfo = userCreditInfo.get();
@@ -141,7 +142,7 @@ public class CreditService {
             // Update credit table
             creditInfo.setCoins(newCoins);
             userCreditInfo = Optional.of(creditInfo);
-            creditRepository.save(creditInfo);
+            return creditRepository.save(creditInfo);
         } else {
             throw new RewardException(ExceptionType.USERNOTFOUND);
         }

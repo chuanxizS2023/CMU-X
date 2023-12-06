@@ -78,8 +78,10 @@ services:
     depends_on:
       - reward-db
       - rabbitmq
+      - user-service
     networks:
       - reward
+      - user
       - rabbitmq
 
   reward-db:
@@ -104,6 +106,8 @@ services:
       - "15672:15672"
       - "5672:5672"
       - "61613:61613"
+    networks:
+      - rabbitmq
 
 networks:
   reward: 

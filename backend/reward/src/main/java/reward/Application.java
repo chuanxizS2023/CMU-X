@@ -8,7 +8,7 @@ import org.springframework.context.event.EventListener;
 import java.time.format.DateTimeFormatter;
 import reward.exception.ErrorHandling.RewardException;
 import reward.service.command.product.CreateProductCommand;
-import reward.service.command.product.ProductCommand;
+import reward.service.command.Command;
 import reward.service.command.product.ProductInvoker;
 import reward.service.command.product.ProductReceiver;
 
@@ -30,33 +30,24 @@ public class Application {
 		SpringApplication.run(Application.class, args);
 	}
 
+	private void createProduct(String name, int price, String imagrUrl, boolean isPurchasable) throws RewardException {
+		receiver.setNewName(name);
+		receiver.setNewPrice(price);
+		receiver.setNewImageUrl(imagrUrl);
+		receiver.setIsPurchasable(isPurchasable);
+		Command createProductCommand = new CreateProductCommand(receiver);
+		invoker.setCommand(createProductCommand);
+		invoker.executeCommand();
+	}
+
 	@EventListener(ApplicationReadyEvent.class)
 	public void insertDefaultIcons() throws RewardException {
 		// Create several default products
+		createProduct("icon-advanced", 1, "https://cmux-reward.s3.us-east-2.amazonaws.com/advanced.png", true);
 
-		receiver.setNewName("icon-advanced");
-		receiver.setNewPrice(1);
-		receiver.setNewImageUrl("https://cmux-reward.s3.us-east-2.amazonaws.com/advanced.png");
-		receiver.setIsPurchasable(true);
-		ProductCommand createProductCommand = new CreateProductCommand(receiver);
-		invoker.setCommand(createProductCommand);
-		invoker.executeCommand();
+		createProduct("icon-tartan", 6, "https://cmux-reward.s3.us-east-2.amazonaws.com/tartan.png", false);
 
-		receiver.setNewName("icon-tartan");
-		receiver.setNewPrice(6);
-		receiver.setNewImageUrl("https://cmux-reward.s3.us-east-2.amazonaws.com/tartan.png");
-		receiver.setIsPurchasable(false);
-		createProductCommand = new CreateProductCommand(receiver);
-		invoker.setCommand(createProductCommand);
-		invoker.executeCommand();
-
-		receiver.setNewName("icon-mickey");
-		receiver.setNewPrice(5);
-		receiver.setNewImageUrl("https://cmux-reward.s3.us-east-2.amazonaws.com/mickey.png");
-		receiver.setIsPurchasable(true);
-		createProductCommand = new CreateProductCommand(receiver);
-		invoker.setCommand(createProductCommand);
-		invoker.executeCommand();
+		createProduct("icon-mickey", 5, "https://cmux-reward.s3.us-east-2.amazonaws.com/mickey.png", true);
 
 	}
 }

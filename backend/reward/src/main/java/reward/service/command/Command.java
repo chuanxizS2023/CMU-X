@@ -1,7 +1,7 @@
-package reward.service.command.credit;
+package reward.service.command;
 
 import reward.exception.ErrorHandling.RewardException;
 
-public interface CreditCommand {
+public interface Command {
     void execute() throws RewardException;
 }

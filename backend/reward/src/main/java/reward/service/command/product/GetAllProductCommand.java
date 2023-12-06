@@ -5,8 +5,9 @@ import java.util.List;
 
 import reward.exception.ErrorHandling.RewardException;
 import reward.model.Product;
+import reward.service.command.GetCommand;
 
-public class GetAllProductCommand implements ProductGetCommand<List<Product>> {
+public class GetAllProductCommand implements GetCommand<List<Product>> {
     private ProductReceiver receiver;
     private List<Product> allProducts;
 
@@ -18,9 +19,7 @@ public class GetAllProductCommand implements ProductGetCommand<List<Product>> {
     public void execute() throws RewardException {
         this.allProducts.clear();
         List<Product> products = receiver.getAllProducts();
-        for (Product p : products) {
-            this.allProducts.add(p);
-        }
+        this.allProducts.addAll(products);
     }
 
     public List<Product> getValue() {
