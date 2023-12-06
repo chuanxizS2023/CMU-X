@@ -3,12 +3,24 @@ package com.cmux.user.controller;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
+import com.cmux.user.dto.PurchaseProductMessage;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 @Component
 public class MQConsumer {
 
-    @RabbitListener(queues = {"${rabbitmq.queue.name.user}"})
-    public void receiveMessage(String message) {
+    private final ObjectMapper mapper = new ObjectMapper();
+
+    @RabbitListener(queues = { "${rabbitmq.queue.name.user.newicon}" })
+    public void receiveMessage(String message) throws JsonMappingException, JsonProcessingException {
+        // TODO: Update new icon into the database
+        PurchaseProductMessage m = mapper.readValue(message, PurchaseProductMessage.class);
+        Long userId = m.getUserId();
+        Long productId = m.getProductId();
+        String imageUrl = m.getImageUrl();
         System.out.println("Received: " + message);
     }
 }
-

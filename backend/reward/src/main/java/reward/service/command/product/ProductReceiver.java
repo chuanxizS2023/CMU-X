@@ -50,28 +50,10 @@ public class ProductReceiver {
         return productService.getProduct();
     }
 
-    // Method to update product name
-    public void updateProductName() throws RewardException {
+    // Method to update product
+    public void updateProduct() throws RewardException {
         productService.setProductInfo(productId);
-        productService.updateName(newName);
-    }
-
-    // Method to update product price
-    public void updateProductPrice() throws RewardException {
-        productService.setProductInfo(productId);
-        productService.updatePrice(newPrice);
-    }
-
-    // Method to update product image url
-    public void updateProductImageUrl() throws RewardException {
-        productService.setProductInfo(productId);
-        productService.updateImageUrl(newImageUrl);
-    }
-
-    // Method to update product image url
-    public void updateProductPurchasable() throws RewardException {
-        productService.setProductInfo(productId);
-        productService.updateProductPurchasable(isPurchasable);
+        productService.updateProduct(newName, newPrice, newImageUrl, isPurchasable);
     }
 
     // Method to get all product

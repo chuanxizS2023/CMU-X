@@ -7,22 +7,24 @@ import org.springframework.stereotype.Service;
 import reward.exception.ErrorHandling.ExceptionType;
 import reward.exception.ErrorHandling.RewardException;
 import reward.model.Product;
+import reward.service.command.Command;
+import reward.service.command.GetCommand;
 
 @Service
 public class ProductInvoker {
-    private ProductCommand command;
+    private Command command;
 
     private Object product;
 
-    public void setCommand(ProductCommand command) {
+    public void setCommand(Command command) {
         this.command = command;
     }
 
     public void executeCommand() throws RewardException {
         this.command.execute();
 
-        if (command instanceof ProductGetCommand) {
-            product = ((ProductGetCommand<?>) command).getValue();
+        if (command instanceof GetCommand) {
+            product = ((GetCommand<?>) command).getValue();
         }
     }
 

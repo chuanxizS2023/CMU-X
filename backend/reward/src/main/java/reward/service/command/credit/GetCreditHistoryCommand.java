@@ -5,8 +5,9 @@ import java.util.List;
 
 import reward.exception.ErrorHandling.RewardException;
 import reward.model.CreditHistory;
+import reward.service.command.GetCommand;
 
-public class GetCreditHistoryCommand implements CreditGetCommand<List<CreditHistory>> {
+public class GetCreditHistoryCommand implements GetCommand<List<CreditHistory>> {
     private CreditReceiver receiver;
     private List<CreditHistory> creditHistories;
 

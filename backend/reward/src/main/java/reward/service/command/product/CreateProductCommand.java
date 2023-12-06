@@ -1,8 +1,9 @@
 package reward.service.command.product;
 
 import reward.exception.ErrorHandling.RewardException;
+import reward.service.command.Command;
 
-public class CreateProductCommand implements ProductCommand {
+public class CreateProductCommand implements Command {
     private ProductReceiver receiver;
 
     public CreateProductCommand(ProductReceiver receiver) {

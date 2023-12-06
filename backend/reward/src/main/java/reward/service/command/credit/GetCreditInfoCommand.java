@@ -2,8 +2,9 @@ package reward.service.command.credit;
 
 import reward.exception.ErrorHandling.RewardException;
 import reward.model.Credit;
+import reward.service.command.GetCommand;
 
-public class GetCreditInfoCommand implements CreditGetCommand<Credit> {
+public class GetCreditInfoCommand implements GetCommand<Credit> {
     private CreditReceiver receiver;
     private Credit credit;
 
