@@ -16,8 +16,11 @@ import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 public class GatewaySecurityConfig {
 
     private static final String[] WHITE_LIST_URL = {
-        "/auth/**", 
-        "/ws**",
+            "/auth/**",
+            "/ws-chat/**",
+            "/ws-communitypost/**",
+            "/chat-socket/**",
+
     };
 
     @Autowired
@@ -29,26 +32,24 @@ public class GatewaySecurityConfig {
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         http
-            .cors().configurationSource(corsConfigurationSource()).and()
-            .csrf().disable()
-            .httpBasic().disable()
-            .formLogin().disable()
-            .exceptionHandling()
-            .authenticationEntryPoint(customAuthenticationEntryPoint)
-            .and()
-            .authorizeExchange()
-            .pathMatchers(WHITE_LIST_URL).permitAll()
-            .anyExchange().authenticated()
-            .and().addFilterAt(jwtAuthenticationFilter, SecurityWebFiltersOrder.AUTHENTICATION);
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .csrf(ServerHttpSecurity.CsrfSpec::disable)
+                .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
+                .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
+                .exceptionHandling(spec -> spec.authenticationEntryPoint(customAuthenticationEntryPoint))
+                .authorizeExchange(exchanges -> exchanges
+                        .pathMatchers(WHITE_LIST_URL).permitAll()
+                        .anyExchange().authenticated())
+                .addFilterAt(jwtAuthenticationFilter, SecurityWebFiltersOrder.AUTHENTICATION);
         return http.build();
     }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(Arrays.asList("*")); // Configure as needed
+        config.setAllowedOrigins(Arrays.asList("*"));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
-        config.setAllowedHeaders(Arrays.asList("*")); // Configure as needed
+        config.setAllowedHeaders(Arrays.asList("*"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
