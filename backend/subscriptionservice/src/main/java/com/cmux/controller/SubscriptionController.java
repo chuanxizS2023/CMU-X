@@ -57,7 +57,7 @@ public class SubscriptionController {
     // Add a subscription for a user
     @PutMapping("/subscriptions")
     public void addSubscription(@RequestParam("userId") Long userId,
-            @RequestParam("otherUserId") Long otherUserId) {
+            @RequestParam("otherUserId") Long otherUserId) throws JsonProcessingException {
         System.out.println("Add subscription for user " + userId);
         System.out.println("Add subscription to user " + otherUserId);
         subscriptionService.addSubscription(userId, otherUserId);
