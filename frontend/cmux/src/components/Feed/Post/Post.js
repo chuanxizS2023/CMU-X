@@ -34,7 +34,6 @@ function Post({communityPostid, userImage, username, title, content, likes, comm
         <div className="post-header">
           <span
             className="post-header-displayname"
-            onMouseEnter={() => setIsVisibleProfileCard(true)}
             onMouseLeave={() => {
               setTimeout(function () {
                 setIsVisibleProfileCard(false);
