@@ -97,6 +97,64 @@ services:
       - 3308:3306
     networks:
       - reward
+  
+  mysql:
+    image: mysql:8.1.0
+    container_name: mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: zhangzcx1999
+      MYSQL_DATABASE: myPostServiceDB
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql 
+    networks:
+      - post
+
+  postservice:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: postservice
+    ports:
+      - "9000:9000"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/myPostServiceDB
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: zhangzcx1999
+      ELASTICSEARCH_HOST: elasticsearch
+      ELASTICSEARCH_PORT: 9200
+      ELASTICSEARCH_USERNAME: elastic
+      ELASTICSEARCH_PASSWORD: 2JeXn31HFDxoD3iMkX5v
+    volumes:
+      - .:/app
+    restart: always
+    depends_on:
+      - mysql
+      - elasticsearch
+      - rabbitmq
+    networks:
+      - post
+      - reward
+      - rabbitmq
+      
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.4
+    container_name: elasticsearch-container
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xmx512m -Xms512m
+      - "ELASTIC_PASSWORD=2JeXn31HFDxoD3iMkX5v"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "9200:9200" 
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    networks:
+      - post
 
   rabbitmq:
     build:
