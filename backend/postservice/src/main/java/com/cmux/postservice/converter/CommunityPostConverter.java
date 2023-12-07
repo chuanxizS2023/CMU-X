@@ -59,6 +59,7 @@ public class CommunityPostConverter {
         communityPost.setTitle(communityPostDTO.getTitle());
         communityPost.setContent(communityPostDTO.getContent());
         communityPost.setCreated_Date(communityPostDTO.getCreated_Date());
+
         communityPost.setAuthorid(communityPostDTO.getAuthorid());
         communityPost.setLikes(communityPostDTO.getLikes());
         communityPost.setCommentsCount(communityPostDTO.getCommentsCount());

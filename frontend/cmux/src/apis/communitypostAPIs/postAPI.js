@@ -22,7 +22,6 @@ export const addLike = async (postId) => {
     return response;
   } catch (error) {
     console.error("Error adding like:", error.message);
-    throw error;
   }
 };
 
