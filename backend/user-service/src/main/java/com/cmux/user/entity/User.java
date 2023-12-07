@@ -4,11 +4,16 @@ import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", indexes = {
+    @Index(name = "idx_user_username", columnList = "username"),
+    @Index(name = "idx_user_email", columnList = "email")
+})
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +29,15 @@ public class User implements Serializable {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    private String userImage;
+
+    @ElementCollection
+    private List<String> unlockedImages = new ArrayList<>();
+
+    @ElementCollection
+    private List<Long> unlockedImageIds = new ArrayList<>();
+
     public User() {
     }
 
@@ -31,6 +45,9 @@ public class User implements Serializable {
         this.username = username;
         this.email = email;
         this.password = password;
+        this.userImage = "https://cmux-reward.s3.us-east-2.amazonaws.com/base.png";
+        this.unlockedImages.add(this.userImage);
+        this.unlockedImages.add("https://cmux-reward.s3.us-east-2.amazonaws.com/itermediate.png");
     }
 
     public Long getId() {
@@ -52,6 +69,30 @@ public class User implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getUserImage() {
+        return userImage;
+    }
+
+    public void setUserImage(String userImage) {
+        this.userImage = userImage;
+    }
+
+    public List<String> getUnlockedImages() {
+        return unlockedImages;
+    }
+
+    public void setUnlockedImages(List<String> unlockedImages) {
+        this.unlockedImages = unlockedImages;
+    }
+
+    public List<Long> getUnlockedImageIds() {
+        return unlockedImageIds;
+    }
+
+    public void setUnlockedImageIds(List<Long> unlockedImageIds) {
+        this.unlockedImageIds = unlockedImageIds;
     }
 
     @JsonIgnore

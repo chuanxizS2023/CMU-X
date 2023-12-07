@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import com.cmux.user.entity.User; 
 import java.util.List;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -34,6 +33,18 @@ public class UserController {
     @PostMapping("/users")
     public ResponseEntity<?> getUsersByIds(@RequestBody List<Long> ids) {
         List<User> users = userService.getUsersByIds(ids);
+        return ResponseEntity.ok(users);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> users = userService.getAllUsers();
+        return ResponseEntity.ok(users);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<User>> searchUsers(@RequestParam String keyword) {
+        List<User> users = userService.searchUsersByKeyword(keyword);
         return ResponseEntity.ok(users);
     }
 
