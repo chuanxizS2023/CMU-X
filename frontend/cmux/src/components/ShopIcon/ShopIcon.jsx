@@ -7,7 +7,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Avatar } from "@material-ui/core";
 
-export default function ShopIcon({ product, handlePurchase, handleButton, unit }) {
+export default function ShopIcon({ product, handleModal, handleButton, unit }) {
   return (
     <div className="avatar">
       <Card sx={{ width: 300 }}>
@@ -27,7 +27,7 @@ export default function ShopIcon({ product, handlePurchase, handleButton, unit }
           </Typography>
         </CardContent>
         <CardActions>
-          <Button size="small" onClick={handlePurchase} disabled={handleButton}>
+          <Button size="small" onClick={handleModal} disabled={handleButton}>
             {!handleButton ? "BUY" : `Require ${product.price} ${unit}`}
           </Button>
         </CardActions>

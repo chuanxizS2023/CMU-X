@@ -7,6 +7,7 @@ import Signup from "./pages/Signup/Signup";
 import Home from "./pages/Home/Home";
 import Explore from "./pages/Explore/Explore";
 import Reward from "./pages/Reward/Reward";
+import Success from "./pages/Reward/Success";
 import Profile from "./pages/Profile/Profile";
 import Bookmarks from "./pages/Bookmarks/Bookmarks";
 import Messages from "./pages/Messages/Messages";
@@ -41,6 +42,7 @@ function App() {
         <Route path="/home" component={Home} />
         <Route path="/explore" component={Explore} />
         <Route path="/reward" component={Reward} />
+        <Route path="/reward-success" component={Success} />
         <Route path="/profile" component={Profile} />
         <Route path="/bookmarks" component={Bookmarks} />
         <Route path="/messages" component={Messages} />

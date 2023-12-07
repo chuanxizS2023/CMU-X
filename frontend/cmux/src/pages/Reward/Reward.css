@@ -10,6 +10,15 @@
   font-weight: 800;
 }
 
+.tableRow {
+  background-color: #1da1f2;
+}
+
+.tableRow .tableCell {
+  color: #ffffff;
+  font-weight: 800;
+}
+
 .rewardTitle > p {
   margin-top: 20px;
   color: #ffffff;
@@ -70,4 +79,40 @@
   article {
     min-height: 100vh;
   }
+}
+
+.modalBox {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  background-color: white;
+  box-shadow: 0 0 24px rgba(0, 0, 0, 0.25);
+  padding: 16px;
+}
+
+.modalTitle {
+  margin-bottom: 16px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.modalButtons {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 16px;
+}
+
+.successTitle {
+  padding: 15px;
+  align-items: center;
+}
+
+.successTitle > span {
+  margin-top: 2px;
+  color: #ffffff;
+  display: inline;
+  font-size: 90px;
+  font-weight: 800;
 }

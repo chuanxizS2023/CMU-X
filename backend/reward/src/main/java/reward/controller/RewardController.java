@@ -226,8 +226,8 @@ public class RewardController {
 
     @PostMapping("/purchaseProduct")
     public ResponseEntity<?> purchaseProduct(@RequestBody PurchaseProductRequest purchaseProductRequest) {
-        long userId = purchaseProductRequest.getUserId();
-        long productId = purchaseProductRequest.getProductId();
+        Long userId = purchaseProductRequest.getUserId();
+        Long productId = purchaseProductRequest.getProductId();
         // Target user id
         creditReceiver.setUserId(userId);
         // Target product id
