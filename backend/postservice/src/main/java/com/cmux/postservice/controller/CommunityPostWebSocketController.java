@@ -38,7 +38,6 @@ public class CommunityPostWebSocketController {
     public void addLike(@Payload Long postId) {
         // Process adding a like to a post
         CommunityPost updatedPost = communityPostService.addLikeToPost(postId);
-        // Notify subscribers about the updated post
         messagingTemplate.convertAndSend("/topic/communityPost/" + postId, updatedPost);
     }
 }

@@ -9,5 +9,5 @@ import com.cmux.postservice.model.CommunityPost;
 public interface CommunityPostRepository extends JpaRepository<CommunityPost, Long> {
     CommunityPost findByCommunityPostid(long communityPostid);
     List<CommunityPost> findByAuthoridIn(List<Long> authorIds);
-
+    
 }
