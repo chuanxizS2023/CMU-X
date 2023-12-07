@@ -137,13 +137,13 @@ public class RewardController {
     }
 
     @GetMapping("/allProducts")
-    public ResponseEntity<List<Product>> getAllProducts() {
+    public ResponseEntity<?> getAllProducts() {
         try {
             List<Product> products = getProducts();
             return ResponseEntity.ok(products);
         } catch (RewardException e) {
             LOGGER.info(LOGFORMAT, e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
@@ -192,8 +192,8 @@ public class RewardController {
         }
     }
 
-    @GetMapping("/{productId}")
-    public ResponseEntity<Product> getProduct(@PathVariable long productId) {
+    @GetMapping("/product/{productId}")
+    public ResponseEntity<?> getProduct(@PathVariable long productId) {
         try {
             // Set the target product id
             productReceiver.setProductId(productId);
@@ -204,14 +204,30 @@ public class RewardController {
             return ResponseEntity.ok(product);
         } catch (RewardException e) {
             LOGGER.info(LOGFORMAT, e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/userCredit/{userId}")
+    public ResponseEntity<?> getCreditInfo(@PathVariable long userId) {
+        try {
+            // Set the target user id
+            creditReceiver.setUserId(userId);
+
+            // Get the user credit info command
+            executeCreditCommand(new GetCreditInfoCommand(creditReceiver));
+            Credit creditInfo = creditInvoker.getCreditInfo();
+            return ResponseEntity.ok(creditInfo);
+        } catch (RewardException e) {
+            LOGGER.info(LOGFORMAT, e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     @PostMapping("/purchaseProduct")
     public ResponseEntity<?> purchaseProduct(@RequestBody PurchaseProductRequest purchaseProductRequest) {
-        long userId = purchaseProductRequest.getUserId();
-        long productId = purchaseProductRequest.getProductId();
+        Long userId = purchaseProductRequest.getUserId();
+        Long productId = purchaseProductRequest.getProductId();
         // Target user id
         creditReceiver.setUserId(userId);
         // Target product id
@@ -253,7 +269,7 @@ public class RewardController {
     }
 
     @GetMapping("/creditHistory/{userId}")
-    public ResponseEntity<List<CreditHistory>> getCreditHistory(@PathVariable long userId) {
+    public ResponseEntity<?> getCreditHistory(@PathVariable long userId) {
         try {
             List<CreditHistory> creditHistories = getHistory(userId);
             List<CreditHistory> res = creditHistories.stream().filter(history -> history.getUserId() == userId)
@@ -261,7 +277,7 @@ public class RewardController {
             return ResponseEntity.ok(res);
         } catch (RewardException e) {
             LOGGER.info(LOGFORMAT, e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
