@@ -78,9 +78,9 @@ public class SubscriptionController {
 
     // Get all subscribers for a specific user
     @GetMapping("/subscriptions/user-id")
-    public List<User> getUser(@RequestParam("userId") Long userId) {
-        System.out.println("Get user " + userId);
-        return subscriptionService.getUsers(userId);
+    public List<User> getUser(@RequestParam("userId") String u) {
+        System.out.println("Get user " + u);
+        return subscriptionService.getUsers(u);
     }
 
     // Get whether the user with userId is subscribed to the user with otherUserId

@@ -13,7 +13,7 @@ public class UserRetrievalbyName implements UserRetrievalStrategy{
     private UserRepository userRepository;
         
     @Override
-    public List<User> getUser(String username) {
+    public List<User> getUsers(String username) {
         return userRepository.getUsersByName(username);
     }
     

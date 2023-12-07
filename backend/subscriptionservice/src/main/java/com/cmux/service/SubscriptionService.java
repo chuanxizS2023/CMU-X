@@ -70,14 +70,14 @@ public class SubscriptionService {
         return subscriptionStrategy.getHasSubscription(userId, otherUserId);
     }
 
-	public List<User> getUsers(String name) {
+	public List<User> getUsers(String u) {
         // if name is all numbers, then search by userId
-        if (name.matches("[0-9]+")) {
+        if (u.matches("[0-9]+")) {
             userRetrievalStrategy = new UserRetrievalbyID();
         } else {
             userRetrievalStrategy = new UserRetrievalbyName();
         }
-        return userRetrievalStrategy.getUser(name);
+        return userRetrievalStrategy.getUsers(u);
 	}
 
 	public void createUser(Long userId, String name) {

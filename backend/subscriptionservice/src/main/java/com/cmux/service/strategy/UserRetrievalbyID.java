@@ -13,7 +13,7 @@ public class UserRetrievalbyID implements UserRetrievalStrategy {
     private UserRepository userRepository;
 
     @Override
-    public List<User> getUser(String userIdString) {
+    public List<User> getUsers(String userIdString) {
         Long userId = Long.parseLong(userIdString);
         return userRepository.getUserByUserId(userId);
     }
