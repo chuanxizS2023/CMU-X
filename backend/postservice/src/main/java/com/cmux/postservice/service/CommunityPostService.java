@@ -1,6 +1,7 @@
 package com.cmux.postservice.service;
 
 import java.util.NoSuchElementException;
+import com.cmux.postservice.dto.NewCreditMessage;
 import com.cmux.postservice.dto.CommunityPostDTO;
 import com.cmux.postservice.handleException.IndexingException;
 import com.cmux.postservice.model.CommunityPost;
@@ -52,7 +53,9 @@ public class CommunityPostService extends AbstractESService<CommunityPost> {
                 .orElseThrow(() -> new NoSuchElementException("Post not found with id: " + communityPostId));
         communityPost.setLikes(communityPost.getLikes() + 1);
         communityPostRepository.save(communityPost);
-
+        NewCreditMessage newCreditMessageDTO = new NewCreditMessage(communityPost.getAuthorid(),1)
+        String jsonString = mapper.writeValueAsString(newCreditMessageDTO);
+                    messageProducer.sendImageToUser(jsonString);
         publisher.publishEvent(new PostEvents.Updated(communityPost));
         return communityPost;
     }
