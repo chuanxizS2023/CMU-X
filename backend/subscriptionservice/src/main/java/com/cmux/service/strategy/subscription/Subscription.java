@@ -1,18 +1,18 @@
-package com.cmux.service.strategy;
+package com.cmux.service.strategy.subscription;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import com.cmux.entity.User;
 import com.cmux.repository.UserRepository;
+
 import jakarta.validation.ConstraintViolationException;
 
+@Service
+public class Subscription implements SubscriptionStrategy {
 
-// Special subscription strategy for special users. CloseFriend, Family, Acquaintance, etc.
-@Component
-public class SubscriptionSpecial implements SubscriptionStrategy{
     @Autowired
     UserRepository userRepository;
 
@@ -53,4 +53,5 @@ public class SubscriptionSpecial implements SubscriptionStrategy{
     public boolean getHasSubscription(Long userId, Long otherUserId) {
 		return userRepository.findHasSubscriptionByUserId(userId, otherUserId) != null;
     }
+
 }

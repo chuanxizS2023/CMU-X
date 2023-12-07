@@ -77,8 +77,8 @@ public class SubscriptionController {
     }
 
     // Get all subscribers for a specific user
-    @GetMapping("/subscriptions/user-id")
-    public List<User> getUser(@RequestParam("userId") String u) {
+    @GetMapping("/subscriptions/users")
+    public List<User> getUser(@RequestParam("u") String u) {
         System.out.println("Get user " + u);
         return subscriptionService.getUsers(u);
     }

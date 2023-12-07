@@ -17,8 +17,7 @@ function SearchInput({ placeholder }) {
   const [ isPopupOpen, setIsPopupOpen ] = useState(false);
   const [ results, setResults ] = useState([]);
   const [ user_results, setUserResults ] = useState([]);
-  const user_id_url = baseUrl + '/subscriptions/user-id';
-  const user_name_url = baseUrl + '/subscriptions/user-name';
+  const user_url = baseUrl + '/subscriptions/users';
   const follower_number_url = baseUrl + '/followers/count';
   const subscription_number__url = baseUrl + '/subscriptions/count';
   const hasSubscription_url = baseUrl + '/subscriptions/has';
@@ -28,17 +27,7 @@ function SearchInput({ placeholder }) {
   //========================================
   const fetchUser = async (query) => {
     try {
-      const response = await axios.get(`${user_id_url}?${query}`);
-      return response.data;
-    } catch (error) {
-      console.error("Error during search:", error);
-      return [];
-    }
-  };
-
-  const fetchUserByName = async (query) => {
-    try {
-      const response = await axios.get(`${user_name_url}?${query}`);
+      const response = await axios.get(`${user_url}?${query}`);
       return response.data;
     } catch (error) {
       console.error("Error during search:", error);
@@ -86,17 +75,10 @@ function SearchInput({ placeholder }) {
       const res = await searchPosts(searchText);
       let user_res = [];
       // if searchText contains only numbers, search by userId
-      const isNumericSearch = /^\d+$/.test(searchText);
-      if (isNumericSearch) {
-        const params = { userId: searchText };
-        const query = new URLSearchParams(params).toString();
-        user_res = await fetchUser(query);
-      }
-      else {
-        const params = { username: searchText };
-        const query = new URLSearchParams(params).toString();
-        user_res = await fetchUserByName(query);
-      }
+      const params = { u: searchText };
+      const query = new URLSearchParams(params).toString();
+      user_res = await fetchUser(query);
+
       if (res.length === 0 && user_res.length === 0) {
         setIsPopupOpen(false);
         return;

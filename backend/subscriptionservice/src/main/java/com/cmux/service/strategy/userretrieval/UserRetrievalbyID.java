@@ -1,4 +1,4 @@
-package com.cmux.service.strategy;
+package com.cmux.service.strategy.userretrieval;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

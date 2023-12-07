@@ -1,4 +1,4 @@
-package com.cmux.service.strategy;
+package com.cmux.service.strategy.usercreation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
