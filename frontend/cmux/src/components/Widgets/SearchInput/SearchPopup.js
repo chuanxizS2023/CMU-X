@@ -11,6 +11,9 @@ function SearchResultsPopup({ open, onClose, searchResults, userSearchResults })
   const [ userOrPost, setUserOrPost ] = React.useState('user');
   const [ isActivated, setIsActivated ] = React.useState(false);
   const [ isFollowing, setIsFollowing ] = React.useState(false);
+  const onPostClick = (id) =>{
+    console.log("")
+  }
   const handleSearchType = () => {
     setIsActivated(!isActivated);
   }
@@ -61,7 +64,7 @@ function SearchResultsPopup({ open, onClose, searchResults, userSearchResults })
             <Post
               key={ post.communityPostid }
               communityPostid={ post.communityPostid }
-              username={ post.author_id }
+              username={ post.authorid }
               userimage={ post.userimage }
               created_Date={ post.created_Date }
               title={ post.title }
@@ -75,6 +78,7 @@ function SearchResultsPopup({ open, onClose, searchResults, userSearchResults })
               courseNumber={ post.courseNumber }
               semester={ post.semester }
               teamMembers={ post.teamMembers }
+              onPostClick={onPostClick}
             />
           )) }
         </List>

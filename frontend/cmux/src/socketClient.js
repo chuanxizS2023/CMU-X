@@ -99,8 +99,5 @@ class StompClientSingleton {
   }
 }
 
-// Usage
-// const stompClient = StompClientSingleton.getInstance();
-// stompClient.sendMessage('/topic/greetings', { text: 'Hello!' });
 
 export const stompClientInstance = StompClientSingleton.getInstance();
