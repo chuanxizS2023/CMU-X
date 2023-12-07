@@ -1,70 +1,114 @@
-import { Avatar } from "@material-ui/core";
-import React from "react";
-import { useHistory, useLocation } from "react-router-dom";
-import ChatInputs from "../ChatInputs/ChatInputs";
-import FromMessage from "../FromMessage/FromMessage";
-import BackIcon from "@material-ui/icons/KeyboardBackspace";
-import MyMessage from "../MyMessage/MyMessage";
-import "./Chat.css";
-import Loading from "../Loading/Loading";
+import React, { useState, useEffect, useContext } from 'react';
+import { Client } from '@stomp/stompjs';
+import ChatInputs from '../ChatInputs/ChatInputs';
+import { AuthContext } from '../../components/AuthProvider';
+import MyMessage from '../MyMessage/MyMessage';
+import FromMessage from '../FromMessage/FromMessage';
+import { UsersIcon } from '../../components/icons';
+import { useFetchWithTokenRefresh } from '../../utils/ApiUtilsDynamic';
+import './Chat.css';
 
-const Chat = ({ messages, users }) => {
-  const username = "mucahitsahin6";
-  //let { id } = useParams();
-  var id = useLocation().pathname;
-  let history = useHistory();
-  const [user, setUser] = React.useState({});
-  const [messagesData, setMessagesData] = React.useState();
 
-  const [loading, setLoading] = React.useState(true);
-  setTimeout(() => {
-    setLoading(false);
-  }, 2000);
+const Chat = ({ chat }) => {
+  const [messageHistory, setMessageHistory] = useState([]);
+  const { userId } = useContext(AuthContext);
+  const refreshToken = localStorage.getItem('refreshToken');
 
-  React.useEffect(() => {
-    if (id) {
-      let userid = id.split("-")[1];
-      let messageid = id.split("/")[2];
-      setUser(users.find((user) => user.username === userid));
-      setMessagesData(
-        messages.find((message) => message.fromto === messageid).messages
-      );
+  useEffect(() => {
+    const stompClient = new Client({
+      brokerURL: `ws://${process.env.REACT_APP_URL}ws-chat/websocket`,
+      beforeConnect: () => {
+        stompClient.connectHeaders = {
+          'Authorization': `Bearer ${refreshToken}`
+        };
+      },
+      onConnect: () => {
+        stompClient.subscribe(`/topic/chat.${chat.chatId}`, (message) => {
+          const newMessage = JSON.parse(message.body);
+          setMessageHistory(prevHistory => [...prevHistory, newMessage]);
+        });
+      },
+    });
+
+    stompClient.activate();
+
+    return () => {
+      stompClient.deactivate();
+    };
+  }, [chat]);
+
+
+  const fetchWithTokenRefresh = useFetchWithTokenRefresh();
+
+  const fetchMessages = async () => {
+    try {
+      const url = `${process.env.REACT_APP_URL}api/chats/history/${chat.chatId}`;
+      const response = await fetchWithTokenRefresh(url, { method: 'GET' });
+      if (response.ok) {
+        let data = await response.json();
+
+        const messagesWithSender = await Promise.all(data.map(async (message) => {
+          const sender = await fetchSender(message.senderId);
+          return { ...message, sender };
+        }));
+
+        setMessageHistory(messagesWithSender);
+        console.log('Chat history:', messagesWithSender);
+      } else {
+        console.error('Failed to fetch chat history');
+      }
+    } catch (error) {
+      console.error('Error fetching chat history:', error);
     }
-  }, [id]);
+  };
+
+
+  const fetchSender = async (userId) => {
+    try {
+      const url = `${process.env.REACT_APP_URL}user/${userId}`;
+      const response = await fetchWithTokenRefresh(url, { method: 'GET' });
+      if (response.ok) {
+        const data = await response.json();
+        return data;
+      } else {
+        throw new Error('Failed to fetch user');
+      }
+    } catch (error) {
+      console.error('Error fetching user:', error);
+      return null;
+    }
+  }
+
+  useEffect(() => {
+    fetchMessages();
+    console.log('messageHistory changed:', messageHistory);
+  }, [chat]);
+
+
+  if (!chat) {
+    return <div className="chat">No chat selected</div>;
+  }
 
   return (
     <div className="chat">
-      {loading ? (
-        <Loading />
-      ) : (
-        <>
-          <div className="chatHeader">
-            <div onClick={() => history.goBack()}>
-              <BackIcon />
-            </div>
-            <Avatar src={user && user.userimage} />
-            <div>
-              <span>{user && user.username}</span>
-            </div>
-          </div>
-          <div className="chatRoom">
-            <div className="chatMessages">
-              {messagesData &&
-                messagesData.map((message) =>
-                  message.from === username ? (
-                    <MyMessage message={message.message} />
-                  ) : (
-                    <FromMessage
-                      message={message.message}
-                      userimage={user.userimage}
-                    />
-                  )
-                )}
-            </div>
-            <ChatInputs />
-          </div>
-        </>
-      )}
+      <div className="chatHeader">
+        <span>{chat.chatName}</span>
+        {chat.chatType === 'GROUP' && <UsersIcon />}
+      </div>
+      <div className="chatRoom">
+        <div className="chatMessages">
+          {messageHistory.map((message) => {
+            const isMyMessage = message.senderId == userId;
+
+            return isMyMessage ? (
+              <MyMessage message={message} />
+            ) : (
+              <FromMessage message={message} />
+            );
+          })}
+        </div>
+        <ChatInputs />
+      </div>
     </div>
   );
 };
