@@ -76,11 +76,18 @@ public class SubscriptionController {
         subscriptionService.removeSubscription(userId, otherUserIdq);
     }
 
-    // Get all subscribers for a specific user
+    // Get specific users
     @GetMapping("/subscriptions/users")
     public List<User> getUser(@RequestParam("u") String u) {
         System.out.println("Get user " + u);
         return subscriptionService.getUsers(u);
+    }
+
+    // Get numbers of subscribers for a specific user
+    @GetMapping("/subscriptions/count")
+    public int getSubscriptionsCount(@RequestParam("userId") Long userId) {
+        System.out.println("Get number of subscriptions for user " + userId);
+        return subscriptionService.getAllSubscriptions(userId).size();
     }
 
     // Get whether the user with userId is subscribed to the user with otherUserId

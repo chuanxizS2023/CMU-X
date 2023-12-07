@@ -3,6 +3,7 @@ package com.cmux.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.cmux.entity.User;
+import com.cmux.repository.UserRepository;
 import com.cmux.service.strategy.subscription.SubscriptionStrategy;
 import com.cmux.service.strategy.usercreation.UserCreationStrategy;
 import com.cmux.service.strategy.userretrieval.UserRetrievalStrategy;
@@ -14,6 +15,8 @@ import java.util.List;
 @Service
 public class SubscriptionService {
 
+    @Autowired
+    private UserRepository userRepository;
     @Autowired
     private SubscriptionStrategy subscriptionStrategy;
 
@@ -54,9 +57,9 @@ public class SubscriptionService {
 	public List<User> getUsers(String u) {
         // if name is all numbers, then search by userId
         if (u.matches("[0-9]+")) {
-            userRetrievalStrategy = new UserRetrievalbyID();
+            userRetrievalStrategy = new UserRetrievalbyID(userRepository);
         } else {
-            userRetrievalStrategy = new UserRetrievalbyName();
+            userRetrievalStrategy = new UserRetrievalbyName(userRepository);
         }
         return userRetrievalStrategy.getUsers(u);
 	}

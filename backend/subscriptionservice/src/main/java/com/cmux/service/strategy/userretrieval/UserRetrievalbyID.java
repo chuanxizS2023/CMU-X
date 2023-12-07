@@ -9,13 +9,20 @@ import java.util.List;
 @Component
 public class UserRetrievalbyID implements UserRetrievalStrategy {
 
-    @Autowired
     private UserRepository userRepository;
+
+    public UserRetrievalbyID(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public List<User> getUsers(String userIdString) {
-        Long userId = Long.parseLong(userIdString);
-        return userRepository.getUserByUserId(userId);
+        try {
+            Long userId = Long.parseLong(userIdString);
+            return userRepository.getUserByUserId(userId);
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
     
 }

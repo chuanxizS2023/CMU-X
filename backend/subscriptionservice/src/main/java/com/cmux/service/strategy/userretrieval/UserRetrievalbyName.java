@@ -9,8 +9,11 @@ import com.cmux.entity.User;
 @Component
 public class UserRetrievalbyName implements UserRetrievalStrategy{
 
-    @Autowired
     private UserRepository userRepository;
+
+    public UserRetrievalbyName(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
         
     @Override
     public List<User> getUsers(String username) {
