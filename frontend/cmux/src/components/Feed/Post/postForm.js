@@ -7,7 +7,7 @@ const PostForm = ({ open, onClose, onSubmit }) => {
     username: '',
     title: '',
     content: '',
-    author_id: null,
+    authorid: null,
     created_Date: null,
     findTeammatePost: isFindTeammatePost,
     semester: '',

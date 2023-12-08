@@ -37,13 +37,14 @@ function Feed() {
   const handlepopUpOpen = () => setOpenPopup(true);
   const handlepopUpClose = () => setOpenPopup(false);
   const handleClosePostForm = () => setPostFormOpen(false);
-  const {userid, username} = useContext(AuthContext);
+  const {userId, username} = useContext(AuthContext);
 
   const handlePostSubmit = (postData) => {
     // Logic to submit the post data to the backend
-    postData.authorid = userid;
+    postData.authorid = userId;
     postData.username = username;
     postData.created = new Date().toLocaleString();
+    console.log("postData: ", postData);
     const response = createPost(postData);
     if (response) {
       setPopupContext('Post created successfully!');
@@ -79,7 +80,7 @@ function Feed() {
 
   const handleCommentSubmit = async (commentData) => {
     // Logic to submit the post data to the backend
-    commentData.authorid = userid;
+    commentData.authorid = userId;
     commentData.username = username;
     commentData.communityPostid = activeCommentPostId;
     

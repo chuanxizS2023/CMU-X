@@ -33,7 +33,7 @@ export const usePostApi = () => {
         method: 'POST'
       });
       if (response.ok) {
-        const data = await response.json(); 
+        const data = response;
         return data;
       } else {
         throw new Error(`HTTP error! status: ${response.status}`);
