@@ -3,6 +3,8 @@ package com.cmux.controller;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import java.util.List;
+import java.util.ArrayList;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,25 +16,12 @@ import com.cmux.service.SubscriptionService;
 public class MQConsumer {
     private final SubscriptionService subscriptionService;
 
-    private final UserRepository userRepository;
 
-    private MQConsumer(UserRepository userRepository,
-            SubscriptionService subscriptionService) {
-        this.userRepository = userRepository;
+    private MQConsumer(SubscriptionService subscriptionService) {
         this.subscriptionService = subscriptionService;
     }
 
-    private final ObjectMapper mapper = new ObjectMapper();
-
-    @RabbitListener(queues = { "${rabbitmq.queue.name.newuser}" })
-    public void receiveMessage(String message) throws JsonProcessingException {
-        System.out.println(message);
-        // Trim " at the beginning and end of the string
-        // message = message.substring(1, message.length() - 1);
-        // message = "{\"userId\":38,\"username\":\"123-1-3103910-3\"}";
-
-        // add a " at the beginning and end of the string
-        // message = "\"" + message + "\"";
+    public List<String> extracUsernameAndId (String message) {
         boolean firstColon = false;
         boolean secondColon = false;
         StringBuilder sb = new StringBuilder();
@@ -59,9 +48,21 @@ public class MQConsumer {
         sb2.delete(0, 1);
         sb2.reverse().delete(0, 3);
         sb2.reverse();
-        System.out.println(id);
-        System.out.println(sb2.toString().substring(1, sb2.length() - 1));
         String username = sb2.toString().substring(1, sb2.length() - 1);
+        List<String> result = new ArrayList<>();
+        result.add(username);
+        // Long to String
+        String idString = Long.toString(id);
+        result.add(idString);
+        return result;
+    }
+
+    @RabbitListener(queues = { "${rabbitmq.queue.name.newuser}" })
+    public void receiveMessage(String message) throws JsonProcessingException {
+
+        List<String> res = this.extracUsernameAndId(message);
+        String username = res.get(0);
+        Long id = Long.parseLong(res.get(1));
 
         try {
             subscriptionService.createUser(id, username);

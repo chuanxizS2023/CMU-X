@@ -23,6 +23,9 @@ public class User {
 	@Relationship(type = "SUBSCRIBED_BY", direction = Direction.INCOMING)
 	private List<User> subscribers;
 
+	// More relationships can be added here
+	
+	
     public Long getUserId() {
         return userId;
     }
