@@ -17,9 +17,11 @@ import DeleteIcon from "@material-ui/icons/Delete";
 function Comments({comment}) {
   const [isVisibleProfileCard, setIsVisibleProfileCard] = useState(false);
   const [authorid, setauthorid] = useState(null);
+  const [username, setUsername] = useState(null);
   const [content, setContent] = useState(null);
     const [created_Date, setCreated_Date] = useState(null);
     useEffect(() => {
+        setUsername(comment.username);
         setauthorid(comment.authorid);
         setContent(comment.content);
         setCreated_Date(comment.created_Date);
@@ -36,14 +38,13 @@ function Comments({comment}) {
             <span
                 className="post-header-displayname"
                 style={{color:"black"}}
-                onMouseEnter={() => setIsVisibleProfileCard(true)}
                 onMouseLeave={() => {
                 setTimeout(function () {
                     setIsVisibleProfileCard(false);
                 }, 1000);
                 }}
             >
-                {authorid}
+                {username}
             </span>
             <span className="post-header-date">{created_Date}</span>
             <MoreHorizIcon className="postMoreIcon" />
