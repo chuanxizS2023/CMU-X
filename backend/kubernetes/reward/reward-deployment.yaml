@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: reward-container
-        image: leolando/reward-service:latest
+        image: hanqid/cmux-reward:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8081

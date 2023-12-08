@@ -13,8 +13,9 @@ public class Credit {
     @Getter
     private Long userId;
 
-    private int coins;
-    private int points;
+    private String username;
+    private Integer coins;
+    private Integer points;
 
     protected Credit() {
     }

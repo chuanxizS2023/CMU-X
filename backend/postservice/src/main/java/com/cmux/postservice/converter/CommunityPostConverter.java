@@ -59,6 +59,7 @@ public class CommunityPostConverter {
         communityPost.setTitle(communityPostDTO.getTitle());
         communityPost.setContent(communityPostDTO.getContent());
         communityPost.setCreated_Date(communityPostDTO.getCreated_Date());
+
         communityPost.setAuthorid(communityPostDTO.getAuthorid());
         communityPost.setLikes(communityPostDTO.getLikes());
         communityPost.setCommentsCount(communityPostDTO.getCommentsCount());
@@ -80,7 +81,7 @@ public class CommunityPostConverter {
             ArrayList<Comment> commentList = new ArrayList<Comment>();
             for (int i = 0; i < communityPostDTO.getComments().size(); i++) {
                 commentList.add(commentConverter.convertDTOToEntity(communityPostDTO.getComments().get(i)));
-            }
+            }    
             communityPost.setComments(commentList);
         } else {
             communityPost.setComments(null);

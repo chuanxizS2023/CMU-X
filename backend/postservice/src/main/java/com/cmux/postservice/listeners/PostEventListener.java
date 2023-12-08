@@ -13,14 +13,14 @@ import com.cmux.postservice.model.PostEvents;
 @Component
 public class PostEventListener {
 
-    @Autowired
-    private CommunityPostService communityPostService;
-
-    @Autowired
-    private CommentService commentService;
-
-    @Autowired
-    private SimpMessagingTemplate messagingTemplate;
+    public PostEventListener(CommunityPostService communityPostService, CommentService commentService, SimpMessagingTemplate messagingTemplate) {
+        this.communityPostService = communityPostService;
+        this.commentService = commentService;
+        this.messagingTemplate = messagingTemplate;
+    }
+    private final CommunityPostService communityPostService;
+    private final CommentService commentService;
+    private final SimpMessagingTemplate messagingTemplate;
 
     private final String id = "communitypost";
 

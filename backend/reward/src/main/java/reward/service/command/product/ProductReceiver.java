@@ -19,6 +19,7 @@ public class ProductReceiver {
     private String newName;
     private Integer newPrice;
     private String newImageUrl;
+    private Boolean isPurchasable;
     private final ProductService productService;
 
     public ProductReceiver(ProductService productService) {
@@ -30,41 +31,30 @@ public class ProductReceiver {
         productService.setProductInfo(productId);
     }
 
-    public void checkProductValue() throws RewardException {
-        if (newName == null || newPrice == null || newImageUrl == null) {
-            throw new RewardException(ExceptionType.MISSINGCREDITVALUE);
+    public void checkNewProductValue() throws RewardException {
+        if (newName == null || newPrice == null || newImageUrl == null || isPurchasable == null) {
+            throw new RewardException(ExceptionType.MISSINGPRODUCTINFO);
         }
     }
 
-    public void createNewProduct() throws RewardException {
+    // Method to create new product
+    public Product createNewProduct() throws RewardException {
         // Check if any field is missing
-        this.checkProductValue();
-        productService.createProduct(newName, newPrice, newImageUrl);
+        this.checkNewProductValue();
+        return productService.createProduct(newName, newPrice, newImageUrl, isPurchasable);
 
     }
 
-    // Method to get product image url
+    // Method to get product
     public Product getProduct() throws RewardException {
         productService.setProductInfo(productId);
         return productService.getProduct();
     }
 
-    // Method to update product name
-    public void updateProductName() throws RewardException {
+    // Method to update product
+    public Product updateProduct() throws RewardException {
         productService.setProductInfo(productId);
-        productService.updateName(newName);
-    }
-
-    // Method to update product price
-    public void updateProductPrice() throws RewardException {
-        productService.setProductInfo(productId);
-        productService.updatePrice(newPrice);
-    }
-
-    // Method to update product image url
-    public void updateProductImageUrl() throws RewardException {
-        productService.setProductInfo(productId);
-        productService.updateImageUrl(newImageUrl);
+        return productService.updateProduct(newName, newPrice, newImageUrl, isPurchasable);
     }
 
     // Method to get all product

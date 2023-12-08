@@ -12,7 +12,7 @@ public class MQProducer {
     @Value("${rabbitmq.exchange.name}")
     private String exchange;
 
-    @Value("${rabbitmq.user.routing.key}")
+    @Value("${rabbitmq.newicon.routing.key}")
     private String userRoutingKey;
 
     public MQProducer (RabbitTemplate rabbitTemplate){

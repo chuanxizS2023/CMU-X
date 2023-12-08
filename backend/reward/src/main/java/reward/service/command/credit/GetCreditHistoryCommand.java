@@ -5,8 +5,9 @@ import java.util.List;
 
 import reward.exception.ErrorHandling.RewardException;
 import reward.model.CreditHistory;
+import reward.service.command.GetCommand;
 
-public class GetCreditHistoryCommand implements CreditGetCommand<List<CreditHistory>> {
+public class GetCreditHistoryCommand implements GetCommand<List<CreditHistory>> {
     private CreditReceiver receiver;
     private List<CreditHistory> creditHistories;
 
@@ -18,9 +19,7 @@ public class GetCreditHistoryCommand implements CreditGetCommand<List<CreditHist
     public void execute() throws RewardException {
         this.creditHistories.clear();
         List<CreditHistory> history = receiver.getCreditHistory();
-        for (CreditHistory ch : history) {
-            this.creditHistories.add(ch);
-        }
+        this.creditHistories.addAll(history);
     }
 
     public List<CreditHistory> getValue() {

@@ -6,6 +6,7 @@ public class ErrorHandling {
         USERNOTFOUND("Error: User not found"),
         USEREXISTS("Error: User already exists"),
         MISSINGCREDITVALUE("Error: Missing points and coins"),
+        MISSINGPRODUCTINFO("Error: Missing product info"),
         WRONGCOMMANDTYPE("Error: This command should not be returning any value"),
         PRODUCTNOTFOUND("Error: Product does not exist"),
         PRODUCTEXISTS("Error: Product already exists"),

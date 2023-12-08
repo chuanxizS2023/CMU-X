@@ -6,78 +6,48 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import reward.controller.MQProducer;
 import reward.exception.ErrorHandling.RewardException;
-import reward.model.CreditHistory;
-import reward.service.command.credit.*;
+import reward.service.command.product.CreateProductCommand;
+import reward.service.command.Command;
+import reward.service.command.product.ProductInvoker;
+import reward.service.command.product.ProductReceiver;
 
 @SpringBootApplication
 public class Application {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(Application.class);
+	private final ProductInvoker invoker;
 
-	private final CreditInvoker invoker;
-
-	private final CreditReceiver receiver;
-
-	private final MQProducer messageProducer;
+	private final ProductReceiver receiver;
 
 	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-	public Application(CreditInvoker invoker, CreditReceiver receiver, MQProducer messageProducer) {
+	public Application(ProductInvoker invoker, ProductReceiver receiver) {
 		this.invoker = invoker;
 		this.receiver = receiver;
-		this.messageProducer = messageProducer;
 	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
+	}
 
+	private void createProduct(String name, int price, String imagrUrl, boolean isPurchasable) throws RewardException {
+		receiver.setNewName(name);
+		receiver.setNewPrice(price);
+		receiver.setNewImageUrl(imagrUrl);
+		receiver.setIsPurchasable(isPurchasable);
+		Command createProductCommand = new CreateProductCommand(receiver);
+		invoker.setCommand(createProductCommand);
+		invoker.executeCommand();
 	}
 
 	@EventListener(ApplicationReadyEvent.class)
-	public void executeCommands() throws RewardException {
-		// receiver.setChangePointsAmount(10);
-		// receiver.setChangeCoinsAmount(10);
-		// receiver.setUserId(001L); // Assuming the user ID is an integer
+	public void insertDefaultIcons() throws RewardException {
+		// Create several default products
+		createProduct("icon-advanced", 1, "https://cmux-reward.s3.us-east-2.amazonaws.com/advanced.png", true);
 
-		// // CreateCreditCommand
-		// CreditCommand createCreditCommand = new CreateCreditCommand(receiver);
-		// invoker.setCommand(createCreditCommand);
-		// invoker.executeCommand();
+		createProduct("icon-tartan", 6, "https://cmux-reward.s3.us-east-2.amazonaws.com/tartan.png", false);
 
-		// // GetPointsCommand
-		// CreditCommand getPointsCommand = new GetPointsCommand(receiver);
-		// invoker.setCommand(getPointsCommand);
-		// invoker.executeCommand();
-
-		// // GetPointsCommand
-		// CreditCommand addPointsCommand = new AddPointsCommand(receiver);
-		// invoker.setCommand(addPointsCommand);
-		// invoker.executeCommand();
-
-		// // GetHistoryCommand
-		// CreditCommand getCreditHistoryCommand = new GetCreditHistoryCommand(receiver);
-		// invoker.setCommand(getCreditHistoryCommand);
-		// invoker.executeCommand();
-
-		// List<CreditHistory> value = invoker.getHistory();
-		// for (CreditHistory history : value) {
-		// 	if (LOGGER.isInfoEnabled()) {
-		// 		LOGGER.info("\nid: {}\n", history.getId());
-		// 		LOGGER.info("\nuserId: {}\n", history.getUserId());
-		// 		LOGGER.info("\ncoins: {}\n", history.getCoins());
-		// 		LOGGER.info("\npoints: {}\n", history.getPoints());
-		// 		LOGGER.info("\ntime: {}\n", history.getTimestamp().format(formatter));
-		// 	}
-		// }
-
-		messageProducer.sendImageToUser("Reward service sending to user service");
+		createProduct("icon-mickey", 5, "https://cmux-reward.s3.us-east-2.amazonaws.com/mickey.png", true);
 
 	}
 }

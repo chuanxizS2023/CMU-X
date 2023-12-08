@@ -15,10 +15,10 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig{
+public class SecurityConfig {
 
     private static final String[] WHITE_LIST_URL = {
-        "/auth/**"
+            "/auth/**"
     };
 
     @Autowired
@@ -43,12 +43,11 @@ public class SecurityConfig{
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(AbstractHttpConfigurer::disable)
-            .exceptionHandling(exception -> exception.authenticationEntryPoint(customAuthenticationEntryPoint))
-            .authorizeHttpRequests(auth -> auth
-                .anyRequest().permitAll())
-            .authenticationProvider(authenticationProvider());
-
+                .csrf(AbstractHttpConfigurer::disable)
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(customAuthenticationEntryPoint))
+                .authorizeHttpRequests(auth -> auth
+                        .anyRequest().permitAll())
+                .authenticationProvider(authenticationProvider());
 
         return http.build();
     }
