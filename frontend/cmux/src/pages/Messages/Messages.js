@@ -190,7 +190,6 @@ const Messages = () => {
     } catch (error) {
       console.error('Error creating private chat:', error);
     }
-
     handleCloseUserList();
   };
 
@@ -230,9 +229,10 @@ const Messages = () => {
       </div>
       {isDialogOpen ? (
         <div className="groupDialog">
+          <h3>Create Group Chat</h3>
           <input
             type="text"
-            placeholder="Enter group name"
+            placeholder="Enter new group chat name"
             value={newGroupName}
             onChange={handleGroupNameChange}
           />
