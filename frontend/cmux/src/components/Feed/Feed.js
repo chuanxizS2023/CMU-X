@@ -183,8 +183,8 @@ function Feed() {
         <div className="feed-headerText">
           <span>Home</span>
         </div>
-        <div className="homeStarsCol">
-          <HomeStars className="homeStars" width={22} height={22} />
+        <div className="homeStarsCol" style={{minHeight:"8vh"}}>
+          {/* <HomeStars className="homeStars" width={22} height={22} /> */}
         </div>
       </div>
       <TweetBox setPostFormOpen={setPostFormOpen}/>
