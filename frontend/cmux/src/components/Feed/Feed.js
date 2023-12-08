@@ -11,11 +11,11 @@ import DrawerBar from "../DrawerBar/DrawerBar";
 import Loading from "../Loading/Loading";
 import logo from "../../assets/cmux_logo_no_bg.png";
 import {stompClientInstance} from "../../socketClient";
-import { saveComment } from "../../apis/communitypostAPIs/commentAPI";
 import PostForm from "./Post/postForm";
 import CommentForm from "./Post/commentForm"
 import SinlgePost from "./Post/singlePost";
 import {usePostApi} from "../../apis/communitypostAPIs/postAPI";
+import {useCommentApi} from "../../apis/communitypostAPIs/commentAPI";
 import { fetchPostsByIds } from "../../data/postData";
 
 
@@ -33,6 +33,7 @@ function Feed() {
   const [openSinglePost, setOpenSinglePost] = useState(false);
   const [posts, setPosts] = useState([]);
   const { fetchPostsByAuthorIds, createPost, addLike, getPostById, deletePost, updatePost, markAsFindTeammatePost, addTeamMembers, searchPosts } = usePostApi();
+  const { saveComment } = useCommentApi();
   const delay = ms => new Promise(res => setTimeout(res, ms));
   const handlepopUpOpen = () => setOpenPopup(true);
   const handlepopUpClose = () => setOpenPopup(false);
@@ -83,7 +84,7 @@ function Feed() {
     commentData.communityPostid = activeCommentPostId;
     
     const response = await saveComment(commentData);
-    if (response.status === 200) {
+    if (response) {
       setPosts(prevPosts => {
         const existingPostIndex = prevPosts.findIndex(post => post.communityPostid === activeCommentPostId);
         if(existingPostIndex !== -1){

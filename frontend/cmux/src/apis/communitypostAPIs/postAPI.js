@@ -14,9 +14,14 @@ export const usePostApi = () => {
           'Content-Type': 'application/json'
         }
       });
-      return response;
+      if (response.ok) {
+        const data = await response.json(); 
+        return data;
+      } else {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
     } catch (error) {
-      console.error("Error creating post:", error);
+      console.error("Error getting posts:", error.message);
     }
   };
 
@@ -25,9 +30,14 @@ export const usePostApi = () => {
       const response = await fetchWithTokenRefresh(`${baseUrl}/likes/${postId}`, {
         method: 'POST'
       });
-      return response;
+      if (response.ok) {
+        const data = await response.json(); 
+        return data;
+      } else {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
     } catch (error) {
-      console.error("Error adding like:", error);
+      console.error("Error getting posts:", error.message);
     }
   };
 
@@ -36,9 +46,14 @@ export const usePostApi = () => {
       const response = await fetchWithTokenRefresh(`${baseUrl}/${postId}`, {
         method: 'GET'
       });
-      return response.data;
+      if (response.ok) {
+        const data = await response.json(); 
+        return data;
+      } else {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
     } catch (error) {
-      console.error("Error getting post:", error);
+      console.error("Error getting posts:", error.message);
     }
   };
 
@@ -64,9 +79,14 @@ export const usePostApi = () => {
       const response = await fetchWithTokenRefresh(`${baseUrl}/${postId}`, {
         method: 'DELETE'
       });
-      return response;
+      if (response.ok) {
+        const data = await response.json(); 
+        return data;
+      } else {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
     } catch (error) {
-      console.error("Error deleting post:", error);
+      console.error("Error getting posts:", error.message);
     }
   };
 
@@ -79,9 +99,14 @@ export const usePostApi = () => {
           'Content-Type': 'application/json'
         }
       });
-      return response;
+      if (response.ok) {
+        const data = await response.json(); 
+        return data;
+      } else {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
     } catch (error) {
-      console.error("Error updating post:", error);
+      console.error("Error getting posts:", error.message);
     }
   };
 
