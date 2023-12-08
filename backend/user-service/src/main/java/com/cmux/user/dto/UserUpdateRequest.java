@@ -16,4 +16,5 @@ public class UserUpdateRequest {
     private String userImage;
     private List<String> unlockedImages;
     private List<Long> unlockedImageIds;
+    private String bio;
 }

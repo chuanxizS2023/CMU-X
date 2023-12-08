@@ -1,6 +1,7 @@
 package com.cmux.user.dto;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class UserDTO implements Serializable {
@@ -11,6 +12,8 @@ public class UserDTO implements Serializable {
     private String userImage;
     private List<String> unlockedImages;
     private List<Long> unlockedImageIds;
+    private LocalDateTime createdAt;
+    private String bio;
 
     public UserDTO() {
     }
@@ -62,6 +65,18 @@ public class UserDTO implements Serializable {
     public void setUnlockedImageIds(List<Long> unlockedImageIds) {
         this.unlockedImageIds = unlockedImageIds;
     }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getBio() { return bio; }
+
+    public void setBio(String bio) { this.bio = bio; }  
 }
 
 
