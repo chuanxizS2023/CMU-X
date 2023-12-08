@@ -172,7 +172,6 @@ const Chat = ({ chat }) => {
       });
 
       if (response.ok) {
-        console.log('Users added to group');
         return true;
       } else {
         console.error('Failed to add users to group');
@@ -196,15 +195,11 @@ const Chat = ({ chat }) => {
 
   const handleDeleteGroupUser = async (userIdToDelete) => {
     try {
-      console.log('Deleting user from group:', userIdToDelete);
       const response = await fetchWithTokenRefresh(`${process.env.REACT_APP_URL}api/chats/groupusers/${chat.chatId}/${userIdToDelete}`, {
         method: 'DELETE'
       });
 
       if (response.ok) {
-        console.log('UserId to delete:', userIdToDelete)
-        console.log('UserId:', userId)
-        console.log("userIdToDelete == userId ", userIdToDelete === userId)
         if (userIdToDelete == userId) {
           history.push('/Messages');
         }
@@ -218,7 +213,6 @@ const Chat = ({ chat }) => {
   };
 
   const handleUserListOpen = () => {
-    console.log('Opening user list');
     setIsUserListOpen(true);
   };
 

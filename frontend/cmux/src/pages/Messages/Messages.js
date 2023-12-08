@@ -129,12 +129,9 @@ const Messages = () => {
   }, [userId]);
 
   const parseChatName = async (chat) => {
-    console.log('parseChatName:', chat.chatName)
     if (chat.chatType === "PRIVATE") {
-      const receiverId = chat.chatName.split("-").filter(id => id !== userId).join("");
-      console.log('receiverId:', receiverId);
+      const receiverId = chat.chatName.split("-").filter(id => id != userId).join("");
       const receiverName = await fetchReceiverName(receiverId);
-      console.log('receiverName:', receiverName);
       return receiverName || 'Unknown User';
     } else {
       return chat.chatName;
