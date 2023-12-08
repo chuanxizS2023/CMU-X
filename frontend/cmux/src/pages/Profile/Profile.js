@@ -125,6 +125,7 @@ const Profile = () => {
     setIsEditMode(true);
     setEditedUsername(userProfile.username);
     setSelectedImage(userProfile.userImage);
+    setEditedBio(userProfile.bio);
   };
 
   const handleSaveClick = async () => {
