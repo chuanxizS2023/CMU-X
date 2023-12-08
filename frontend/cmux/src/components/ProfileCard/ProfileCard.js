@@ -1,7 +1,7 @@
 import { Avatar } from "@material-ui/core";
 import React from "react";
 import axios from 'axios';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext} from 'react';
 import { VerifiedIcon } from "../icons";
 import "./ProfileCard.css";
 import { AuthContext } from "../AuthProvider";
@@ -11,9 +11,9 @@ const ProfileCard = ({ active, username, userId, initialIsFollowing, following, 
   const [ isFollowing, setIsFollowing ] = useState(initialIsFollowing);
   const [ isVisible, setIsVisible ] = useState(false);
   // Mock userId, should be replaced by the real userId
-  const myuserId = 1;
-  // const userId = useContext(AuthContext).userId;
-
+  // const myuserId = 1;
+  const myuserId = useContext(AuthContext).userId;
+  const fetch = useFetchWithTokenRefresh();
   const [ isSelf, setIsSelf ] = useState(userId === myuserId);
   const baseUrl = process.env.REACT_APP_SUBSCRIPTION_SERVICE_URL;
   const subscription_url = `${baseUrl}/subscriptions`;
@@ -23,13 +23,9 @@ const ProfileCard = ({ active, username, userId, initialIsFollowing, following, 
 
   const updateFollowers = async (method, query) => {
     try {
-      const response = await axios({
-        method: method,
-        url: `${subscription_url}?${query}`,
-      });
+      const response = await fetch(`${subscription_url}?${query}`,{method: method});
       if (response.status === 200) {
         setIsFollowing(!isFollowing);
-
       }
     } catch (error) {
       console.error("Error during update:", error);

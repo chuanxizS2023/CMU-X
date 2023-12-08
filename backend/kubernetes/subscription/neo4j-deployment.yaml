@@ -14,10 +14,9 @@ spec:
     spec:
       containers:
       - name: neo4j
-        image: neo4j:latest
+        image: bitnami/neo4j:latest
         env:
         - name: NEO4J_AUTH
           value: "neo4j/cmuxpassword"
-        ports:
-        - containerPort: 7474  # HTTP
-        - containerPort: 7687  # Bolt
+        - name: NEO4J_dbms_config_strict_validation_enabled
+          value: "false"

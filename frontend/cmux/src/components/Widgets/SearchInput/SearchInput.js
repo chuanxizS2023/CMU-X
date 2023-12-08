@@ -3,8 +3,7 @@ import "./SearchInput.css";
 import SearchIcon from "@material-ui/icons/Search";
 import { searchPosts } from "../../../apis/communitypostAPIs/postAPI";
 import SearchResultsPopup from "./SearchPopup";
-import { useFetchWithTokenRefresh } from '../../../utils/ApiUtils';
-import axios from 'axios';
+import { useSubscriptionApi } from "../../../apis/communitypostAPIs/subscriptionAPI";
 import { useContext } from 'react';
 import { AuthContext } from '../../AuthProvider';
 import { Alarm } from "@material-ui/icons";
@@ -17,72 +16,36 @@ function SearchInput({ placeholder }) {
   const [ isPopupOpen, setIsPopupOpen ] = useState(false);
   const [ results, setResults ] = useState([]);
   const [ user_results, setUserResults ] = useState([]);
-  const user_url = baseUrl + '/subscriptions/users';
-  const follower_number_url = baseUrl + '/followers/count';
-  const subscription_number__url = baseUrl + '/subscriptions/count';
-  const hasSubscription_url = baseUrl + '/subscriptions/has';
+  const user_url = baseUrl + 'subscriptions/users';
+  const { fetchUser, fetchFollowers, fetchSubscriptions, fetchHasSubscription } = useSubscriptionApi();
+
   // Mock userId, should be replaced by the real userId
   // const userId = useContext(AuthContext).userId;
   const userId = 1;
   //========================================
-  const fetchUser = async (query) => {
-    try {
-      const response = await axios.get(`${user_url}?${query}`);
-      return response.data;
-    } catch (error) {
-      console.error("Error during search:", error);
-      return [];
-    }
-  };
-
-  const fetchFollowers = async (query) => {
-    try {
-      const response = await axios.get(`${follower_number_url}?${query}`);
-      return response.data;
-    } catch (error) {
-      console.error("Error during search:", error);
-      return 0;
-    }
-  };
-
-  const fetchSubscriptions = async (query) => {
-    try {
-      const response = await axios.get(`${subscription_number__url}?${query}`);
-      return response.data;
-    } catch (error) {
-      console.error("Error during search:", error);
-      return 0;
-    }
-  };
-
-  const fetchHasSubscription = async (query) => {
-    try {
-      const response = await axios.get(`${hasSubscription_url}?${query}`);
-      return response.data;
-    } catch (error) {
-      console.error("Error during search:", error);
-      return false;
-    }
-  };
+  
 
   const handleSearch = async () => {
+    console.log('Searching for:');
     try {
       if (searchText === '') {
         setIsPopupOpen(false);
         return;
       }
       
-      const res = await searchPosts(searchText);
+      // const res = await searchPosts(searchText);
       let user_res = [];
       // if searchText contains only numbers, search by userId
       const params = { u: searchText };
       const query = new URLSearchParams(params).toString();
-      user_res = await fetchUser(query);
+      console.log('Searching by userId:', query);
+      user_res = await fetchUser(user_url, query);
+      console.log('User search results:', user_res);
 
-      if (res.length === 0 && user_res.length === 0) {
-        setIsPopupOpen(false);
-        return;
-      }
+      // if (res.length === 0 && user_res.length === 0) {
+      //   setIsPopupOpen(false);
+      //   return;
+      // }
       // Iterate over user_res array to update each user object
       for (let i = 0; i < user_res.length; i++) {
         const user = user_res[i];
@@ -92,13 +55,13 @@ function SearchInput({ placeholder }) {
         const followerQuery = new URLSearchParams(followerParams).toString();
         const subscriptionQuery = new URLSearchParams(subscriptionParams).toString();
       
-        const user_followers = await fetchFollowers(followerQuery);
-        const user_subscriptions = await fetchSubscriptions(subscriptionQuery);
+        const user_followers = await fetchFollowers(user_url, followerQuery);
+        const user_subscriptions = await fetchSubscriptions(user_url, subscriptionQuery);
       
         const has_subscription_params = { userId: userId, otherUserId: user.userId };
         const has_subscription_query = new URLSearchParams(has_subscription_params).toString();
       
-        const user_has_subscription = await fetchHasSubscription(has_subscription_query);
+        const user_has_subscription = await fetchHasSubscription(user_url, has_subscription_query);
       
         // Update the user object
         user.followers = user_followers;
@@ -107,7 +70,7 @@ function SearchInput({ placeholder }) {
         user.isSelf = userId === user.userId;
       }
   
-      setResults(res);
+      // setResults(res);
       setUserResults(user_res);
       setIsPopupOpen(true);
       return;
