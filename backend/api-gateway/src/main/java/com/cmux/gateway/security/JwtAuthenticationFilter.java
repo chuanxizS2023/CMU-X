@@ -37,7 +37,6 @@ public class JwtAuthenticationFilter implements WebFilter {
         } catch (Exception e) {
             System.err.printf("Cannot set user authentication: {}", e);
         }
-
         return chain.filter(exchange);
     }
 

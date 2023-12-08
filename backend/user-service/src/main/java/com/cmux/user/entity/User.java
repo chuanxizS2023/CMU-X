@@ -32,10 +32,10 @@ public class User implements Serializable {
     @Column(nullable = false)
     private String userImage;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<String> unlockedImages = new ArrayList<>();
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<Long> unlockedImageIds = new ArrayList<>();
 
     public User() {

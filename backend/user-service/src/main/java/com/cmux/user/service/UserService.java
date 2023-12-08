@@ -27,9 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.CachePut;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -68,11 +66,11 @@ public class UserService {
 
     public User registerUser(SignUpRequest signUpRequest) {
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-            throw new DataIntegrityViolationException("Error: Username is already taken!");
+            throw new DataIntegrityViolationException("Error: Username is already taken");
         }
 
         if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-            throw new DataIntegrityViolationException("Error: Email is already in use!");
+            throw new DataIntegrityViolationException("Error: Email is already in use");
         }
 
         User user = new User(signUpRequest.getUsername(),
@@ -114,7 +112,7 @@ public class UserService {
     }
 
     @Cacheable(value = "users", key = "#id")
-    @Transactional(readOnly = true)
+    @Transactional
     public UserDTO getUserById(Long id) {
         return userRepository.findById(id)
                 .map(this::convertToDTO)

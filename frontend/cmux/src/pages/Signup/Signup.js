@@ -14,7 +14,36 @@ function Signup() {
   const { signIn } = useContext(AuthContext);
   const history = useHistory();
 
+  const isUsernameValid = (checkUsername) => {
+    return checkUsername.length >= 3;
+  };
+  
+  const isEmailValid = (checkEmail) => {
+    const re =
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(checkEmail).toLowerCase());
+  };
+  
+  const isPasswordValid = (checkPassword) => {
+    const re = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/; // At least one letter, one number, and minimum 8 characters
+    return re.test(checkPassword);
+  };
+
   const handleSignup = async () => {
+    if (!isUsernameValid(username)) {
+      setErrorMessage('Username must be at least 3 characters long.');
+      return;
+    }
+  
+    if (!isEmailValid(email)) {
+      setErrorMessage('Invalid email address.');
+      return;
+    }
+  
+    if (!isPasswordValid(password)) {
+      setErrorMessage('Password must contain at least 8 characters, including a number and a letter.');
+      return;
+    }
     try {
       const response = await fetch(`${process.env.REACT_APP_URL}auth/signup`, {
         method: 'POST',
@@ -33,7 +62,7 @@ function Signup() {
       if (response.ok) {
         await handleLogin(username, password);
       } else {
-        setErrorMessage(data.message || 'Signup failed');
+        setErrorMessage(data.errorMessage || 'Signup failed');
       }
     } catch (error) {
       console.error('Signup error:', error);
