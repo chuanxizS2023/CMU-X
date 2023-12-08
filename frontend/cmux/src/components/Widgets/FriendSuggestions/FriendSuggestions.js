@@ -23,9 +23,9 @@ function FriendSuggestions() {
         displayName="Cecil Phillip"
         image="https://pbs.twimg.com/profile_images/1262824892535373825/BiXDFDDp_200x200.jpg"
       />
-      <div className="widgetsTopicMore">
+      {/* <div className="widgetsTopicMore">
         <span>Show more</span>
-      </div>
+      </div> */}
     </div>
   );
 }

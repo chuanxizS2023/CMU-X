@@ -16,9 +16,9 @@ function FriendSuggestionItem({ image, displayName, username }) {
           <span>@{username}</span>
         </div>
       </div>
-      <div className="friendFollowButton">
+      {/* <div className="friendFollowButton">
         <span>Follow</span>
-      </div>
+      </div> */}
     </div>
   );
 }

@@ -7,8 +7,8 @@ function Topics() {
   return (
     <div className="widgetsTopics">
       <div className="widgetsTopicsHeader">
-        <span>Trends for you</span>
-        <SettingsIcon />
+        <span>Hot Courses</span>
+        {/* <SettingsIcon /> */}
       </div>
       <TopicItem
         category="Course · Trending"
@@ -36,9 +36,9 @@ function Topics() {
         numberoftweet="13.1K"
       />
 
-      <div className="widgetsTopicMore">
+      {/* <div className="widgetsTopicMore">
         <span>Show more</span>
-      </div>
+      </div> */}
     </div>
   );
 }
