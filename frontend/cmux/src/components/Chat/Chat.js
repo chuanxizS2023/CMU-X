@@ -221,9 +221,15 @@ const Chat = ({ chat }) => {
 
   const loadUserList = async () => {
     try {
-      const userIds = await fetchGroupUsers(chat.chatId);
-      const users = await fetchUsers(userIds);
-      setUserList(users);
+      const userIdsInGroup = await fetchGroupUsers(chat.chatId);
+      const usersInGroup = await fetchUsers(userIdsInGroup);
+
+      const filteredUsers = allUsers.filter((user) => {
+        return !usersInGroup.some((groupUser) => groupUser.id === user.id);
+      });
+
+      setUserList(usersInGroup);
+      setAllUsers(filteredUsers);
     } catch (error) {
       console.error('Error loading user list:', error);
     }
