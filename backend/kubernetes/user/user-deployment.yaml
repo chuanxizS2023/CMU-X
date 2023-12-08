@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: user-container
-        image: leolando/user-service:latest
+        image: hanqid/cmux-user:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 5002
