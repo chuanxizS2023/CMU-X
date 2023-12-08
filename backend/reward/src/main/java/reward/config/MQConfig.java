@@ -39,7 +39,7 @@ public class MQConfig {
     @Value("${rabbitmq.newfollower.routing.key}")
     private String newFollowerRoutingKey;
 
-    @Value("${rabbitmq.newicon.routing.key}")
+    @Value("${rabbitmq.newlike.routing.key}")
     private String newLikeRoutingKey;
 
     @Bean
