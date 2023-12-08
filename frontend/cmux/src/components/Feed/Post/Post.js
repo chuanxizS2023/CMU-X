@@ -82,7 +82,7 @@ function Post({communityPostid, userImage, username, title, content, likes, comm
         <div className="post-event">
           <div>
             <CommentIcon className="postIcon" onClick={(e) => onCommentClick(e, communityPostid)} />
-            <span>{comments.length}</span>
+            <span>{comments?comments.length:0}</span>
           </div>
           <div>
             <FavoriteIcon className="postIcon" onClick={(e)=>{onLikeClick(e, communityPostid)}}/>

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useContext} from "react";
 import "./Feed.css";
 import TweetBox from "./TweetBox/TweetBox";
 import CommonPopup from "./Post/popup"
@@ -17,14 +17,13 @@ import SinlgePost from "./Post/singlePost";
 import {usePostApi} from "../../apis/communitypostAPIs/postAPI";
 import {useCommentApi} from "../../apis/communitypostAPIs/commentAPI";
 import { fetchPostsByIds } from "../../data/postData";
+import { AuthContext } from '../../components/AuthProvider';
 
 
 function Feed() {
   const [isDrawerBar, setIsDrawerBar] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
   const [isPostFormOpen, setPostFormOpen] = React.useState(false);
-  const [authorid, setAthorid] = React.useState(2);
-  const [username, setUsername] = React.useState('testuser');
   const [isCommentFormOpen, setCommentFormOpen] = useState(false);
   const [activeCommentPostId, setActiveCommentPostId] = useState(null);
   const [activePostId, setActivePostId] = useState(null); 
@@ -38,10 +37,11 @@ function Feed() {
   const handlepopUpOpen = () => setOpenPopup(true);
   const handlepopUpClose = () => setOpenPopup(false);
   const handleClosePostForm = () => setPostFormOpen(false);
+  const {userid, username} = useContext(AuthContext);
 
   const handlePostSubmit = (postData) => {
     // Logic to submit the post data to the backend
-    postData.authorid = authorid;
+    postData.authorid = userid;
     postData.username = username;
     postData.created = new Date().toLocaleString();
     const response = createPost(postData);
@@ -79,7 +79,7 @@ function Feed() {
 
   const handleCommentSubmit = async (commentData) => {
     // Logic to submit the post data to the backend
-    commentData.authorid = authorid;
+    commentData.authorid = userid;
     commentData.username = username;
     commentData.communityPostid = activeCommentPostId;
     
