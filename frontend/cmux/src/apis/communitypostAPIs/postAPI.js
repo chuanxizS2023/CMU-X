@@ -2,7 +2,7 @@ import axios from 'axios';
 import { StompClientSingleton } from '../../../../cmux/src/socketClient';
 
 
-const baseUrl = 'http://localhost:9000/community';
+const baseUrl = process.env.REACT_APP_POST_URL || "";
 
 // Create a new post
 export const createPost = async (postData) => {

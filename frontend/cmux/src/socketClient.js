@@ -12,7 +12,7 @@ class StompClientSingleton {
   }
 
   constructor() {
-    const socket = new SockJS('http://localhost:9000/ws-communitypost');
+    const socket = new SockJS('http://35.233.174.241:9000/ws-communitypost');
     this.client = new Client({
       webSocketFactory: () => socket,
       connectHeaders: {
