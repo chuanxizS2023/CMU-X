@@ -221,50 +221,46 @@ const Chat = ({ chat }) => {
   }
 
   return (
-    <div>
-      (
-      <div className="chat">
-        <div className="chatHeader">
-          <span>{chat.chatName}</span>
-          {chat.chatType === 'GROUP' && <UsersIcon onClick={handleUserListOpen} />}
-        </div>
-        {isUserListOpen ? (
-          <div className="userList">
-            <h3>Group User List</h3>
-            <ul>
-              {userList.map((user) => (
-                <li key={user.id}>
-                  {user.username}
-                  <button onClick={() => handleDeleteGroupUser(user.id)}>Delete</button>
-                </li>
-              ))}
-            </ul>
-            <h3>Add User</h3>
-            <input
-              type="text"
-              placeholder="Enter User ID"
-              value={newUserId}
-              onChange={(e) => setNewUserId(e.target.value)}
-            />
-            <button onClick={handleAddGroupUser}>Add User</button>
-            <button onClick={handleUserListClose}>Close</button>
-          </div>
-        ) : (<div className="chatRoom">
-          <div className="chatMessages">
-            {messageHistory.map((message) => {
-              const isMyMessage = message.senderId == userId;
-
-              return isMyMessage ? (
-                <MyMessage message={message} />
-              ) : (
-                <FromMessage message={message} />
-              );
-            })}
-          </div>
-          <ChatInputs addMessageToHistory={addMessageToHistory} />
-        </div>)}
+    <div className="chat">
+      <div className="chatHeader">
+        <span>{chat.chatName}</span>
+        {chat.chatType === 'GROUP' && <UsersIcon onClick={handleUserListOpen} />}
       </div>
-      )
+      {isUserListOpen ? (
+        <div className="userList">
+          <h3>Group User List</h3>
+          <ul>
+            {userList.map((user) => (
+              <li key={user.id}>
+                {user.username}
+                <button onClick={() => handleDeleteGroupUser(user.id)}>Delete</button>
+              </li>
+            ))}
+          </ul>
+          <h3>Add User</h3>
+          <input
+            type="text"
+            placeholder="Enter User ID"
+            value={newUserId}
+            onChange={(e) => setNewUserId(e.target.value)}
+          />
+          <button onClick={handleAddGroupUser}>Add User</button>
+          <button onClick={handleUserListClose}>Close</button>
+        </div>
+      ) : (<div className="chatRoom">
+        <div className="chatMessages">
+          {messageHistory.map((message) => {
+            const isMyMessage = message.senderId == userId;
+
+            return isMyMessage ? (
+              <MyMessage message={message} />
+            ) : (
+              <FromMessage message={message} />
+            );
+          })}
+        </div>
+        <ChatInputs addMessageToHistory={addMessageToHistory} />
+      </div>)}
     </div>
   );
 };
