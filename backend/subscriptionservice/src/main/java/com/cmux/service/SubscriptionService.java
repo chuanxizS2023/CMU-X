@@ -28,6 +28,7 @@ public class SubscriptionService {
     private final ObjectMapper mapper = new ObjectMapper();
     private final MQProducer messageProducer;
 
+    private final int REWARD_AMOUNT = 10;
 
 
     public SubscriptionService(SubscriptionStrategy subscriptionStrategy, 
@@ -46,8 +47,9 @@ public class SubscriptionService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        NewCreditMessage creditMessage = new NewCreditMessage(userId, 10);
+        NewCreditMessage creditMessage = new NewCreditMessage(subscriptionId, REWARD_AMOUNT);
         String jsonString = mapper.writeValueAsString(creditMessage);
+        System.out.println("Sending reward: "+jsonString);
         messageProducer.sendNewFollowerMessageToReward(jsonString);
         
     }
