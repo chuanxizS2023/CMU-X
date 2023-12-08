@@ -23,3 +23,5 @@ data:
   RABBITMQ_EXCHANGE_FANOUT_NAME: "cmuxfanoutExchange"
   RABBITMQ_NEWUSER_ROUTING_KEY: "cmux-newuser"
   RABBITMQ_NEWICON_ROUTING_KEY: "cmux-newicon"
+  SPRING_DATA_REDIS_HOST: user-redis-service
+  SPRING_DATA_REDIS_PORT: "6379"

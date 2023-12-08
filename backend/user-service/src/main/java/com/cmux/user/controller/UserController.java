@@ -1,5 +1,6 @@
 package com.cmux.user.controller;
 
+import com.cmux.user.dto.UserDTO;
 import com.cmux.user.dto.UserUpdateRequest;
 import com.cmux.user.service.UserService;
 
@@ -21,7 +22,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getUsserById(@PathVariable Long id) {
-        User user = userService.getUserById(id);
+        UserDTO user = userService.getUserById(id);
         System.out.println("user: " + user);
         if (user == null) {
             return ResponseEntity.notFound().build();
@@ -59,7 +60,7 @@ public class UserController {
         if (!userId.equals(id)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Unauthorized update attempt: id mismatch!");
         }
-        User updatedUser = userService.updateUserProfile(id, updateRequest);
+        UserDTO updatedUser = userService.updateUserProfile(id, updateRequest);
         if (updatedUser == null) {
             return ResponseEntity.notFound().build();
         }

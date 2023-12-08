@@ -29,7 +29,6 @@ public class JwtAuthenticationFilter implements WebFilter {
                 ServerHttpRequest mutatedRequest = request.mutate()
                         .header("userId", userId.toString())
                         .build();
-                System.out.println(mutatedRequest.getHeaders().get("userId"));
                 UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
                         userId, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
                 return chain.filter(exchange.mutate().request(mutatedRequest).build())

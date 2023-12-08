@@ -31,7 +31,6 @@ function Signup() {
       const data = await response.json();
 
       if (response.ok) {
-        // 自动登录
         await handleLogin(username, password);
       } else {
         setErrorMessage(data.message || 'Signup failed');

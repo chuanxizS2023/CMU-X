@@ -47,7 +47,7 @@ public class User implements Serializable {
         this.password = password;
         this.userImage = "https://cmux-reward.s3.us-east-2.amazonaws.com/base.png";
         this.unlockedImages.add(this.userImage);
-        this.unlockedImages.add("https://cmux-reward.s3.us-east-2.amazonaws.com/itermediate.png");
+        this.unlockedImages.add("https://cmux-reward.s3.us-east-2.amazonaws.com/intermediate.png");
     }
 
     public Long getId() {
