@@ -201,6 +201,12 @@ const Chat = ({ chat }) => {
       });
 
       if (response.ok) {
+        console.log('UserId to delete:', userIdToDelete)
+        console.log('UserId:', userId)
+        console.log("userIdToDelete == userId ", userIdToDelete === userId)
+        if (userIdToDelete == userId) {
+          history.push('/Messages');
+        }
         loadUserList();
       } else {
         console.error('Failed to delete user from group');
