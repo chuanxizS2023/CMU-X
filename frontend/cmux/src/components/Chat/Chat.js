@@ -59,7 +59,8 @@ const Chat = ({ chat }) => {
 
   const fetchAllUsers = async () => {
     try {
-      const url = `${process.env.REACT_APP_URL}user/all`;
+      // const url = `${process.env.REACT_APP_URL}user/all`;
+      const url = `${process.env.REACT_APP_URL}followers/mutual?userId=${userId}`;
       const response = await fetchWithTokenRefresh(url, { method: 'GET' });
       if (response.ok) {
         const users = await response.json();
