@@ -2,7 +2,7 @@
 import React from "react";
 import "./TextInput.css";
 
-function TextInput({ text, value, onChange }) {
+function TextInput({type = "text", text, value, onChange }) {
   const [clicked, setClicked] = React.useState(false);
   const [inputFocus, setInputFocus] = React.useState(false);
 
@@ -26,7 +26,7 @@ function TextInput({ text, value, onChange }) {
         {text}
       </label>
       <input
-        type="text"
+        type={type}
         className="textInput"
         id={text}
         name={text}

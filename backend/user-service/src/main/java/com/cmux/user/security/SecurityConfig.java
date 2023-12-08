@@ -17,9 +17,6 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private static final String[] WHITE_LIST_URL = {
-            "/auth/**"
-    };
 
     @Autowired
     CustomUserDetailsService userDetailsService;
