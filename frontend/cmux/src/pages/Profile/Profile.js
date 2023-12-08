@@ -175,7 +175,7 @@ const Profile = () => {
             {userProfile ? (
               <>
                 <span>{userProfile.username}</span>
-                <span>{authorPosts.length} Tweets</span>
+                <span>{authorPosts.length} Posts</span>
               </>
             ) : (
               <span>Loading...</span>
