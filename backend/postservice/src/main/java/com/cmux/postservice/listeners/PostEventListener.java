@@ -30,7 +30,6 @@ public class PostEventListener {
         this.messageProducer = messageProducer;
     }
 
-
     @EventListener
     public void onPostCreated(PostEvents.Created event) {
         String postID = String.valueOf(event.getCommunityPost().getCommunityPostid());
@@ -38,7 +37,6 @@ public class PostEventListener {
         communityPostService.index(this.id, postID, event.getCommunityPost());
 
         messagingTemplate.convertAndSend("/topic/post-created", event.getCommunityPost());
-        System.out.println("PostEventListener: onPostCreated: indexed document with id " + postID);
     }
 
 
@@ -46,12 +44,10 @@ public class PostEventListener {
     public void onPostUpdated(PostEvents.Updated event) throws JsonProcessingException {
         String postID = String.valueOf(event.getCommunityPost().getCommunityPostid());
 
-
         communityPostService.index(this.id, String.valueOf(event.getCommunityPost().getCommunityPostid()),
                 event.getCommunityPost());
         final long authorid = event.getCommunityPost().getAuthorid();
         final int credit_amount = 10;
-        System.out.println("PostEventListener: author id before send " + event.getCommunityPost().getAuthorid());
         NewCreditMessage purchaseProductMessage = new NewCreditMessage(authorid, credit_amount);
         String jsonString = mapper.writeValueAsString(purchaseProductMessage);
         messageProducer.sendIdToReward(jsonString);
