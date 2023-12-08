@@ -30,18 +30,18 @@ public class ChatRestController {
     @Autowired
     private S3Service s3Service;
 
-    @PostMapping("/message")
-    public ResponseEntity<ChatMessage> sendMessage(@RequestBody MessageRequest chatMessage) {
-        ChatMessage newMessage = ChatMessage.builder()
-            .chatId(chatMessage.getChatId())
-            .senderId(chatMessage.getSenderId())
-            .messageType(MessageType.TEXT)
-            .messageId(Uuids.timeBased())
-            .timestamp(Instant.now())
-            .content(chatMessage.getContent())
-            .build();
-        return ResponseEntity.ok(chatService.saveMessage(newMessage));
-    }
+    // @PostMapping("/message")
+    // public ResponseEntity<ChatMessage> sendMessage(@RequestBody MessageRequest chatMessage) {
+    //     ChatMessage newMessage = ChatMessage.builder()
+    //         .chatId(chatMessage.getChatId())
+    //         .senderId(chatMessage.getSenderId())
+    //         .messageType(MessageType.TEXT)
+    //         .messageId(Uuids.timeBased())
+    //         .timestamp(Instant.now())
+    //         .content(chatMessage.getContent())
+    //         .build();
+    //     return ResponseEntity.ok(chatService.saveMessage(newMessage));
+    // }
 
     @PostMapping(value = "/file", consumes = "multipart/form-data")
     public ResponseEntity<ChatMessage> sendFile(
@@ -80,6 +80,7 @@ public class ChatRestController {
                 .chatId(UUID.randomUUID())
                 .chatType(ChatType.GROUP)
                 .chatName(groupChatRequest.getChatName())
+                .lastMessageTime(Instant.now())
                 .build();
         return ResponseEntity.ok(chatService.createGroupChat(newGroupChat, groupChatRequest.getUserId()));
     }

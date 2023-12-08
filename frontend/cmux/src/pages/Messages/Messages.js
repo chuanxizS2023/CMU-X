@@ -6,13 +6,13 @@ import Chat from "../../components/Chat/Chat";
 import DrawerBar from "../../components/DrawerBar/DrawerBar";
 import HomeBox from "../../components/HomeBox/HomeBox";
 import AddIcon from "@material-ui/icons/Add";
+import ChatIcon from "@material-ui/icons/Chat";
 import ChatList from "../../components/ChatList/ChatList";
+import UserList from "../../components/UserList/UserList";
 import NotSelectedMessage from "../../components/NotSelectedMessage/NotSelectedMessage";
-import SearchInput from "../../components/Widgets/SearchInput/SearchInput";
 import { AuthContext } from '../../components/AuthProvider';
 import "./Messages.css";
 import { useFetchWithTokenRefresh } from '../../utils/ApiUtilsDynamic';
-
 
 const Messages = () => {
   const [isDrawerBar, setIsDrawerBar] = useState(false);
@@ -24,6 +24,7 @@ const Messages = () => {
   const currentChat = chats.length > 0 ? chats.find(chat => chat.chatId === currentChatId) : null;
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newGroupName, setNewGroupName] = useState("");
+  const [userListOpen, setUserListOpen] = useState(false);
 
   const fetchWithTokenRefresh = useFetchWithTokenRefresh();
 
@@ -43,6 +44,14 @@ const Messages = () => {
     }
   };
 
+  const formatChatData = async (chatData) => {
+    const chatsToFormat = Array.isArray(chatData) ? chatData : [chatData];
+    return Promise.all(chatsToFormat.map(async chat => ({
+      ...chat,
+      chatName: chat.chatType === "PRIVATE" ? await parseChatName(chat) : chat.chatName,
+      lastMessageTime: formatDate(chat.lastMessageTime),
+    })));
+  };
 
   const loadChatList = async () => {
     try {
@@ -52,19 +61,39 @@ const Messages = () => {
       if (response.ok) {
         const data = await response.json();
         console.log('Chat list data:', data);
-        const formattedChatsPromises = data.map(async chat => ({
-          ...chat,
-          chatName: await parseChatName(chat),
-          lastMessageTime: formatDate(chat.lastMessageTime)
-        }));
-        const formattedChats = await Promise.all(formattedChatsPromises);
-        console.log('formattedChats:', formattedChats);
+        const formattedChats = await formatChatData(data);
         setChats(formattedChats);
       } else {
         console.error('Failed to fetch chat list');
       }
     } catch (error) {
       console.error('Error fetching chat list:', error);
+    }
+  };
+
+  const createPrivateChat = async (selectedUserId) => {
+    try {
+      const payload = {
+        user1Id: selectedUserId,
+        user2Id: userId,
+      };
+      const response = await fetchWithTokenRefresh(`${process.env.REACT_APP_URL}api/chats/private`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (response.ok) {
+        const newChatData = await response.json();
+        const formattedChats = await formatChatData(newChatData);
+        setChats([...formattedChats, ...chats]);
+      } else {
+        console.error('Failed to create private chat');
+      }
+    } catch (error) {
+      console.error('Error creating private chat:', error);
     }
   };
 
@@ -83,8 +112,9 @@ const Messages = () => {
       });
 
       if (response.ok) {
-        const newChat = await response.json();
-        setChats([...chats, newChat]);
+        const newChatData = await response.json();
+        const formattedChats = await formatChatData(newChatData);
+        setChats([...formattedChats, ...chats]);
       } else {
         console.error('Failed to create group chat');
       }
@@ -126,6 +156,14 @@ const Messages = () => {
     handleDialogOpen();
   };
 
+  const handleChatIconClick = () => {
+    handleUserListOpen();
+  };
+
+  const handleUserListOpen = () => {
+    setUserListOpen(true);
+  };
+
   const handleDialogOpen = () => {
     setIsDialogOpen(true);
   };
@@ -144,6 +182,22 @@ const Messages = () => {
     handleDialogClose();
   };
 
+  const handleSelectUser = async (selectedUser) => {
+    console.log('Selected user in message page:', selectedUser);
+    try {
+      await createPrivateChat(selectedUser.id);
+      console.log('Created private chat');
+    } catch (error) {
+      console.error('Error creating private chat:', error);
+    }
+    handleCloseUserList();
+  };
+
+
+  const handleCloseUserList = () => {
+    setUserListOpen(false);
+  };
+
   return (
     <HomeBox>
       <div className={`messages ${path !== "/messages" && "messagesNone"}`}>
@@ -154,28 +208,31 @@ const Messages = () => {
         <div className="messagesHeader">
           <div onClick={() => setIsDrawerBar(true)}><Avatar src="" /></div>
           <span>Messages</span>
+          <ChatIcon onClick={handleChatIconClick} />
           <AddIcon onClick={handleAddIconClick} />
         </div>
-        <div className="messagesSearchInput">
-          <SearchInput placeholder="Search for people to talk" />
-        </div>
-        <div className="lastMessages">
-          {chats.map(chat => (
-            <ChatList
-              chatId={chat.chatId}
-              chatName={chat.chatName}
-              lastMessage={chat.lastMessage}
-              lastMessageTime={chat.lastMessageTime}
-            />
-          ))}
-        </div>
+        {userListOpen ? (
+          <UserList onSelectUser={handleSelectUser} onCloseUserList={handleCloseUserList} />
+        ) : (
+          <div className="lastMessages">
+            {chats.map(chat => (
+              <ChatList
+                chatId={chat.chatId}
+                chatName={chat.chatName}
+                lastMessage={chat.lastMessage}
+                lastMessageTime={chat.lastMessageTime}
+              />
+            ))}
+          </div>
+        )}
         <BottomSidebar />
       </div>
       {isDialogOpen ? (
         <div className="groupDialog">
+          <h3>Create Group Chat</h3>
           <input
             type="text"
-            placeholder="Enter group name"
+            placeholder="Enter new group chat name"
             value={newGroupName}
             onChange={handleGroupNameChange}
           />

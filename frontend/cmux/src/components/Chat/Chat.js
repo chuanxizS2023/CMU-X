@@ -16,7 +16,9 @@ const Chat = ({ chat }) => {
   const { userId } = useContext(AuthContext);
   const [isUserListOpen, setIsUserListOpen] = useState(false);
   const [userList, setUserList] = useState([]);
-  const [newUserId, setNewUserId] = useState("");
+  const [allUsers, setAllUsers] = useState([]);
+  const [selectedUsers, setSelectedUsers] = useState([]);
+
   const history = useHistory();
 
   const addMessageToHistory = async (newMessage) => {
@@ -54,6 +56,21 @@ const Chat = ({ chat }) => {
 
 
   const fetchWithTokenRefresh = useFetchWithTokenRefresh();
+
+  const fetchAllUsers = async () => {
+    try {
+      const url = `${process.env.REACT_APP_URL}user/all`;
+      const response = await fetchWithTokenRefresh(url, { method: 'GET' });
+      if (response.ok) {
+        const users = await response.json();
+        setAllUsers(users);
+      } else {
+        console.error('Failed to fetch all users');
+      }
+    } catch (error) {
+      console.error('Error fetching all users:', error);
+    }
+  };
 
   const fetchMessages = async () => {
     try {
@@ -135,17 +152,17 @@ const Chat = ({ chat }) => {
     }
   };
 
-  const handleAddGroupUser = async () => {
+  const addUserToGroup = async (selectedUserIds, chatId) => {
     try {
-      const payload = [parseInt(newUserId)];
+      const payload = selectedUserIds.map((userId) => parseInt(userId));
 
-      if (isNaN(payload[0])) {
+      if (payload.some(isNaN)) {
         console.error('Invalid user ID');
         return;
       }
 
-      console.log('Adding user to group:', payload);
-      const response = await fetchWithTokenRefresh(`${process.env.REACT_APP_URL}api/chats/groupusers/${chat.chatId}`, {
+      console.log('Adding users to group:', payload);
+      const response = await fetchWithTokenRefresh(`${process.env.REACT_APP_URL}api/chats/groupusers/${chatId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -154,16 +171,27 @@ const Chat = ({ chat }) => {
       });
 
       if (response.ok) {
-        loadUserList();
-        setNewUserId("");
+        console.log('Users added to group');
+        return true;
       } else {
-        console.error('Failed to add user to group');
+        console.error('Failed to add users to group');
+        return false;
       }
     } catch (error) {
-      console.error('Error adding user to group:', error);
+      console.error('Error adding users to group:', error);
+      return false;
     }
   };
 
+  const handleAddGroupUser = async (selectedUserIds) => {
+    const addedSuccessfully = await addUserToGroup(selectedUserIds, chat.chatId);
+
+    if (addedSuccessfully) {
+      loadUserList();
+    } else {
+      console.error('Failed to add users to group');
+    }
+  };
 
   const handleDeleteGroupUser = async (userIdToDelete) => {
     try {
@@ -201,6 +229,19 @@ const Chat = ({ chat }) => {
     }
   };
 
+  const handleUserSelection = (userId) => {
+    if (selectedUsers.includes(userId)) {
+      setSelectedUsers(selectedUsers.filter((id) => id !== userId));
+    } else {
+      setSelectedUsers([...selectedUsers, userId]);
+    }
+  };
+
+  const handleUserListToggle = () => {
+    setIsUserListOpen(!isUserListOpen);
+  };
+
+
   useEffect(() => {
     console.log('isUserListOpen changed:', isUserListOpen);
     if (isUserListOpen) {
@@ -215,6 +256,10 @@ const Chat = ({ chat }) => {
     console.log('messageHistory changed:', messageHistory);
   }, [chat]);
 
+  useEffect(() => {
+    fetchAllUsers();
+  }, []);
+
 
   if (!chat) {
     return <div className="chat">No chat selected</div>;
@@ -228,24 +273,43 @@ const Chat = ({ chat }) => {
       </div>
       {isUserListOpen ? (
         <div className="userList">
+          <button onClick={handleUserListClose}>Close</button>
           <h3>Group User List</h3>
           <ul>
-            {userList.map((user) => (
-              <li key={user.id}>
-                {user.username}
-                <button onClick={() => handleDeleteGroupUser(user.id)}>Delete</button>
-              </li>
+            {userList.map((user, index) => (
+              <React.Fragment key={user.id}>
+                <li className="userListItem">
+                  <div className="userAvatar">
+
+                    <img src={user.userImage} alt={user.username} />
+                  </div>
+                  <div className="userName">
+                    {user.username}
+                  </div>
+                  <button onClick={() => handleDeleteGroupUser(user.id)}>Delete</button>
+                </li>
+                {index < userList.length - 1 && <div className="userListSeparator"></div>}
+              </React.Fragment>
             ))}
           </ul>
+          <div className="userListSeparator"></div>
           <h3>Add User</h3>
-          <input
-            type="text"
-            placeholder="Enter User ID"
-            value={newUserId}
-            onChange={(e) => setNewUserId(e.target.value)}
-          />
-          <button onClick={handleAddGroupUser}>Add User</button>
-          <button onClick={handleUserListClose}>Close</button>
+          <div className="userList">
+            <ul>
+              {allUsers.map((user) => (
+                <li className="userListItem" key={user.id}>
+                  <div className="userAvatar">
+                    <img src={user.userImage} alt={user.username} />
+                  </div>
+                  <div className="userName">{user.username}</div>
+                  <button onClick={() => handleUserSelection(user.id)}>
+                    {selectedUsers.includes(user.id) ? 'Unselect' : 'Select'}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <button onClick={() => handleAddGroupUser(selectedUsers)}>Add User</button>
         </div>
       ) : (<div className="chatRoom">
         <div className="chatMessages">

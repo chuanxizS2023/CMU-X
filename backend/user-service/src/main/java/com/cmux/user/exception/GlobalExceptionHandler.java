@@ -65,10 +65,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<CustomErrorResponse> handleDataIntegrityViolation(DataIntegrityViolationException ex, WebRequest request) {
         logger.error("Data integrity violation: {}", ex.getMessage());
-        String errorMessage = "A data integrity violation occurred.";
-        if (ex.getMessage().contains("Duplicate entry")) {
-            errorMessage = "Username or email already exists.";
-        }
-        return buildErrorResponse(errorMessage, HttpStatus.BAD_REQUEST);
+        return buildErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }
