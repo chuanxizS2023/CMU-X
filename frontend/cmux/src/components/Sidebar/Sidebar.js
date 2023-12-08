@@ -114,26 +114,7 @@ function Sidebar() {
         <MoreMenu active={ moreActive } />
         { moreActive && <div className="closeMoreMenuPanel" /> }
       </div>
-      {/* <div className="tweetButton">
-        <SetTweetIcon className="setTweetIcon" />
-        <span>Tweet</span>
-      </div> */}
-      <div className="profileCard">
-        <div className="profileCardImage">
-          <Avatar src="https://avatars2.githubusercontent.com/u/38807255?s=460&u=deb087d587be7f6a4000e4e710ec4d1daa6fde84&v=4" />
-        </div>
-        <div className="profileCardNameCol">
-          <div className="profileCardNameColName">
-            <span>Test User</span>
-          </div>
-          <div className="profileCardNameColuserName">
-            <span>@testuser</span>
-          </div>
-        </div>
-        <div className="profileCardIcon">
-          <MoreHorizIcon />
-        </div>
-      </div>
+      
     </div>
   );
 }

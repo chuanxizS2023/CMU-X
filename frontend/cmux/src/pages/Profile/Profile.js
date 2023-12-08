@@ -34,11 +34,21 @@ const Profile = () => {
   const [selectedImage, setSelectedImage] = useState('');
   const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
   const [authorPosts, setAuthorPosts] = useState([]);
+  const [editedBio, setEditedBio] = useState('');
+  const [followersCount, setFollowersCount] = useState(0);
+  const [followingCount, setFollowingCount] = useState(0);
+
   setTimeout(() => {
     setLoading(false);
   }, 2000);
 
   const fetchWithTokenRefresh = useFetchWithTokenRefresh();
+
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'long' };
+    const date = new Date(dateString);
+    return `Joined ${date.toLocaleDateString(undefined, options)}`;
+  };
 
   const loadUserProfile = async () => {
     console.log('Fetching user profile');
@@ -73,8 +83,39 @@ const Profile = () => {
     }
   };
 
+  const fetchFollowersCount = async () => {
+    try {
+      const response = await fetchWithTokenRefresh(`${process.env.REACT_APP_URL}followers/count?userId=${userId}`, { method: 'GET' });
+      if (response.ok) {
+        const count = await response.json();
+        setFollowersCount(count);
+      } else {
+        console.error('Failed to fetch followers count');
+      }
+    } catch (error) {
+      console.error('Error fetching followers count:', error);
+    }
+  };
+
+  const fetchFollowingCount = async () => {
+    try {
+      const response = await fetchWithTokenRefresh(`${process.env.REACT_APP_URL}subscriptions/count?userId=${userId}`, { method: 'GET' });
+      if (response.ok) {
+        const count = await response.json();
+        setFollowingCount(count);
+      } else {
+        console.error('Failed to fetch following count');
+      }
+    } catch (error) {
+      console.error('Error fetching following count:', error);
+    }
+  };
+
+
   useEffect(() => {
     loadUserProfile();
+    fetchFollowersCount();
+    fetchFollowingCount();
     if (userId) {
       fetchPostsByAuthor(userId);
     }
@@ -97,7 +138,8 @@ const Profile = () => {
         },
         body: JSON.stringify({
           username: editedUsername,
-          userImage: selectedImage
+          userImage: selectedImage,
+          bio: editedBio
         })
       });
       if (response.ok) {
@@ -133,7 +175,7 @@ const Profile = () => {
             {userProfile ? (
               <>
                 <span>{userProfile.username}</span>
-                <span>12 Tweets</span>
+                <span>{authorPosts.length} Tweets</span>
               </>
             ) : (
               <span>Loading...</span>
@@ -173,19 +215,26 @@ const Profile = () => {
                   <span>{userProfile.username}</span>
                 )}
                 <span>@{userProfile.username}</span>
-                <span>Junior Software Developer</span>
+                {isEditMode ? (
+                  <textarea
+                    value={editedBio}
+                    onChange={(e) => setEditedBio(e.target.value)}
+                  />
+                ) : (
+                  <span>{userProfile.bio}</span>
+                )}
                 <span>
                   <ScheduleIcon />
-                  Joined December 2011
+                  {userProfile.createdAt ? formatDate(userProfile.createdAt) : 'Loading...'}
                 </span>
               </div>
               <div>
                 <span>
-                  <span>167</span>
+                  <span>{followingCount}</span>
                   <span>Following</span>
                 </span>
                 <span>
-                  <span>167</span>
+                  <span>{followersCount}</span>
                   <span>Followers</span>
                 </span>
               </div>
@@ -196,7 +245,7 @@ const Profile = () => {
                 >
                   <span>Tweets</span>
                 </div>
-                <div
+                {/* <div
                   className={category === 2 && "profileCategoryActive"}
                   onClick={() => setCategory(2)}
                 >
@@ -213,7 +262,7 @@ const Profile = () => {
                   onClick={() => setCategory(4)}
                 >
                   <span>Likes</span>
-                </div>
+                </div> */}
               </div>
             </div>
           )}
@@ -221,23 +270,23 @@ const Profile = () => {
           {!loading ? (
             authorPosts.map((post) => (
               <ProfilePost
-              key={post.communityPostid}
-              communityPostid={post.communityPostid}
-              username={post.username}
-              userimage={post.userimage}
-              created_Date={post.created_Date}
-              title={post.title}
-              content={post.content}
-              likes={post.likes}
-              comments={post.comments}
-              retweets={post.retweets}
-              commentsCount={post.commentsCount}
-              findTeammatePost={post.findTeammatePost}
-              instructorName={post.instructorName}
-              courseNumber={post.courseNumber}
-              semester={post.semester}
-              teamMembers={post.teamMembers}
-            />
+                key={post.communityPostid}
+                communityPostid={post.communityPostid}
+                username={post.username}
+                userimage={post.userimage}
+                created_Date={post.created_Date}
+                title={post.title}
+                content={post.content}
+                likes={post.likes}
+                comments={post.comments}
+                retweets={post.retweets}
+                commentsCount={post.commentsCount}
+                findTeammatePost={post.findTeammatePost}
+                instructorName={post.instructorName}
+                courseNumber={post.courseNumber}
+                semester={post.semester}
+                teamMembers={post.teamMembers}
+              />
             ))
           ) : (
             <Loading />

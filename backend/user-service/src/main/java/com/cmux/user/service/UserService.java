@@ -61,6 +61,8 @@ public class UserService {
         userDTO.setUserImage(user.getUserImage());
         userDTO.setUnlockedImages(user.getUnlockedImages());
         userDTO.setUnlockedImageIds(user.getUnlockedImageIds());
+        userDTO.setCreatedAt(user.getCreatedAt());
+        userDTO.setBio(user.getBio());
         return userDTO;
     }
 
@@ -141,8 +143,10 @@ public class UserService {
             user.setUnlockedImages(updateRequest.getUnlockedImages());
         }
         if (updateRequest.getUnlockedImageIds() != null) {
-            System.out.println("updateRequest.getUnlockedImageIds(): " + updateRequest.getUnlockedImageIds());
             user.setUnlockedImageIds(updateRequest.getUnlockedImageIds());
+        }
+        if(updateRequest.getBio() != null) {
+            user.setBio(updateRequest.getBio());
         }
         User updatedUser = userRepository.save(user);
         UserDTO userDTO = convertToDTO(updatedUser);
