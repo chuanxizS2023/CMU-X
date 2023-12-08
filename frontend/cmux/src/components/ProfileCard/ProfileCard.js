@@ -1,12 +1,11 @@
 import { Avatar } from "@material-ui/core";
 import React from "react";
 import axios from 'axios';
-import { useState, useEffect, useContext} from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { VerifiedIcon } from "../icons";
 import "./ProfileCard.css";
 import { AuthContext } from "../AuthProvider";
-import { useFetchWithTokenRefresh } from '../../utils/ApiUtils';
-
+import { useFetchWithTokenRefresh } from '../../utils/ApiUtilsDynamic';
 const ProfileCard = ({ active, username, userId, initialIsFollowing, following, followers }) => {
   const [ isFollowing, setIsFollowing ] = useState(initialIsFollowing);
   const [ isVisible, setIsVisible ] = useState(false);
@@ -14,19 +13,19 @@ const ProfileCard = ({ active, username, userId, initialIsFollowing, following, 
   // const myuserId = 1;
   const myuserId = useContext(AuthContext).userId;
   const fetch = useFetchWithTokenRefresh();
-  const [ isSelf, setIsSelf ] = useState(userId === myuserId);
+  const [ isSelf, setIsSelf ] = useState(parseInt(userId) === parseInt(myuserId));
+  console.log("isSelf:", isSelf+"userId:"+userId+"myuserId:"+myuserId);
   const baseUrl = process.env.REACT_APP_SUBSCRIPTION_SERVICE_URL;
-  const subscription_url = `${baseUrl}/subscriptions`;
+  const subscription_url = `${baseUrl}subscriptions`;
   useEffect(() => {
-    setIsSelf(userId === myuserId);
+    setIsSelf(parseInt(userId) === parseInt(myuserId));
   }, [ userId, myuserId ]);
 
-  const updateFollowers = async (method, query) => {
+  const handleUpdateFollowers = async (method, query) => {
     try {
-      const response = await fetch(`${subscription_url}?${query}`,{method: method});
-      if (response.status === 200) {
-        setIsFollowing(!isFollowing);
-      }
+      const response = await fetch(`${subscription_url}?${query}`, { method: method });
+      console.log("responsessss:", response);
+      setIsFollowing(!isFollowing);
     } catch (error) {
       console.error("Error during update:", error);
     }
@@ -34,12 +33,12 @@ const ProfileCard = ({ active, username, userId, initialIsFollowing, following, 
 
   const handleFollowClick = () => {
     const query = `userId=${myuserId}&otherUserId=${userId}`;
-    updateFollowers('put', query); // Use 'put' for follow
+    handleUpdateFollowers('put', query); // Use 'put' for follow
   };
 
   const handleUnfollowClick = () => {
     const query = `userId=${myuserId}&otherUserId=${userId}`;
-    updateFollowers('delete', query); // Use 'delete' for unfollow
+    handleUpdateFollowers('delete', query); // Use 'delete' for unfollow
   };
 
   return (
