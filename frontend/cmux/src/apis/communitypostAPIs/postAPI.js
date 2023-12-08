@@ -15,7 +15,9 @@ export const usePostApi = () => {
         }
       });
       if (response.ok) {
-        const data = await response.json(); 
+        console.log("response: ", response)
+        const data = response.body; 
+        
         return data;
       } else {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -31,7 +33,7 @@ export const usePostApi = () => {
         method: 'POST'
       });
       if (response.ok) {
-        const data = await response.json(); 
+        const data = response;
         return data;
       } else {
         throw new Error(`HTTP error! status: ${response.status}`);
