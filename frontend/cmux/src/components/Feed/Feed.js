@@ -5,7 +5,6 @@ import CommonPopup from "./Post/popup"
 import Post from "./Post/Post";
 import HomeStars from "../icons/HomeStars";
 import BottomSidebar from "../BottomSidebar/BottomSidebar";
-import { useSelector } from "react-redux";
 import { Avatar } from "@material-ui/core";
 import DrawerBar from "../DrawerBar/DrawerBar";
 import Loading from "../Loading/Loading";
@@ -15,8 +14,8 @@ import PostForm from "./Post/postForm";
 import CommentForm from "./Post/commentForm"
 import SinlgePost from "./Post/singlePost";
 import {usePostApi} from "../../apis/communitypostAPIs/postAPI";
+import {useSubscriptionApi} from "../../apis/communitypostAPIs/subscriptionAPI";
 import {useCommentApi} from "../../apis/communitypostAPIs/commentAPI";
-import { fetchPostsByIds } from "../../data/postData";
 import { AuthContext } from '../../components/AuthProvider';
 
 
@@ -31,6 +30,7 @@ function Feed() {
   const [openPopup, setOpenPopup] = useState(false);
   const [openSinglePost, setOpenSinglePost] = useState(false);
   const [posts, setPosts] = useState([]);
+  const { fetchSubscriptions } = useSubscriptionApi();
   const { fetchPostsByAuthorIds, createPost, addLike, getPostById, deletePost, updatePost, markAsFindTeammatePost, addTeamMembers, searchPosts } = usePostApi();
   const { saveComment } = useCommentApi();
   const delay = ms => new Promise(res => setTimeout(res, ms));
@@ -115,8 +115,6 @@ function Feed() {
 
 
   useEffect(() => {
-    const postIds = [1,2,3,4,5,6,7]
-    const authorid_list = [2]
     const establishConnection = async () => {
       await delay(2000);
       await stompClientInstance.ensureConnection();
@@ -130,7 +128,6 @@ function Feed() {
               updatedPosts[existingPostIndex] = message;
               return updatedPosts;
             } else {
-              // Add new post if it doesn't exist
               return [...prevPosts, { postId: communityPostid, title, content, likes, comments }];
             }
           });
@@ -146,26 +143,21 @@ function Feed() {
       })
     }
 
-    const fetchAndSetPosts = async () => {
+    const fetchPostFromAuthoridList = async () => {
       try {
-        const allPosts = await fetchPostsByAuthorIds(); // Await the result of fetchPostsByIds
-        setPosts(allPosts);
-      } catch (error) {
-        console.error('Error fetching posts:', error);
-        // Handle error, for example, set an error state or a message to the user
-      }
-    };
-
-    const fetchPostFromAuthoridList = async (authorid_list) => {
-      try {
+        const subscriptionURL = process.env.REACT_APP_URL + `subscriptions`;
+        console.log("subscriptionURL: ", subscriptionURL)
+        const authorid_list = await fetchSubscriptions(subscriptionURL, `userId=${userId}`);
+        if(authorid_list && authorid_list.length === 0) return;
         const allPosts = await fetchPostsByAuthorIds(authorid_list); 
         setPosts(allPosts);
       } catch (error) {
         console.error('Error fetching posts:', error);
-        // Handle error, for example, set an error state or a message to the user
       }
     }
-    fetchPostFromAuthoridList(authorid_list);
+
+    
+    fetchPostFromAuthoridList();
     establishConnection();
 
   }, []);
