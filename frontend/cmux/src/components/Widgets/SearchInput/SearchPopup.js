@@ -53,7 +53,7 @@ function SearchResultsPopup({ open, onClose, searchResults, userSearchResults })
             <Post
               key={ post.communityPostid }
               communityPostid={ post.communityPostid }
-              username={ post.authorid }
+              username={ post.username }
               userimage={ post.userimage }
               created_Date={ post.created_Date }
               title={ post.title }
