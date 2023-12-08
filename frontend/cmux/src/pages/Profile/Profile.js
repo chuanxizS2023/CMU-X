@@ -16,6 +16,7 @@ import HomeBox from "../../components/HomeBox/HomeBox";
 import Loading from "../../components/Loading/Loading";
 import { AuthContext } from '../../components/AuthProvider';
 import { useFetchWithTokenRefresh } from '../../utils/ApiUtilsDynamic';
+import ProfilePost from "./ProfilePost";
 
 
 
@@ -62,6 +63,7 @@ const Profile = () => {
       );
       if (response.ok) {
         const data = await response.json();
+        console.log('Posts by author:', data);
         setAuthorPosts(data);
       } else {
         console.error('Failed to fetch posts by author');
@@ -218,15 +220,24 @@ const Profile = () => {
         <article className="profilePosts">
           {!loading ? (
             authorPosts.map((post) => (
-              <Post
-                key={post.id}
-                username={post.username}
-                userimage={post.userimage}
-                date={post.date}
-                displayName={post.displayName}
-                text={post.text}
-                shareImage={post.shareImage}
-              />
+              <ProfilePost
+              key={post.communityPostid}
+              communityPostid={post.communityPostid}
+              username={post.username}
+              userimage={post.userimage}
+              created_Date={post.created_Date}
+              title={post.title}
+              content={post.content}
+              likes={post.likes}
+              comments={post.comments}
+              retweets={post.retweets}
+              commentsCount={post.commentsCount}
+              findTeammatePost={post.findTeammatePost}
+              instructorName={post.instructorName}
+              courseNumber={post.courseNumber}
+              semester={post.semester}
+              teamMembers={post.teamMembers}
+            />
             ))
           ) : (
             <Loading />

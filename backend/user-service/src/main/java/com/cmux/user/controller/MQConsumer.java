@@ -1,13 +1,9 @@
 package com.cmux.user.controller;
 
-import java.util.List;
 
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
-
 import com.cmux.user.dto.PurchaseProductMessage;
-import com.cmux.user.dto.UserUpdateRequest;
-import com.cmux.user.entity.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,7 +28,6 @@ public class MQConsumer {
         Long userId = m.getUserId();
         Long productId = m.getProductId();
         String imageUrl = m.getImageUrl();
-        System.out.println(message);
         try {
             userService.addNewIconToUser(userId, imageUrl, productId);
         } catch (Exception e) {
