@@ -17,7 +17,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         // registry.enableSimpleBroker("/topic"); // default Stomp message broker
         config.enableStompBrokerRelay("/topic", "/queue")
                 .setRelayHost(rabbitmqHost)
-                .setRelayPort(61613) // Default port for RabbitMQ with STOMP plugin
+                // Default port 61613 for RabbitMQ with STOMP plugin
+                .setRelayPort(61613) 
                 .setClientLogin("guest")
                 .setClientPasscode("guest");
         config.setApplicationDestinationPrefixes("/app");

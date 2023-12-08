@@ -13,7 +13,7 @@ spec:
         app: user
     spec:
       containers:
-      - name: user-container
+        - name: user-container
         image: hanqid/cmux-user:latest
         imagePullPolicy: Always
         ports:

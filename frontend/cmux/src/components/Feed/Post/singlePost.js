@@ -18,6 +18,7 @@ import Comments from "./comments";
 function SinlgePost({open, onClose, communityPostid}) {
   const [isVisibleProfileCard, setIsVisibleProfileCard] = useState(false);
   const [authorid, setauthorid] = useState(null);
+  const [username, setUsername] = useState(null);
   const [title, setTitle] = useState(null);
     const [content, setContent] = useState(null);
     const [likes, setLikes] = useState(null);
@@ -35,7 +36,8 @@ function SinlgePost({open, onClose, communityPostid}) {
         try{
             const res = await getPostById(communityPostid);
             if(!res) return console.log("no post found");
-            setauthorid(res.username);
+            setauthorid(res.authorid);
+            setUsername(res.username);
             setTitle(res.title);
             setContent(res.content);
             setLikes(res.likes);
@@ -76,7 +78,7 @@ function SinlgePost({open, onClose, communityPostid}) {
                     }}
                     style={{color:"black"}}
                 >
-                    {authorid}
+                    {username}
                 </span>
                 <span className="post-header-date">{created_Date}</span>
                 <MoreHorizIcon className="postMoreIcon" />
