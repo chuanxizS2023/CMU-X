@@ -149,7 +149,9 @@ function Feed() {
         console.log("subscriptionURL: ", subscriptionURL)
         const authorid_list = await fetchSubscriptions(subscriptionURL, `userId=${userId}`);
         if(authorid_list && authorid_list.length === 0) return;
-        const allPosts = await fetchPostsByAuthorIds(authorid_list); 
+        const userIds = authorid_list.map(author => author.userId);
+        const allPosts = await fetchPostsByAuthorIds(userIds); 
+        console.log("allPosts: ", allPosts);
         setPosts(allPosts);
       } catch (error) {
         console.error('Error fetching posts:', error);
