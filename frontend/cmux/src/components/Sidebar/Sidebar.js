@@ -29,7 +29,6 @@ function Sidebar() {
 
   const handleLogout = () => {
     signOut();
-    // You can add more actions after logout, like redirecting to the login page
   };
 
   const handleStore = () => {

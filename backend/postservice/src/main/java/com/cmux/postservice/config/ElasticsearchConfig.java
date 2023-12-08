@@ -14,7 +14,8 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class ElasticsearchConfig {
-
+    
+    
     @Bean
     public RestClient restClient() {
         // Configure the credentials provider to use your Elasticsearch credentials

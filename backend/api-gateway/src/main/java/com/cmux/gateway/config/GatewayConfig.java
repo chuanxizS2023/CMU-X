@@ -17,7 +17,7 @@ public class GatewayConfig {
                                                 .uri("http://user-service:5002"))
                                 .route("auth-service", r -> r.path("/auth/**")
                                                 .uri("http://user-service:5002"))
-                                .route("ws-chat-service", r -> r.path("/chat-socket/**")
+                                .route("ws-chat-handshake", r -> r.path("/ws-chat/info**")
                                                 .uri("http://chat-service:8080"))
                                 .route("ws-chat-service", r -> r.path("/ws-chat/**")
                                                 .uri("ws://chat-service:8080"))

@@ -19,7 +19,6 @@ public class GatewaySecurityConfig {
             "/auth/**",
             "/ws-chat/**",
             "/ws-communitypost/**",
-            "/chat-socket/**",
 
     };
 

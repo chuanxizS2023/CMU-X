@@ -6,14 +6,16 @@ import CommentIcon from "../../icons/CommentIcon";
 import RetweetIcon from "../../icons/RetweetIcon";
 import SharePostIcon from "../../icons/SharePostIcon";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
+import { usePostApi } from "../../../apis/communitypostAPIs/postAPI";
 import { MillToDate } from "../../../utils/MillToDate";
 import {StompClientSingleton} from "../../../socketClient";
-import {addLike, deletePost} from '../../../apis/communitypostAPIs/postAPI'
 import ProfileCard from "../../ProfileCard/ProfileCard";
 import DeleteIcon from "@material-ui/icons/Delete";
 
 function Post({communityPostid, userImage, username, title, content, likes, comments, retweets, onCommentClick, onPostClick, commentsCount, created_Date,findTeammatePost,instructorName, courseNumber, semester, teamMembers  }) {
   const [isVisibleProfileCard, setIsVisibleProfileCard] = React.useState(false);
+  const {addLike, deletePost} = usePostApi();
+
 
   const onLikeClick = async (e, communityPostid) => {
     e.stopPropagation();

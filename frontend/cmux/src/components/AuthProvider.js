@@ -28,7 +28,7 @@ const AuthProvider = ({ children }) => {
 
   const refreshToken = async () => {
     try {
-      const response = await fetch('http://localhost:5001/auth/refresh', { 
+      const response = await fetch(`${process.env.REACT_APP_URL}auth/refresh`, { 
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
