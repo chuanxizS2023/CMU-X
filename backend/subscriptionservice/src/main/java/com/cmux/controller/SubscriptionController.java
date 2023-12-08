@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("")
 public class SubscriptionController {
