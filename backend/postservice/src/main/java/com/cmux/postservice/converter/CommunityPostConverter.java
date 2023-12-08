@@ -81,7 +81,7 @@ public class CommunityPostConverter {
             ArrayList<Comment> commentList = new ArrayList<Comment>();
             for (int i = 0; i < communityPostDTO.getComments().size(); i++) {
                 commentList.add(commentConverter.convertDTOToEntity(communityPostDTO.getComments().get(i)));
-            }
+            }    
             communityPost.setComments(commentList);
         } else {
             communityPost.setComments(null);
