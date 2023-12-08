@@ -15,9 +15,6 @@ public class MQProducer {
     @Value("${rabbitmq.reward.routing.key}")
     private String rewardRoutingKey;
 
-    @Value("${rabbitmq.post.routing.key}")
-    private String postRoutingKey;
-
     public MQProducer(RabbitTemplate rabbitTemplate) {
             this.rabbitTemplate = rabbitTemplate;
         }

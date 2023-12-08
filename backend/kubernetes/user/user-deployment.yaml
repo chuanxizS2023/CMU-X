@@ -14,10 +14,10 @@ spec:
     spec:
       containers:
         - name: user-container
-          image: hanqid/cmux-user
-          imagePullPolicy: Always
-          ports:
-            - containerPort: 5002
-          envFrom:
-            - configMapRef:
-                name: user-service-env
+        image: hanqid/cmux-user:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5002
+        envFrom:
+        - configMapRef:
+            name: user-service-env
