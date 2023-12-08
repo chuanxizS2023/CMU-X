@@ -1,22 +1,28 @@
+# Use a slim version of the OpenJDK 17 image
 FROM openjdk:17-jdk-slim
-
-# Install necessary utilities
-RUN apt-get update && apt-get install -y maven curl
-RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
-RUN apt-get install -y nodejs
-RUN npm install -g nodemon
 
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy local files to the container
+# Install necessary utilities and clean up in one layer to reduce image size
+RUN apt-get update && \
+    apt-get install -y maven curl && \
+    rm -rf /var/lib/apt/lists/*
+
+# Copy only the pom.xml to leverage Docker cache
+COPY pom.xml /app/
+
+# Install dependencies in a separate layer to improve build time
+RUN mvn dependency:go-offline
+
+# Copy the rest of the project
 COPY . /app/
 
-# Build the application
+# Build the application without running tests
 RUN mvn clean install -DskipTests
 
 # Expose the port the app runs on
 EXPOSE 8082
 
 # Command to run the application
-CMD ["nodemon", "--watch", "src", "--exec", "mvn", "spring-boot:run"]
+CMD ["mvn", "spring-boot:run"]

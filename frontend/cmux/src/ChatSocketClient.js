@@ -12,7 +12,8 @@ class StompClientSingleton {
     }
 
     constructor() {
-        const socket = new SockJS('http://34.105.119.0:8080/ws-chat');
+
+        const socket = new SockJS(`${process.env.REACT_APP_SOCKJS_CLIENT_CHAT_URL}ws-chat`);
         this.client = new Client({
             webSocketFactory: () => socket,
             connectHeaders: {

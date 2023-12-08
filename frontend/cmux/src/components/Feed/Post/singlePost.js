@@ -9,9 +9,9 @@ import SharePostIcon from "../../icons/SharePostIcon";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import { MillToDate } from "../../../utils/MillToDate";
 import {StompClientSingleton} from "../../../socketClient";
-import {addLike, deletePost, getPostById} from '../../../apis/communitypostAPIs/postAPI'
 import ProfileCard from "../../ProfileCard/ProfileCard";
 import DeleteIcon from "@material-ui/icons/Delete";
+import { usePostApi } from "../../../apis/communitypostAPIs/postAPI";
 import Comments from "./comments";
 
 // communityPostid, userImage, username, title, content, likes, comments, retweets, onCommentClick, commentsCount, created_Date  
@@ -30,6 +30,7 @@ function SinlgePost({open, onClose, communityPostid}) {
     const [courseNumber, setCourseNumber] = useState(null);
     const [semester, setSemester] = useState(null);
     const [teamMembers, setTeamMembers] = useState(null);
+    const { fetchPostsByAuthorIds, createPost, addLike, getPostById, deletePost, updatePost, markAsFindTeammatePost, addTeamMembers, searchPosts } = usePostApi();
 
   useEffect(() => {
     const fetchPost = async () => {

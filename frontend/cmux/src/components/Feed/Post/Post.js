@@ -3,17 +3,15 @@ import { Avatar } from "@material-ui/core";
 import "./Post.css";
 import FavoriteIcon from "../../icons/FavoriteIcon";
 import CommentIcon from "../../icons/CommentIcon";
-import RetweetIcon from "../../icons/RetweetIcon";
 import SharePostIcon from "../../icons/SharePostIcon";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
-import { MillToDate } from "../../../utils/MillToDate";
-import {StompClientSingleton} from "../../../socketClient";
-import {addLike, deletePost} from '../../../apis/communitypostAPIs/postAPI'
+import { usePostApi } from "../../../apis/communitypostAPIs/postAPI";
 import ProfileCard from "../../ProfileCard/ProfileCard";
 import DeleteIcon from "@material-ui/icons/Delete";
 
 function Post({communityPostid, userImage, username, title, content, likes, comments, retweets, onCommentClick, onPostClick, commentsCount, created_Date,findTeammatePost,instructorName, courseNumber, semester, teamMembers  }) {
   const [isVisibleProfileCard, setIsVisibleProfileCard] = React.useState(false);
+  const {addLike, deletePost} = usePostApi();
 
   const onLikeClick = async (e, communityPostid) => {
     e.stopPropagation();
@@ -45,7 +43,7 @@ function Post({communityPostid, userImage, username, title, content, likes, comm
           <span className="post-header-date">{created_Date}</span>
           <MoreHorizIcon className="postMoreIcon" />
         </div>
-        <div style={{fontWeight:"bolder", fontSize:"25px", justifyContent:"center"}}>{title}</div>
+        <div style={{fontWeight:"bolder", fontSize:"25px", justifyContent:"center", color:"white"}}>{title}</div>
         <div className="post-content" style={{color:"white"}}>{content}</div>
         {findTeammatePost && (
           <div style={{marginTop:"10px", color:"white"}}>
@@ -80,7 +78,7 @@ function Post({communityPostid, userImage, username, title, content, likes, comm
         <div className="post-event">
           <div>
             <CommentIcon className="postIcon" onClick={(e) => onCommentClick(e, communityPostid)} />
-            <span>{comments.length}</span>
+            <span>{comments?comments.length:0}</span>
           </div>
           <div>
             <FavoriteIcon className="postIcon" onClick={(e)=>{onLikeClick(e, communityPostid)}}/>

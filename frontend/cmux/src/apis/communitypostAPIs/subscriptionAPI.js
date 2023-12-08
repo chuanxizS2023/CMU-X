@@ -5,7 +5,8 @@ export const useSubscriptionApi = () => {
     const fetchUser = async (user_url, query) => {
         try {
             const response = await fetchWithTokenRefresh(`${user_url}?${query}`, { method: 'GET' });
-            return response.data;
+            const data = await response.json();
+            return data;
         } catch (error) {
             console.error("Error during search user:", error);
             return [];
@@ -15,7 +16,8 @@ export const useSubscriptionApi = () => {
     const fetchFollowers = async (user_url, query) => {
         try {
             const response = await fetchWithTokenRefresh(`${user_url}?${query}`, { method: 'GET' });
-            return response.data;
+            const data = await response.json();
+            return data;
         } catch (error) {
             console.error("Error during search:", error);
             return 0;
@@ -25,7 +27,8 @@ export const useSubscriptionApi = () => {
     const fetchSubscriptions = async (user_url, query) => {
         try {
             const response = await fetchWithTokenRefresh(`${user_url}?${query}`, { method: 'GET' });
-            return response.data;
+            const data = await response.json();
+            return data;
         } catch (error) {
             console.error("Error during search:", error);
             return 0;
@@ -35,9 +38,22 @@ export const useSubscriptionApi = () => {
     const fetchHasSubscription = async (user_url, query) => {
         try {
             const response = await fetchWithTokenRefresh(`${user_url}?${query}`, { method: 'GET' });
-            return response.data;
+            const data = await response.json();
+            return data;
         } catch (error) {
             console.error("Error during search:", error);
+            return false;
+        }
+    };
+
+    const updateFollowers = async (subscription_url, query, method) => {
+        try {
+            const response = await fetchWithTokenRefresh(`${subscription_url}?${query}`, { method: method });
+            if (response.status === 200) {
+                return true;
+            }
+        } catch (error) {
+            console.error("Error during update:", error);
             return false;
         }
     };

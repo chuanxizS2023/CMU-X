@@ -33,9 +33,8 @@ public class MQConfig {
 
     @Bean
     Queue newUserQueue() {
-        return new Queue(newUserqueue);
+        return new Queue(newUserqueue, false);
     }
-
 
     @Bean
     DirectExchange exchange() {

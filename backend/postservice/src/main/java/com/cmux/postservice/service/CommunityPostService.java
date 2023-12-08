@@ -6,7 +6,6 @@ import com.cmux.postservice.handleException.IndexingException;
 import com.cmux.postservice.model.CommunityPost;
 import com.cmux.postservice.model.PostEvents;
 import com.cmux.postservice.repository.CommunityPostRepository;
-
 import co.elastic.clients.elasticsearch.core.IndexResponse;
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import com.cmux.postservice.converter.CommunityPostConverter;

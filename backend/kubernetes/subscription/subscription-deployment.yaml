@@ -14,10 +14,10 @@ spec:
     spec:
       containers:
       - name: subscription-container
-        image: raystudyhardworkhard/subscription-service:latest
+        image: raystudyhardworkhard/subscription-service:v24
         imagePullPolicy: Always
         ports:
-        - containerPort: 8082
+        - containerPort: 8080
         envFrom:
         - configMapRef:
             name: subscription-config

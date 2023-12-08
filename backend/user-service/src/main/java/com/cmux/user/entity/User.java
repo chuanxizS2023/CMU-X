@@ -3,7 +3,11 @@ package com.cmux.user.entity;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Objects;
+
+import org.hibernate.annotations.CreationTimestamp;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,11 +36,16 @@ public class User implements Serializable {
     @Column(nullable = false)
     private String userImage;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<String> unlockedImages = new ArrayList<>();
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<Long> unlockedImageIds = new ArrayList<>();
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    private String bio;
 
     public User() {
     }
@@ -47,7 +56,8 @@ public class User implements Serializable {
         this.password = password;
         this.userImage = "https://cmux-reward.s3.us-east-2.amazonaws.com/base.png";
         this.unlockedImages.add(this.userImage);
-        this.unlockedImages.add("https://cmux-reward.s3.us-east-2.amazonaws.com/itermediate.png");
+        this.unlockedImages.add("https://cmux-reward.s3.us-east-2.amazonaws.com/intermediate.png");
+        this.bio = "I am a CMU-X user!";
     }
 
     public Long getId() {
@@ -102,6 +112,19 @@ public class User implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
     }
 
 

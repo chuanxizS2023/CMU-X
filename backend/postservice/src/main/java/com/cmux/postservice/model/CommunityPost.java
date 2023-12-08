@@ -26,8 +26,8 @@ public class CommunityPost {
     private long likes;
     private int commentsCount;
     private boolean is_published;
-    @OneToMany(mappedBy = "communityPost", cascade = CascadeType.ALL, fetch = FetchType.LAZY) // Changed to LAZY to prevent immediate fetching
-    @JsonManagedReference // This annotation is used to overcome the recursion problem.
+    @OneToMany(mappedBy = "communityPost", cascade = CascadeType.ALL, fetch = FetchType.LAZY) 
+    @JsonManagedReference 
     private List<Comment> comments;
 
     // For find teammate post

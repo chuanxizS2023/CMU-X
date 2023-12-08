@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import "./App.css";
 import SignIndex from "./pages/SignIndex/SignIndex";
 import Login from "./pages/Login/Login";
-import { Route, Switch, Redirect } from "react-router-dom";
+import {Route, Switch, Redirect } from "react-router-dom";
 import Signup from "./pages/Signup/Signup";
 import Home from "./pages/Home/Home";
 import Explore from "./pages/Explore/Explore";
@@ -39,14 +39,14 @@ function App() {
         <Route path="/" component={SignIndex} exact />
         <Route path="/login" component={Login} />
         <Route path="/signup" component={Signup} />
-        <Route path="/home" component={Home} />
-        <Route path="/explore" component={Explore} />
-        <Route path="/reward" component={Reward} />
-        <Route path="/reward-success" component={Success} />
-        <Route path="/profile" component={Profile} />
-        <Route path="/bookmarks" component={Bookmarks} />
-        <Route path="/messages" component={Messages} />
-        <Route path="/lists" component={Lists} />
+        <ProtectedRoute path="/home" component={Home} />
+        <ProtectedRoute path="/explore" component={Explore} />
+        <ProtectedRoute path="/reward" component={Reward} />
+        <ProtectedRoute path="/reward-success" component={Success} />
+        <ProtectedRoute path="/profile" component={Profile} />
+        <ProtectedRoute path="/bookmarks" component={Bookmarks} />
+        <ProtectedRoute path="/messages" component={Messages} />
+        <ProtectedRoute path="/lists" component={Lists} />
       </Switch>
     </AuthProvider>
   );

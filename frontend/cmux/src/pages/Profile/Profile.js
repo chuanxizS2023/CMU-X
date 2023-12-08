@@ -15,7 +15,11 @@ import Links from "../../components/Widgets/Links/Links";
 import HomeBox from "../../components/HomeBox/HomeBox";
 import Loading from "../../components/Loading/Loading";
 import { AuthContext } from '../../components/AuthProvider';
-import { useFetchWithTokenRefresh } from '../../utils/ApiUtils';
+import { useFetchWithTokenRefresh } from '../../utils/ApiUtilsDynamic';
+import ProfilePost from "./ProfilePost";
+
+
+
 
 const Profile = () => {
   const [category, setCategory] = React.useState(1);
@@ -29,22 +33,29 @@ const Profile = () => {
   const [editedUsername, setEditedUsername] = useState('');
   const [selectedImage, setSelectedImage] = useState('');
   const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
+  const [authorPosts, setAuthorPosts] = useState([]);
+  const [editedBio, setEditedBio] = useState('');
+  const [followersCount, setFollowersCount] = useState(0);
+  const [followingCount, setFollowingCount] = useState(0);
+
   setTimeout(() => {
     setLoading(false);
   }, 2000);
 
-  const fetchUserProfile = useFetchWithTokenRefresh(`${process.env.REACT_APP_URL}user/${userId}`, {
-    method: 'GET'
-  });
+  const fetchWithTokenRefresh = useFetchWithTokenRefresh();
+
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'long' };
+    const date = new Date(dateString);
+    return `Joined ${date.toLocaleDateString(undefined, options)}`;
+  };
 
   const loadUserProfile = async () => {
     console.log('Fetching user profile');
     try {
-      const response = await fetchUserProfile();
-      console.log(response);
+      const response = await fetchWithTokenRefresh(`${process.env.REACT_APP_URL}user/${userId}`, { method: 'GET' });
       if (response.ok) {
         const data = await response.json();
-        console.log('User profile:', data);
         setUserProfile(data);
       } else {
         console.error('Failed to fetch user profile');
@@ -54,31 +65,84 @@ const Profile = () => {
     }
   };
 
+  const fetchPostsByAuthor = async (authorId) => {
+    try {
+      const response = await fetchWithTokenRefresh(
+        `${process.env.REACT_APP_URL}community/authors/${authorId}`,
+        { method: 'GET' }
+      );
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Posts by author:', data);
+        setAuthorPosts(data);
+      } else {
+        console.error('Failed to fetch posts by author');
+      }
+    } catch (error) {
+      console.error('Error fetching posts by author:', error);
+    }
+  };
+
+  const fetchFollowersCount = async () => {
+    try {
+      const response = await fetchWithTokenRefresh(`${process.env.REACT_APP_URL}followers/count?userId=${userId}`, { method: 'GET' });
+      if (response.ok) {
+        const count = await response.json();
+        setFollowersCount(count);
+      } else {
+        console.error('Failed to fetch followers count');
+      }
+    } catch (error) {
+      console.error('Error fetching followers count:', error);
+    }
+  };
+
+  const fetchFollowingCount = async () => {
+    try {
+      const response = await fetchWithTokenRefresh(`${process.env.REACT_APP_URL}subscriptions/count?userId=${userId}`, { method: 'GET' });
+      if (response.ok) {
+        const count = await response.json();
+        setFollowingCount(count);
+      } else {
+        console.error('Failed to fetch following count');
+      }
+    } catch (error) {
+      console.error('Error fetching following count:', error);
+    }
+  };
+
+
   useEffect(() => {
     loadUserProfile();
+    fetchFollowersCount();
+    fetchFollowingCount();
+    if (userId) {
+      fetchPostsByAuthor(userId);
+    }
   }, [userId, username]);
 
-  const fetchUpdateProfile = useFetchWithTokenRefresh(`${process.env.REACT_APP_URL}user/${userId}`, {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      username: editedUsername,
-      userImage: selectedImage
-    })
-  });
   const handleEditClick = () => {
     setIsEditMode(true);
     setEditedUsername(userProfile.username);
     setSelectedImage(userProfile.userImage);
+    setEditedBio(userProfile.bio);
   };
 
   const handleSaveClick = async () => {
     setIsEditMode(false);
 
     try {
-      const response = await fetchUpdateProfile();
+      const response = await fetchWithTokenRefresh(`${process.env.REACT_APP_URL}user/${userId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          username: editedUsername,
+          userImage: selectedImage,
+          bio: editedBio
+        })
+      });
       if (response.ok) {
         loadUserProfile();
       } else {
@@ -112,7 +176,7 @@ const Profile = () => {
             {userProfile ? (
               <>
                 <span>{userProfile.username}</span>
-                <span>12 Tweets</span>
+                <span>{authorPosts.length} Posts</span>
               </>
             ) : (
               <span>Loading...</span>
@@ -124,7 +188,7 @@ const Profile = () => {
             <div className="profile">
               <div className="backgroundImage"></div>
               <div className="profileTitle">
-                <div className="profileImage" onClick={ handleAvatarClick }>
+                <div className="profileImage" onClick={handleAvatarClick}>
                   <Avatar src={userProfile.userImage} />
                 </div>
                 {
@@ -152,19 +216,26 @@ const Profile = () => {
                   <span>{userProfile.username}</span>
                 )}
                 <span>@{userProfile.username}</span>
-                <span>Junior Software Developer</span>
+                {isEditMode ? (
+                  <textarea
+                    value={editedBio}
+                    onChange={(e) => setEditedBio(e.target.value)}
+                  />
+                ) : (
+                  <span>{userProfile.bio}</span>
+                )}
                 <span>
                   <ScheduleIcon />
-                  Joined December 2011
+                  {userProfile.createdAt ? formatDate(userProfile.createdAt) : 'Loading...'}
                 </span>
               </div>
               <div>
                 <span>
-                  <span>167</span>
+                  <span>{followingCount}</span>
                   <span>Following</span>
                 </span>
                 <span>
-                  <span>167</span>
+                  <span>{followersCount}</span>
                   <span>Followers</span>
                 </span>
               </div>
@@ -175,7 +246,7 @@ const Profile = () => {
                 >
                   <span>Tweets</span>
                 </div>
-                <div
+                {/* <div
                   className={category === 2 && "profileCategoryActive"}
                   onClick={() => setCategory(2)}
                 >
@@ -192,21 +263,30 @@ const Profile = () => {
                   onClick={() => setCategory(4)}
                 >
                   <span>Likes</span>
-                </div>
+                </div> */}
               </div>
             </div>
           )}
         <article className="profilePosts">
           {!loading ? (
-            posts.map((post) => (
-              <Post
-                key={post.id}
+            authorPosts.map((post) => (
+              <ProfilePost
+                key={post.communityPostid}
+                communityPostid={post.communityPostid}
                 username={post.username}
                 userimage={post.userimage}
-                date={post.date}
-                displayName={post.displayName}
-                text={post.text}
-                shareImage={post.shareImage}
+                created_Date={post.created_Date}
+                title={post.title}
+                content={post.content}
+                likes={post.likes}
+                comments={post.comments}
+                retweets={post.retweets}
+                commentsCount={post.commentsCount}
+                findTeammatePost={post.findTeammatePost}
+                instructorName={post.instructorName}
+                courseNumber={post.courseNumber}
+                semester={post.semester}
+                teamMembers={post.teamMembers}
               />
             ))
           ) : (

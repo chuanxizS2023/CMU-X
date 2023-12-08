@@ -11,7 +11,7 @@ function Widgets() {
       <SearchInput placeholder="Search CMUX" />
       <Topics />
       <FriendSuggestions />
-      <Links />
+      {/* <Links /> */}
     </div>
   );
 }

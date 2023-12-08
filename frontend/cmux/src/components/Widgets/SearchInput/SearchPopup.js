@@ -32,17 +32,6 @@ function SearchResultsPopup({ open, onClose, searchResults, userSearchResults })
         </ButtonGroup>
       </div>
       { userOrPost === 'user' ?
-        // <ProfileCard
-        //   key={ userSearchResults.userId }
-        //   active={ true }
-        //   username={ userSearchResults.name }
-        //   userId={ userSearchResults.userId }
-        //   isFollowing={ isFollowing }
-        //   setIsFollowing={ setIsFollowing }
-        //   following={ userSearchResults.following }
-        //   followers={ userSearchResults.followers }
-        //   isSelf={ userSearchResults.isSelf}
-        // />
         <List>
           {
             userSearchResults.map((user) => (
@@ -64,7 +53,7 @@ function SearchResultsPopup({ open, onClose, searchResults, userSearchResults })
             <Post
               key={ post.communityPostid }
               communityPostid={ post.communityPostid }
-              username={ post.authorid }
+              username={ post.username }
               userimage={ post.userimage }
               created_Date={ post.created_Date }
               title={ post.title }

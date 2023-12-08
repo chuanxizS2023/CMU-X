@@ -13,7 +13,6 @@ public class AccessTokenFactory extends TokenFactory {
 
     public AccessTokenFactory(@Value("${JWT_SECRET_KEY}") String jwtSecret, @Value("${JWT_EXPIRATION_MS}") int jwtExpirationMs) {
         super(jwtSecret, jwtExpirationMs);
-         System.out.println(jwtExpirationMs);
     }
 
     @Override
@@ -22,8 +21,8 @@ public class AccessTokenFactory extends TokenFactory {
         ClaimsBuilder claims = Jwts.claims();
         claims.add("username", userDetails.getUsername());
         claims.add("userId", userDetails.getUserId());
+        claims.add("tokenType", "access");
         return Jwts.builder().claims(claims.build())
-                // .subject(userDetails.getUsername())
                 .issuedAt(new Date())
                 .expiration(getExpirationDate())
                 .signWith(secretKey)

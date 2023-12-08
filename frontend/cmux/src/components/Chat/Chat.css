@@ -129,7 +129,6 @@
 }
 
 .userList {
-  background-color: #333;
   color: white;
   padding: 20px;
   border-radius: 5px;
@@ -137,4 +136,37 @@
   width: 100%;
   margin-top: 20px;
   margin-left: 0;
+}
+
+.userListSeparator {
+  height: 1px;
+  background-color: #ccc;
+  margin: 10px 0;
+}
+
+.userListItem {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.userAvatar {
+  margin-right: 10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.userAvatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.userName {
+  flex-grow: 1;
+  font-weight: bold;
+  font-size: 16px;
+  color: white;
 }

@@ -23,5 +23,6 @@ public class MQProducer {
     // to add 10 points to the user's account
     public void sendNewFollowerMessageToReward(String message) {
         rabbitTemplate.convertAndSend(exchange, rewardRoutingKey, message);
+        System.out.println("Sent message to reward service");
     }
 }
