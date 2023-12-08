@@ -7,7 +7,7 @@ const TopicItem = ({ category, title, numberoftweet }) => {
     <div className="widgetsTopicsItem">
       <div className="widgetsTopicCategory">
         <span>{category}</span>
-        <MoreHorizIcon />
+        {/* <MoreHorizIcon /> */}
       </div>
       <span className="widgetsTopicTitle">#{title}</span>
       <span className="widgetsTopicCount">{numberoftweet} Tweets</span>
