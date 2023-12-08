@@ -58,6 +58,7 @@ const DrawerBar = ({ active }) => {
         <MoreMenuItem title="Display" Icon={DisplayIcon} />
         <MoreMenuItem title="Keyboard Shortcuts" Icon={KeyboardShortcutsIcon} />
         <MoreMenuItem title="Logout" Icon={DisplayIcon} />
+        
       </div>
     </div>
   );
