@@ -14,6 +14,7 @@ import com.cmux.chat.repository.GroupUserRepository;
 import com.cmux.chat.repository.UserChatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.time.Instant;
 import java.util.Optional;
 import java.util.List;
 import java.util.UUID;
@@ -62,6 +63,7 @@ public class ChatService {
                            .chatId(chatId)
                            .chatType(ChatType.PRIVATE)
                            .chatName(user1Id + "-" + user2Id)
+                           .lastMessageTime(Instant.now())
                            .build();
             chatRepository.save(newChat);
             UserChat user1Chat = new UserChat(user1Id, chatId);

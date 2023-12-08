@@ -5,7 +5,7 @@
 
 .fromMessage {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
 }
 
 .avatarContainer {
@@ -45,7 +45,8 @@
   padding: 12px 15px;
   font-size: 15px;
   color: white;
-  margin-top: 4px;
+  display: inline-block;
+  margin-right: 12px;
 }
 
 .fromMessage:hover svg {

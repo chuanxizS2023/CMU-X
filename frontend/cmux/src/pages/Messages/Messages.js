@@ -9,14 +9,12 @@ import AddIcon from "@material-ui/icons/Add";
 import ChatList from "../../components/ChatList/ChatList";
 import NotSelectedMessage from "../../components/NotSelectedMessage/NotSelectedMessage";
 import SearchInput from "../../components/Widgets/SearchInput/SearchInput";
-import GroupUserSelection from "../../components/GroupUserSelection/GroupUserSelection";
 import { AuthContext } from '../../components/AuthProvider';
 import "./Messages.css";
 import { useFetchWithTokenRefresh } from '../../utils/ApiUtilsDynamic';
 
 
 const Messages = () => {
-  const [showGroupUserSelection, setShowGroupUserSelection] = useState(false);
   const [isDrawerBar, setIsDrawerBar] = useState(false);
   const { userId } = useContext(AuthContext);
   let path = useLocation().pathname;
@@ -24,6 +22,8 @@ const Messages = () => {
   const pathSegments = path.split('/');
   const currentChatId = pathSegments.length > 2 ? pathSegments[2] : null;
   const currentChat = chats.length > 0 ? chats.find(chat => chat.chatId === currentChatId) : null;
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [newGroupName, setNewGroupName] = useState("");
 
   const fetchWithTokenRefresh = useFetchWithTokenRefresh();
 
@@ -68,6 +68,32 @@ const Messages = () => {
     }
   };
 
+  const createGroupChat = async (chatName) => {
+    try {
+      const payload = {
+        chatName: chatName,
+        userId: userId,
+      };
+      const response = await fetchWithTokenRefresh(`${process.env.REACT_APP_URL}api/chats/group`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (response.ok) {
+        const newChat = await response.json();
+        setChats([...chats, newChat]);
+      } else {
+        console.error('Failed to create group chat');
+      }
+    } catch (error) {
+      console.error('Error creating group chat:', error);
+    }
+  };
+
+
   useEffect(() => {
     loadChatList();
   }, [userId]);
@@ -76,6 +102,7 @@ const Messages = () => {
     console.log('parseChatName:', chat.chatName)
     if (chat.chatType === "PRIVATE") {
       const receiverId = chat.chatName.split("-").filter(id => id !== userId).join("");
+      console.log('receiverId:', receiverId);
       const receiverName = await fetchReceiverName(receiverId);
       console.log('receiverName:', receiverName);
       return receiverName || 'Unknown User';
@@ -96,52 +123,72 @@ const Messages = () => {
   const history = useHistory();
 
   const handleAddIconClick = () => {
-    history.push("/Messages/addGroupUsers");
-    setShowGroupUserSelection(true);
+    handleDialogOpen();
+  };
+
+  const handleDialogOpen = () => {
+    setIsDialogOpen(true);
+  };
+
+  const handleDialogClose = () => {
+    setIsDialogOpen(false);
+    setNewGroupName("");
+  };
+
+  const handleGroupNameChange = (event) => {
+    setNewGroupName(event.target.value);
+  };
+
+  const handleCreateGroupChat = async () => {
+    await createGroupChat(newGroupName);
+    handleDialogClose();
   };
 
   return (
     <HomeBox>
-      {path === "/Messages/addGroupUsers"
-        ? <GroupUserSelection />
-        : <>
-          <div className={`messages ${path !== "/messages" && "messagesNone"}`}>
-            {isDrawerBar && (
-              <div onClick={() => setIsDrawerBar(false)} className="drawerBarPanel" />
-            )}
-            <DrawerBar active={isDrawerBar} />
-            <div className="messagesHeader">
-              <div onClick={() => setIsDrawerBar(true)}><Avatar src="" /></div>
-              <span>Messages</span>
-              <AddIcon onClick={handleAddIconClick} />
-            </div>
-
-            {showGroupUserSelection && <GroupUserSelection />}
-
-            {!showGroupUserSelection && (
-              <>
-                <div className="messagesSearchInput">
-                  <SearchInput placeholder="Search for people to talk" />
-                </div>
-                <div className="lastMessages">
-                  {chats.map(chat => (
-                    <ChatList
-                      chatId={chat.chatId}
-                      chatName={chat.chatName}
-                      lastMessage={chat.lastMessage}
-                      lastMessageTime={chat.lastMessageTime}
-                    />
-                  ))}
-                </div>
-              </>
-            )}
-            <BottomSidebar />
-          </div>
-        </>}
-
-      {path === "/Messages" && !currentChatId
-        ? <NotSelectedMessage />
-        : <Chat chat={currentChat} />}
+      <div className={`messages ${path !== "/messages" && "messagesNone"}`}>
+        {isDrawerBar && (
+          <div onClick={() => setIsDrawerBar(false)} className="drawerBarPanel" />
+        )}
+        <DrawerBar active={isDrawerBar} />
+        <div className="messagesHeader">
+          <div onClick={() => setIsDrawerBar(true)}><Avatar src="" /></div>
+          <span>Messages</span>
+          <AddIcon onClick={handleAddIconClick} />
+        </div>
+        <div className="messagesSearchInput">
+          <SearchInput placeholder="Search for people to talk" />
+        </div>
+        <div className="lastMessages">
+          {chats.map(chat => (
+            <ChatList
+              chatId={chat.chatId}
+              chatName={chat.chatName}
+              lastMessage={chat.lastMessage}
+              lastMessageTime={chat.lastMessageTime}
+            />
+          ))}
+        </div>
+        <BottomSidebar />
+      </div>
+      {isDialogOpen ? (
+        <div className="groupDialog">
+          <input
+            type="text"
+            placeholder="Enter group name"
+            value={newGroupName}
+            onChange={handleGroupNameChange}
+          />
+          <button onClick={handleCreateGroupChat}>Confirm</button>
+          <button onClick={handleDialogClose}>Cancel</button>
+        </div>
+      ) : (
+        (!currentChatId) ? (
+          <NotSelectedMessage />
+        ) : (
+          <Chat chat={currentChat} />
+        )
+      )}
     </HomeBox>
   );
 };
