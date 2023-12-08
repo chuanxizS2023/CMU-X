@@ -15,7 +15,10 @@ import Links from "../../components/Widgets/Links/Links";
 import HomeBox from "../../components/HomeBox/HomeBox";
 import Loading from "../../components/Loading/Loading";
 import { AuthContext } from '../../components/AuthProvider';
-import { useFetchWithTokenRefresh } from '../../utils/ApiUtils';
+import { useFetchWithTokenRefresh } from '../../utils/ApiUtilsDynamic';
+
+
+
 
 const Profile = () => {
   const [category, setCategory] = React.useState(1);
@@ -29,22 +32,19 @@ const Profile = () => {
   const [editedUsername, setEditedUsername] = useState('');
   const [selectedImage, setSelectedImage] = useState('');
   const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
+  const [authorPosts, setAuthorPosts] = useState([]);
   setTimeout(() => {
     setLoading(false);
   }, 2000);
 
-  const fetchUserProfile = useFetchWithTokenRefresh(`${process.env.REACT_APP_URL}user/${userId}`, {
-    method: 'GET'
-  });
+  const fetchWithTokenRefresh = useFetchWithTokenRefresh();
 
   const loadUserProfile = async () => {
     console.log('Fetching user profile');
     try {
-      const response = await fetchUserProfile();
-      console.log(response);
+      const response = await fetchWithTokenRefresh(`${process.env.REACT_APP_URL}user/${userId}`, { method: 'GET' });
       if (response.ok) {
         const data = await response.json();
-        console.log('User profile:', data);
         setUserProfile(data);
       } else {
         console.error('Failed to fetch user profile');
@@ -54,20 +54,30 @@ const Profile = () => {
     }
   };
 
+  const fetchPostsByAuthor = async (authorId) => {
+    try {
+      const response = await fetchWithTokenRefresh(
+        `${process.env.REACT_APP_URL}community/authors/${authorId}`,
+        { method: 'GET' }
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setAuthorPosts(data);
+      } else {
+        console.error('Failed to fetch posts by author');
+      }
+    } catch (error) {
+      console.error('Error fetching posts by author:', error);
+    }
+  };
+
   useEffect(() => {
     loadUserProfile();
+    if (userId) {
+      fetchPostsByAuthor(userId);
+    }
   }, [userId, username]);
 
-  const fetchUpdateProfile = useFetchWithTokenRefresh(`${process.env.REACT_APP_URL}user/${userId}`, {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      username: editedUsername,
-      userImage: selectedImage
-    })
-  });
   const handleEditClick = () => {
     setIsEditMode(true);
     setEditedUsername(userProfile.username);
@@ -78,7 +88,16 @@ const Profile = () => {
     setIsEditMode(false);
 
     try {
-      const response = await fetchUpdateProfile();
+      const response = await fetchWithTokenRefresh(`${process.env.REACT_APP_URL}user/${userId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          username: editedUsername,
+          userImage: selectedImage
+        })
+      });
       if (response.ok) {
         loadUserProfile();
       } else {
@@ -124,7 +143,7 @@ const Profile = () => {
             <div className="profile">
               <div className="backgroundImage"></div>
               <div className="profileTitle">
-                <div className="profileImage" onClick={ handleAvatarClick }>
+                <div className="profileImage" onClick={handleAvatarClick}>
                   <Avatar src={userProfile.userImage} />
                 </div>
                 {
@@ -198,7 +217,7 @@ const Profile = () => {
           )}
         <article className="profilePosts">
           {!loading ? (
-            posts.map((post) => (
+            authorPosts.map((post) => (
               <Post
                 key={post.id}
                 username={post.username}

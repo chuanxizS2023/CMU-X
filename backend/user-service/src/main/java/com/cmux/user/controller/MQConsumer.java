@@ -32,16 +32,9 @@ public class MQConsumer {
         Long userId = m.getUserId();
         Long productId = m.getProductId();
         String imageUrl = m.getImageUrl();
-        User currentUser  = userService.getUserById(userId);
-        List<String> imageList = currentUser.getUnlockedImages();
-        imageList.add(imageUrl);
-        List<Long> imageIdList = currentUser.getUnlockedImageIds();
-        imageIdList.add(productId);
-        UserUpdateRequest updateRequest = new UserUpdateRequest();
-        updateRequest.setUnlockedImages(imageList);
-        updateRequest.setUnlockedImageIds(imageIdList);
+        System.out.println(message);
         try {
-            userService.updateUserProfile(userId, updateRequest);
+            userService.addNewIconToUser(userId, imageUrl, productId);
         } catch (Exception e) {
             e.printStackTrace();
         }
