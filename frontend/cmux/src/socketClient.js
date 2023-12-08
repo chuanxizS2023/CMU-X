@@ -12,7 +12,7 @@ class StompClientSingleton {
   }
 
   constructor() {
-    const socket = new SockJS(`${process.env.SOCKJS_CLIENT_CHAT_URL}ws-communitypost`);
+    const socket = new SockJS(`${process.env.REACT_APP_SOCKJS_CLIENT_POST_URL}ws-communitypost`);
     this.client = new Client({
       webSocketFactory: () => socket,
       connectHeaders: {
