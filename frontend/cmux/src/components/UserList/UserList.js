@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Avatar } from "@material-ui/core";
 import { useFetchWithTokenRefresh } from '../../utils/ApiUtilsDynamic';
+import { AuthContext } from '../AuthProvider';
 import './UserList.css';
 
 const UserList = ({ onSelectUser, onCloseUserList }) => {
     const [allUsers, setAllUsers] = useState([]);
     const [selectedUser, setSelectedUser] = useState(null);
+    const { userId } = useContext(AuthContext);
 
     const fetchWithTokenRefresh = useFetchWithTokenRefresh();
 
@@ -43,18 +45,19 @@ const UserList = ({ onSelectUser, onCloseUserList }) => {
                 <button onClick={onCloseUserList}>Close</button>
             </div>
             <ul className="userList">
-                {allUsers.map((user) => (
-                    <li
-                        key={user.id}
-                        onClick={() => handleSelectUser(user)}
-                        className={selectedUser?.id === user.id ? 'selected' : ''}
-                    >
-                        <div className="userListItem">
-                            <Avatar src={user.avatar} />
-                            <span>{user.username}</span>
-                        </div>
-                    </li>
-                ))}
+                {allUsers.filter(user => user.id != userId)
+                    .map((user) => (
+                        <li
+                            key={user.id}
+                            onClick={() => handleSelectUser(user)}
+                            className={selectedUser?.id === user.id ? 'selected' : ''}
+                        >
+                            <div className="userListItem">
+                                <Avatar src={user.avatar} />
+                                <span>{user.username}</span>
+                            </div>
+                        </li>
+                    ))}
             </ul>
         </div>
     );
