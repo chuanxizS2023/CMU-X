@@ -11,28 +11,28 @@ function Topics() {
         <SettingsIcon />
       </div>
       <TopicItem
-        category="Programming · Trending"
-        title="React"
+        category="Course · Trending"
+        title="SDA"
         numberoftweet="13.1K"
       />
       <TopicItem
-        category="Programming · Trending"
-        title="React Native"
+        category="Course · Trending"
+        title="Data Science"
         numberoftweet="13.1K"
       />
       <TopicItem
-        category="Programming · Trending"
-        title="Javascript"
+        category="Course · Trending"
+        title="FSE"
         numberoftweet="13.1K"
       />
       <TopicItem
-        category="Programming · Trending"
-        title="CSS"
+        category="Course · Trending"
+        title="Testing"
         numberoftweet="13.1K"
       />
       <TopicItem
-        category="Programming · Trending"
-        title="HTML"
+        category="Course · Trending"
+        title="Cloud Computing"
         numberoftweet="13.1K"
       />
 

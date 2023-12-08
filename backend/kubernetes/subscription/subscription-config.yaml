@@ -14,6 +14,6 @@ data:
   RABBITMQ_QUEUE_NAME_NEWUSER: "cmu-x-subscription-newuser"
   RABBITMQ_EXCHANGE_NAME: "cmuxExchange"
   RABBITMQ_EXCHANGE_FANOUT_NAME: "cmuxfanoutExchange"
-  RABBITMQ_REWARD_ROUTING_KEY: "cmux-reward-newfollower"
+  RABBITMQ_REWARD_ROUTING_KEY: "cmux-newfollower"
 
 
