@@ -49,14 +49,13 @@ export const usePostApi = () => {
         method: 'GET'
       });
       if (response.ok) {
-        const data = await response.json(); // Parse the JSON data from the response
+        const data = await response.json(); 
         return data;
       } else {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
     } catch (error) {
       console.error("Error getting posts:", error.message);
-      throw error;
     }
   };
 
@@ -121,9 +120,14 @@ export const usePostApi = () => {
       const response = await fetchWithTokenRefresh(`${baseUrl}/search?query=${encodeURIComponent(query)}`, {
         method: 'GET'
       });
-      return response.data;
+      if (response.ok) {
+        const data = await response.json(); 
+        return data;
+      } else {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
     } catch (error) {
-      console.error("Error during search:", error);
+      console.error("Error getting posts:", error.message);
     }
   };
 

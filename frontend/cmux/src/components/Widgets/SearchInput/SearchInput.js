@@ -34,6 +34,7 @@ function SearchInput({ placeholder }) {
       }
       
       const res = await searchPosts(searchText);
+      console.log("search results: ", res);
       let user_res = [];
       // if searchText contains only numbers, search by userId
       const params = { u: searchText };
@@ -47,31 +48,32 @@ function SearchInput({ placeholder }) {
         return;
       }
       // Iterate over user_res array to update each user object
-      for (let i = 0; i < user_res.length; i++) {
-        const user = user_res[i];
-        // Use the actual user ID from the user object
-        const followerParams = { userId: user.userId };
-        const subscriptionParams = { userId: user.userId };
-        const followerQuery = new URLSearchParams(followerParams).toString();
-        const subscriptionQuery = new URLSearchParams(subscriptionParams).toString();
+      // for (let i = 0; i < user_res.length; i++) {
+      //   const user = user_res[i];
+      //   // Use the actual user ID from the user object
+      //   const followerParams = { userId: user.userId };
+      //   const subscriptionParams = { userId: user.userId };
+      //   const followerQuery = new URLSearchParams(followerParams).toString();
+      //   const subscriptionQuery = new URLSearchParams(subscriptionParams).toString();
       
-        const user_followers = await fetchFollowers(user_url, followerQuery);
-        const user_subscriptions = await fetchSubscriptions(user_url, subscriptionQuery);
+      //   const user_followers = await fetchFollowers(user_url, followerQuery);
+      //   const user_subscriptions = await fetchSubscriptions(user_url, subscriptionQuery);
       
-        const has_subscription_params = { userId: userId, otherUserId: user.userId };
-        const has_subscription_query = new URLSearchParams(has_subscription_params).toString();
+      //   const has_subscription_params = { userId: userId, otherUserId: user.userId };
+      //   const has_subscription_query = new URLSearchParams(has_subscription_params).toString();
       
-        const user_has_subscription = await fetchHasSubscription(user_url, has_subscription_query);
+      //   const user_has_subscription = await fetchHasSubscription(user_url, has_subscription_query);
       
-        // Update the user object
-        user.followers = user_followers;
-        user.following = user_subscriptions;
-        user.isFollowing = user_has_subscription;
-        user.isSelf = userId === user.userId;
-      }
+      //   // Update the user object
+      //   user.followers = user_followers;
+      //   user.following = user_subscriptions;
+      //   user.isFollowing = user_has_subscription;
+      //   user.isSelf = userId === user.userId;
+      // }
   
-      // setResults(res);
-      setUserResults(user_res);
+      setResults(res);
+      // setUserResults(user_res);
+      console.log("setting popup open");
       setIsPopupOpen(true);
       return;
     }
