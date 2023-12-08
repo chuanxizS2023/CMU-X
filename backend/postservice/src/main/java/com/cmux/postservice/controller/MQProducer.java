@@ -1,4 +1,4 @@
-package reward.controller;
+package com.cmux.postservice.controller;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
@@ -20,6 +20,7 @@ public class MQProducer {
     }
 
     public void sendIdToReward(String message) {
+        System.out.println("MQProducer: sendIdToReward: sending message to reward service" + message);
         rabbitTemplate.convertAndSend(exchange, rewardRoutingKey, message);
     }
 }
