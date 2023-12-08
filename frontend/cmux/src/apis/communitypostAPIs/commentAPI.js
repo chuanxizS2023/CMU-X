@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:9000/comments'; 
+const API_URL = process.env.REACT_APP_POST_URL + "comments" || "";
+
 
 
 export const saveComment = async (commentData) => {

@@ -16,17 +16,19 @@ import DeleteIcon from "@material-ui/icons/Delete";
 // communityPostid, userImage, username, title, content, likes, comments, retweets, onCommentClick, commentsCount, created_Date  
 function Comments({comment}) {
   const [isVisibleProfileCard, setIsVisibleProfileCard] = useState(false);
-  const [author_id, setAuthor_id] = useState(null);
+  const [authorid, setauthorid] = useState(null);
+  const [username, setUsername] = useState(null);
   const [content, setContent] = useState(null);
     const [created_Date, setCreated_Date] = useState(null);
     useEffect(() => {
-        setAuthor_id(comment.author_id);
+        setUsername(comment.username);
+        setauthorid(comment.authorid);
         setContent(comment.content);
         setCreated_Date(comment.created_Date);
     }, [comment]);
   
   return (
-    <div className="post" onMouseLeave={() => setIsVisibleProfileCard(false)} style={{minWidth:"25vw"}}>
+    <div className="post" onMouseLeave={() => setIsVisibleProfileCard(false)} style={{minWidth:"25vw", paddingBottom:"25px"}}>
         <ProfileCard active={isVisibleProfileCard && true} />
         <div>
             <Avatar/>
@@ -36,23 +38,19 @@ function Comments({comment}) {
             <span
                 className="post-header-displayname"
                 style={{color:"black"}}
-                onMouseEnter={() => setIsVisibleProfileCard(true)}
                 onMouseLeave={() => {
                 setTimeout(function () {
                     setIsVisibleProfileCard(false);
                 }, 1000);
                 }}
             >
-                {author_id}
+                {username}
             </span>
             <span className="post-header-date">{created_Date}</span>
             <MoreHorizIcon className="postMoreIcon" />
             </div>
             <div className="post-content" style={{color:"black"}}>{content}</div>
             <div className="post-event">
-            <div>
-                <SharePostIcon className="postIcon" />
-            </div>
             </div>
         </div>
     </div>

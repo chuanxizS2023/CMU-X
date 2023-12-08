@@ -11,3 +11,9 @@ data:
   SPRING_NEO4J_AUTHENTICATION_PASSWORD: cmuxpassword
   SPRING_DATA_NEO4J_DATABASE: neo4j
   SERVER_PORT: "8082"
+  RABBITMQ_EXCHANGE_NAME: "cmuxExchange"
+  RABBITMQ_EXCHANGE_FANOUT_NAME: "cmuxfanoutExchange"
+  RABBITMQ_QUEUE_NAME_NEWUSER: "cmux-subscription-newuser"
+  RABBITMQ_REWARD_ROUTING_KEY: "cmux-reward-newfollower"
+
+

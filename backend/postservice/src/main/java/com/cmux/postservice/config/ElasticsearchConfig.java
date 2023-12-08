@@ -23,7 +23,7 @@ public class ElasticsearchConfig {
             new UsernamePasswordCredentials("elastic", "2JeXn31HFDxoD3iMkX5v")); 
 
         // Build the RestClient using the credentials provider
-        return RestClient.builder(new HttpHost("elasticsearch", 9200, "http")) 
+        return RestClient.builder(new HttpHost("elasticsearch-service", 9200, "http")) 
                 .setHttpClientConfigCallback(httpClientBuilder -> 
                     httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider))
                 .build();

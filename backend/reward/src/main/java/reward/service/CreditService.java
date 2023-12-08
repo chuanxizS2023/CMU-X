@@ -40,7 +40,7 @@ public class CreditService {
         }
 
         // Insert new user credit into db
-        Credit creditInfo = new Credit(userId, username, 5, 5);
+        Credit creditInfo = new Credit(userId, username, NEW_USER_POINT, NEW_USER_COIN);
         userCreditInfo = Optional.of(creditInfo);
         Credit credit = creditRepository.save(creditInfo);
 

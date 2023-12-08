@@ -19,12 +19,12 @@ public class Comment {
 
     private String content;
     private String created_Date;
-    private String author_id;
+    private long authorid;
     private String username;
     private long likes;
     
-    @ManyToOne(fetch = FetchType.LAZY) // Changed to LAZY to prevent immediate fetching
+    @ManyToOne(fetch = FetchType.LAZY) 
     @JoinColumn(name = "communityPostid")
-    @JsonBackReference // This annotation will prevent the serialization of the referenced CommunityPost to avoid recursion.
+    @JsonBackReference 
     private CommunityPost communityPost;
 }

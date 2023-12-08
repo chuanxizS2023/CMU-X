@@ -1,4 +1,4 @@
-package com.cmux.service.strategy;
+package com.cmux.service.strategy.subscription;
 
 import java.util.List;
 
@@ -7,6 +7,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import com.cmux.entity.User;
 import com.cmux.repository.UserRepository;
+
 import jakarta.validation.ConstraintViolationException;
 
 @Service

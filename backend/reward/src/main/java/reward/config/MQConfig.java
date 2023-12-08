@@ -27,6 +27,9 @@ public class MQConfig {
     @Value("${rabbitmq.queue.name.update.points}")
     private String updatePointsQueue;
 
+    @Value("${rabbitmq.queue.name.newuser.sub}")
+    private String subNewUserqueue;
+
     @Value("${rabbitmq.exchange.name}")
     private String exchange;
 
@@ -45,6 +48,11 @@ public class MQConfig {
     @Bean
     Queue newUserQueue() {
         return new Queue(newUserqueue);
+    }
+
+    @Bean
+    Queue subNewUserQueue() {
+        return new Queue(subNewUserqueue);
     }
 
     @Bean
@@ -70,6 +78,11 @@ public class MQConfig {
     @Bean
     Binding newUserBinding() {
         return BindingBuilder.bind(newUserQueue()).to(fanoutExchange());
+    }
+
+    @Bean
+    Binding subNewUserBinding() {
+        return BindingBuilder.bind(subNewUserQueue()).to(fanoutExchange());
     }
 
     @Bean

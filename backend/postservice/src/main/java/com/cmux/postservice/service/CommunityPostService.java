@@ -41,8 +41,6 @@ public class CommunityPostService extends AbstractESService<CommunityPost> {
         CommunityPost communityPost = communityPostConverter.convertToEntity(communityPostDTO);
         communityPost = communityPostRepository.save(communityPost);
 
-        // after save to mysql, publish event for elastic search
-
         publisher.publishEvent(new PostEvents.Created(communityPost));
 
         return communityPostConverter.convertToDTO(communityPost);
@@ -183,6 +181,7 @@ public class CommunityPostService extends AbstractESService<CommunityPost> {
     @Override
     public void index(String index, String id, CommunityPost communityPost) {
         try {
+            System.out.println("Elasticsearch host: " + elasticsearchClient._transportOptions().toString());
             IndexResponse response = elasticsearchClient.index(i -> i
                     .index("communitypost")
                     .id(String.valueOf(communityPost.getCommunityPostid()))

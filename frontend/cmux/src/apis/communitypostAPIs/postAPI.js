@@ -2,7 +2,7 @@ import axios from 'axios';
 import { StompClientSingleton } from '../../../../cmux/src/socketClient';
 
 
-const baseUrl = 'http://localhost:9000/community';
+const baseUrl = process.env.REACT_APP_POST_URL + "community" || "";
 
 // Create a new post
 export const createPost = async (postData) => {
@@ -22,7 +22,6 @@ export const addLike = async (postId) => {
     return response;
   } catch (error) {
     console.error("Error adding like:", error.message);
-    throw error;
   }
 };
 

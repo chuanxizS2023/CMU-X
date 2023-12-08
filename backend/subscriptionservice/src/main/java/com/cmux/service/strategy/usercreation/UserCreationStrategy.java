@@ -1,4 +1,4 @@
-package com.cmux.service.strategy;
+package com.cmux.service.strategy.usercreation;
 
 import com.cmux.entity.User;
 

@@ -1,23 +1,23 @@
 import { Avatar } from "@material-ui/core";
 import React from "react";
 import { Link } from "react-router-dom";
-import "./LastChat.css";
+import "./ChatList.css";
 
-const LastChat = ({
-  username,
-  userimage,
+const ChatList = ({
+  chatId,
+  chatName,
   lastMessage,
   lastMessageTime,
 }) => {
   return (
-    <Link className="lastChat" to={`/Messages/mucahitsahin6-${username}`}>
+    <Link className="lastChat" to={`/Messages/${chatId}`}>
       <div>
-        <Avatar src={userimage} />
+        <Avatar src={''} />
       </div>
       <div>
         <div>
           <span>
-            {username}
+            {chatName}
           </span>
           <span>
             {lastMessageTime}
@@ -29,4 +29,4 @@ const LastChat = ({
   );
 };
 
-export default LastChat;
+export default ChatList;

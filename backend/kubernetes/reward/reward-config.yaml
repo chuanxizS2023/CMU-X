@@ -29,5 +29,6 @@ data:
   RABBITMQ_NEWFOLLOWER_ROUTING_KEY: "cmux-newfollower"
   RABBITMQ_NEWLIKE_ROUTING_KEY: "cmux-newlike"
   RABBITMQ_NEWICON_ROUTING_KEY: "cmux-newicon"
+  RABBITMQ_QUEUE_NAME_NEWUSER_SUB: "cmu-x-subscription-newuser"
   SERVER_PORT: "8081"
 

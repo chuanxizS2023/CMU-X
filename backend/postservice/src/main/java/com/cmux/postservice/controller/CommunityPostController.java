@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/community")
 public class CommunityPostController {
 
@@ -24,7 +23,6 @@ public class CommunityPostController {
     public ResponseEntity<?> createPost(@RequestBody CommunityPostDTO postDTO) {
         String dateNow = java.time.LocalDate.now().toString();
         postDTO.setCreated_Date(dateNow);
-        System.out.println("postDTO controller: " + postDTO.getUsername());
         communityPostService.savePost(postDTO);
 
         return new ResponseEntity<>("Post created successfully", HttpStatus.OK);

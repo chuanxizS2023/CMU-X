@@ -57,7 +57,7 @@ public class SubscriptionController {
     // Add a subscription for a user
     @PutMapping("/subscriptions")
     public void addSubscription(@RequestParam("userId") Long userId,
-            @RequestParam("otherUserId") Long otherUserId) {
+            @RequestParam("otherUserId") Long otherUserId) throws JsonProcessingException {
         System.out.println("Add subscription for user " + userId);
         System.out.println("Add subscription to user " + otherUserId);
         subscriptionService.addSubscription(userId, otherUserId);
@@ -76,18 +76,18 @@ public class SubscriptionController {
         subscriptionService.removeSubscription(userId, otherUserIdq);
     }
 
-    // Get all subscribers for a specific user
-    @GetMapping("/subscriptions/user-id")
-    public List<User> getUser(@RequestParam("userId") Long userId) {
-        System.out.println("Get user " + userId);
-        return subscriptionService.getUserByUserId(userId);
+    // Get specific users
+    @GetMapping("/subscriptions/users")
+    public List<User> getUser(@RequestParam("u") String u) {
+        System.out.println("Get user " + u);
+        return subscriptionService.getUsers(u);
     }
 
-    // Get all subscribers for a specific user by username
-    @GetMapping("/subscriptions/user-name")
-    public List<User> getUser(@RequestParam("username") String username) {
-        System.out.println("Get user " + username);
-        return subscriptionService.getUsersByName(username);
+    // Get numbers of subscribers for a specific user
+    @GetMapping("/subscriptions/count")
+    public int getSubscriptionsCount(@RequestParam("userId") Long userId) {
+        System.out.println("Get number of subscriptions for user " + userId);
+        return subscriptionService.getAllSubscriptions(userId).size();
     }
 
     // Get whether the user with userId is subscribed to the user with otherUserId
