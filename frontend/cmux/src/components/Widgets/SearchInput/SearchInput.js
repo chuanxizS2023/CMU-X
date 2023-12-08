@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import "./SearchInput.css";
 import SearchIcon from "@material-ui/icons/Search";
-import { searchPosts } from "../../../apis/communitypostAPIs/postAPI";
 import SearchResultsPopup from "./SearchPopup";
 import { useSubscriptionApi } from "../../../apis/communitypostAPIs/subscriptionAPI";
 import { useContext } from 'react';
 import { AuthContext } from '../../AuthProvider';
 import { Alarm } from "@material-ui/icons";
+import { usePostApi } from "../../../apis/communitypostAPIs/postAPI";
 
 
 function SearchInput({ placeholder }) {
@@ -18,7 +18,7 @@ function SearchInput({ placeholder }) {
   const [ user_results, setUserResults ] = useState([]);
   const user_url = baseUrl + 'subscriptions/users';
   const { fetchUser, fetchFollowers, fetchSubscriptions, fetchHasSubscription } = useSubscriptionApi();
-
+  const { searchPosts } = usePostApi();
   // Mock userId, should be replaced by the real userId
   // const userId = useContext(AuthContext).userId;
   const userId = 1;
@@ -33,7 +33,7 @@ function SearchInput({ placeholder }) {
         return;
       }
       
-      // const res = await searchPosts(searchText);
+      const res = await searchPosts(searchText);
       let user_res = [];
       // if searchText contains only numbers, search by userId
       const params = { u: searchText };
@@ -42,10 +42,10 @@ function SearchInput({ placeholder }) {
       user_res = await fetchUser(user_url, query);
       console.log('User search results:', user_res);
 
-      // if (res.length === 0 && user_res.length === 0) {
-      //   setIsPopupOpen(false);
-      //   return;
-      // }
+      if (res.length === 0 && user_res.length === 0) {
+        setIsPopupOpen(false);
+        return;
+      }
       // Iterate over user_res array to update each user object
       for (let i = 0; i < user_res.length; i++) {
         const user = user_res[i];
