@@ -14,12 +14,12 @@ import com.cmux.chat.repository.GroupUserRepository;
 import com.cmux.chat.repository.UserChatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.time.Instant;
 import java.util.Optional;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.Comparator;
+import java.util.Collections;
 
 
 @Service
@@ -63,7 +63,6 @@ public class ChatService {
                            .chatId(chatId)
                            .chatType(ChatType.PRIVATE)
                            .chatName(user1Id + "-" + user2Id)
-                           .lastMessageTime(Instant.now())
                            .build();
             chatRepository.save(newChat);
             UserChat user1Chat = new UserChat(user1Id, chatId);
@@ -114,15 +113,16 @@ public class ChatService {
         return userIds;
     }
 
-    public List<Chat> getChatsByUserId(Long userId) {
-        List<UserChat> userChats = userChatRepository.findByUserId(userId);
-        List<UUID> chatIds = userChats.stream()
-                .map(UserChat::getChatId)
-                .collect(Collectors.toList());
-        List<Chat> chats = chatRepository.findAllById(chatIds);
-        chats.sort(Comparator.comparing(Chat::getLastMessageTime, Comparator.nullsLast(Comparator.naturalOrder())));
-        return chats;
-    }
+public List<Chat> getChatsByUserId(Long userId) {
+    List<UserChat> userChats = userChatRepository.findByUserId(userId);
+    List<UUID> chatIds = userChats.stream()
+            .map(UserChat::getChatId)
+            .collect(Collectors.toList());
+    List<Chat> chats = chatRepository.findAllById(chatIds);
+    chats.sort(Comparator.comparing(Chat::getLastMessageTime, Comparator.nullsLast(Comparator.naturalOrder())));
+    Collections.reverse(chats);
+    return chats;
+}
 
     public void addUserToGroup(GroupUser groupUser) {
         groupUserRepository.save(groupUser);
