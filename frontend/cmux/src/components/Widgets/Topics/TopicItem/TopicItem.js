@@ -10,7 +10,7 @@ const TopicItem = ({ category, title, numberoftweet }) => {
         {/* <MoreHorizIcon /> */}
       </div>
       <span className="widgetsTopicTitle">#{title}</span>
-      <span className="widgetsTopicCount">{numberoftweet} Tweets</span>
+      <span className="widgetsTopicCount">{numberoftweet} Posts</span>
     </div>
   );
 };
