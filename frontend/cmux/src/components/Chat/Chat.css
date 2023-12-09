@@ -170,3 +170,18 @@
   font-size: 16px;
   color: white;
 }
+
+.beautiful-button {
+  color: white; /* White text */
+  padding: 10px 20px; /* Padding */
+  border: none; /* No border */
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: transform 0.2s, box-shadow 0.2s; /* Smooth transition for hover effects */
+  margin-right: 20px; /* Margin to the right */
+}
+
+.beautiful-button:hover {
+  transform: scale(1.05); /* Slightly scale the button */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+}

@@ -9,6 +9,7 @@ import { useFetchWithTokenRefresh } from '../../utils/ApiUtilsDynamic';
 import { useHistory } from 'react-router-dom';
 import NotSelectedMessage from '../NotSelectedMessage/NotSelectedMessage';
 import './Chat.css';
+import { Avatar, Button} from '@material-ui/core';
 
 
 const Chat = ({ chat }) => {
@@ -62,8 +63,10 @@ const Chat = ({ chat }) => {
       // const url = `${process.env.REACT_APP_URL}user/all`;
       const url = `${process.env.REACT_APP_URL}followers/mutual?userId=${userId}`;
       const response = await fetchWithTokenRefresh(url, { method: 'GET' });
+      console.log(response);
       if (response.ok) {
         const users = await response.json();
+        console.log(users);
         setAllUsers(users);
       } else {
         console.error('Failed to fetch all users');
@@ -226,7 +229,7 @@ const Chat = ({ chat }) => {
       const usersInGroup = await fetchUsers(userIdsInGroup);
 
       const filteredUsers = allUsers.filter((user) => {
-        return !usersInGroup.some((groupUser) => groupUser.id === user.id);
+        return !usersInGroup.some((groupUser) => groupUser.id === user.userId);
       });
 
       setUserList(usersInGroup);
@@ -280,7 +283,7 @@ const Chat = ({ chat }) => {
       </div>
       {isUserListOpen ? (
         <div className="userList">
-          <button onClick={handleUserListClose}>Close</button>
+          <Button variant="contained" onClick={handleUserListClose}>Close</Button>
           <h3>Group User List</h3>
           <ul>
             {userList.map((user, index) => (
@@ -293,7 +296,7 @@ const Chat = ({ chat }) => {
                   <div className="userName">
                     {user.username}
                   </div>
-                  <button onClick={() => handleDeleteGroupUser(user.id)}>Delete</button>
+                  <Button variant="contained" onClick={() => handleDeleteGroupUser(user.id)}>Delete</Button>
                 </li>
                 {index < userList.length - 1 && <div className="userListSeparator"></div>}
               </React.Fragment>
@@ -301,22 +304,24 @@ const Chat = ({ chat }) => {
           </ul>
           <div className="userListSeparator"></div>
           <h3>Add User</h3>
+          <ul>
           <div className="userList">
-            <ul>
               {allUsers.map((user) => (
-                <li className="userListItem" key={user.id}>
+                <React.Fragment key={user.userId}>
+                <li className="userListItem" key={user.userId}>
                   <div className="userAvatar">
-                    <img src={user.userImage} alt={user.username} />
+                    <Avatar src="" alt={user.name} />
                   </div>
-                  <div className="userName">{user.username}</div>
-                  <button onClick={() => handleUserSelection(user.id)}>
-                    {selectedUsers.includes(user.id) ? 'Unselect' : 'Select'}
-                  </button>
+                  <div className="userName">{user.name}</div>
+                  <Button className="beautiful-button" variant="contained" onClick={() => handleUserSelection(user.userId)}>
+                    {selectedUsers.includes(user.userId) ? 'Unselect' : 'Select'}
+                  </Button>
                 </li>
+                </React.Fragment>
               ))}
-            </ul>
           </div>
-          <button onClick={() => handleAddGroupUser(selectedUsers)}>Add User</button>
+          </ul>
+          <Button variant="contained" onClick={() => handleAddGroupUser(selectedUsers)}>Add User</Button>
         </div>
       ) : (<div className="chatRoom">
         <div className="chatMessages">

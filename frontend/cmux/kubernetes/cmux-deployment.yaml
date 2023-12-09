@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: cmu-x-frontend-container
-        image: leolando/cmux-frontend:v1
+        image: leolando/cmux-frontend:latest
         ports:
         - containerPort: 80 
         env:
